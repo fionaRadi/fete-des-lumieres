@@ -11,6 +11,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.beans.Beans;
 import javax.swing.event.MouseInputListener;
+import model.circuit.CircuitGeo;
 import model.coord.CoordGeo;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -26,7 +27,7 @@ import view.waypoint.WaypointGeo;
  *
  * @author ugola
  */
-public class MapGeo extends Map<CoordGeo, WaypointGeo> {
+public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     private JXMapViewer viewer;
 
     public MapGeo() {
@@ -64,7 +65,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo> {
             viewer.setOverlayPainter(new WaypointPainter<WaypointGeo>() {
                 @Override
                 protected void doPaint(Graphics2D g, JXMapViewer map, int width, int height) {
-                    for (WaypointGeo waypoint : waypoints) {
+                    for (WaypointGeo waypoint : waypoints.values()) {
                         Point2D point = viewer.getTileFactory().geoToPixel(waypoint.getPosition(), viewer.getZoom());
                         Rectangle rect = viewer.getViewportBounds();
 
@@ -83,10 +84,12 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo> {
     }
 
     @Override
-    public WaypointGeo addWaypoint(CoordGeo coord) {
-        WaypointGeo waypoint = new WaypointGeo(coord);
-        waypoints.add(waypoint);
-        viewer.add(waypoint);
-        return waypoint;
+    public void addCoord(double x, double y) {
+        
+    }
+    
+    @Override
+    public void addWaypoint(CoordGeo coord) {
+
     }
 }

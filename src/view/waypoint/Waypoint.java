@@ -8,21 +8,27 @@ import java.awt.Dimension;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import model.coord.Coord;
 
 /**
  *
  * @author ugola
+ * @param <T>
  */
-public abstract class Waypoint extends JButton {
+public abstract class Waypoint<T extends Coord> extends JButton {
     protected static ImageIcon redIcon;
+    
+    protected T coord;
 
     private static final String RED_ICON_PATH = "../../resources/images/location-dot-solid-red.png";
 
-    public Waypoint() {
+    public Waypoint(T coord) {
         if (redIcon == null) {
             loadImage();
         }
 
+        this.coord = coord;
+        
         setContentAreaFilled(false);
         setIcon(redIcon);
         setSize(new Dimension(redIcon.getIconWidth(), redIcon.getIconHeight()));
@@ -44,5 +50,9 @@ public abstract class Waypoint extends JButton {
     
     public static ImageIcon getWaypointIcon() {
         return redIcon;
+    }
+    
+    public T getCoord() {
+        return coord;
     }
 }

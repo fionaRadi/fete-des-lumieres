@@ -17,6 +17,12 @@ public class CoordEuc extends Coord {
         this.x = x;
         this.y = y;
     }
+    
+    public CoordEuc(double x, double y) {
+        super(maxId + 1);
+        this.x = x;
+        this.y = y;
+    }
 
     public double getX() {
         return x;

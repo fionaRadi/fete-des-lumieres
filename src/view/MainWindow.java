@@ -12,9 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import model.circuit.CircuitEuc;
 import model.circuit.CircuitGeo;
-import model.coord.CoordEuc;
 import view.waypoint.Waypoint;
-import view.waypoint.WaypointEuc;
 
 /**
  *
@@ -311,7 +309,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case "EUC_2D":
                     currentCircuitEuc = new CircuitEuc();
                     currentCircuitEuc.loadFile(path);
-                    mapEuc.open(currentCircuitEuc.getCoords());
+                    mapEuc.open(currentCircuitEuc);
                     SwingUtilities.invokeLater(() -> {
                         if (mapGeo != null)
                             if (mapGeo.isVisible()) {
@@ -326,7 +324,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case "GEO":
                     currentCircuitGeo = new CircuitGeo();
                     currentCircuitGeo.loadFile(path);
-                    mapGeo.open(currentCircuitGeo.getCoords());
+                    mapGeo.open(currentCircuitGeo);
                     SwingUtilities.invokeLater(() -> {
                         if (mapEuc != null)
                             if (mapEuc.isVisible()) {
@@ -369,6 +367,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_xFieldActionPerformed
 
     private void mapEucMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapEucMouseReleased
+        /*
         WaypointEuc waypoint = mapEuc.getSelectedWaypoint();
         if (waypoint != null) {
             CoordEuc coord = waypoint.getCoord();
@@ -376,6 +375,7 @@ public class MainWindow extends javax.swing.JFrame {
             xField.setText(String.valueOf(coord.getX()));
             yField.setText(String.valueOf(coord.getY()));
         }
+        */
     }//GEN-LAST:event_mapEucMouseReleased
 
     private String fileType(String path) {
@@ -437,7 +437,7 @@ public class MainWindow extends javax.swing.JFrame {
             new MainWindow().setVisible(true);
         });
     }
-
+    
     private CircuitEuc currentCircuitEuc;
     private CircuitGeo currentCircuitGeo;
     

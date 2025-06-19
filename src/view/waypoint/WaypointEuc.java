@@ -10,22 +10,15 @@ import model.coord.CoordEuc;
  *
  * @author ugola
  */
-public class WaypointEuc extends Waypoint {
-    private final CoordEuc coord;
+public class WaypointEuc extends Waypoint<CoordEuc> {
 
-    public WaypointEuc(CoordEuc place) {
-        super();
-        this.coord = place;
+    public WaypointEuc(CoordEuc coord) {
+        super(coord);
     }
-
     public void update(int offsetX, int offsetY, double newScale) {
         int x = (int) (newScale * coord.getX()) + offsetX;
         int y = (int) (newScale * coord.getY()) + offsetY;
 
         this.setLocation(x, y);
-    }
-    
-    public CoordEuc getCoord() {
-        return coord;
     }
 }

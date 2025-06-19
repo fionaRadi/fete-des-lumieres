@@ -10,10 +10,15 @@ package model.coord;
  */
 public abstract class Coord {
     protected final int id;
+    
+    protected static int maxId;
 
     protected Coord(int id) {
         this.id = id;
+        maxId = Math.max(maxId, id);
     }
 
     public int getId() { return id; }
+    
+    public static int getMaxId() { return maxId; }
 }

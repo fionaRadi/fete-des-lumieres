@@ -12,10 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import model.circuit.CircuitEuc;
 import model.coord.CoordEuc;
 import view.waypoint.Waypoint;
 import view.waypoint.WaypointEuc;
@@ -24,7 +23,7 @@ import view.waypoint.WaypointEuc;
  *
  * @author ugola
  */
-public class MapEuc extends Map<CoordEuc, WaypointEuc> {
+public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     private int offsetX, offsetY;
     private boolean isRightClickDragging;
     
@@ -36,8 +35,6 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc> {
         System.out.println("=> Creation de la carte euclidienne");
         
         isRightClickDragging = false;
-
-        waypoints = new ArrayList<>();
 
         offsetX = 0;
         offsetY = 0;
@@ -58,10 +55,10 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc> {
     }
     
     @Override
-    public void open(List<CoordEuc> coords) {
-        super.open(coords);
+    public void open(CircuitEuc circuit) {
+        super.open(circuit);
         
-        for (WaypointEuc waypoint : waypoints) {
+        for (WaypointEuc waypoint : waypoints.values()) {
             waypoint.update(offsetX, offsetY, scale);
         }
             
@@ -90,8 +87,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc> {
                     int x = (int) (e.getX() / scale - offsetX / scale - Waypoint.getWaypointIcon().getIconWidth() / 2 / scale);
                     int y = (int) (e.getY() / scale - offsetY / scale - Waypoint.getWaypointIcon().getIconHeight() / 2 / scale);
                     
-                    WaypointEuc waypoint = addWaypoint(new CoordEuc(2, x, y));
-                    waypoint.update(offsetX, offsetY, scale);
+                    addCoord(x, y);
                     
                     repaint();
                 }
@@ -120,7 +116,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc> {
                     lastX = e.getX();
                     lastY = e.getY();
 
-                    for (Waypoint waypoint : waypoints) {
+                    for (Waypoint waypoint : waypoints.values()) {
                         WaypointEuc waypointEuc = (WaypointEuc) waypoint;
                         waypointEuc.update(offsetX, offsetY, scale);
                     }
@@ -149,7 +145,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc> {
             offsetX = (int) (screenMouseX - mapMouseX * scale);
             offsetY = (int) (screenMouseY - mapMouseY * scale);
             
-            for (WaypointEuc waypoint : waypoints) {
+            for (WaypointEuc waypoint : waypoints.values()) {
                 waypoint.update(offsetX, offsetY, scale);
             }
             
@@ -159,29 +155,22 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc> {
     
     @Override
     protected void paintComponent(Graphics g) {
-        for (List<Integer> circuit : circuits) {
-            for (int i = 0; i < circuit.size() - 1; i++) {
-                
-            }
-        
         super.paintComponent(g);
     }
-}
 
     @Override
-    public WaypointEuc addWaypoint(CoordEuc coord) {
+    public void addCoord(double x, double y) {
+        CoordEuc coord = new CoordEuc(x, y);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
+    }
+    
+    @Override
+    public void addWaypoint(CoordEuc coord) {
         WaypointEuc waypoint = new WaypointEuc(coord);
         waypoint.addActionListener(waypointListener);
-        waypoints.add(waypoint);
+        waypoints.put(coord.getId(), waypoint);
         add(waypoint);
-        return waypoint;
-    }
-    
-    public WaypointEuc getSelectedWaypoint() {
-        return selectedWaypoint;
-    }
-    
-    public void drawCircuit() {
-        
+        waypoint.update(offsetX, offsetY, scale);
     }
 }

@@ -4,9 +4,10 @@
  */
 package view;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JComponent;
+import model.circuit.Circuit;
 import model.coord.Coord;
 import view.waypoint.Waypoint;
 
@@ -15,30 +16,35 @@ import view.waypoint.Waypoint;
  * @author ugola
  * @param <T>
  * @param <W>
+ * @param <C>
  */
-public abstract class Map<T extends Coord, W extends Waypoint> extends JComponent {
-    protected List<W> waypoints;
+public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit> extends JComponent {
+    protected HashMap<Integer, W> waypoints;
     
-    protected List<List<Integer>> circuits;
+    protected C circuit;
     
     protected W selectedWaypoint;
     
     protected double scale;
 
     protected Map() {
-        this.waypoints = new ArrayList<>();
-        this.circuits = new ArrayList<>();
+        this.waypoints = new HashMap<>();
         scale = 1.0;
         setLayout(null);
     }
 
-    public abstract W addWaypoint(T coord);
+    public abstract void addCoord(double x, double y);
+    
+    public abstract void addWaypoint(T coord);
         
-    public void open(List<T> coords) {
+    public void open(C circuit) {
         close();
         
         System.out.println("=> Chargement de la carte");
         
+        this.circuit = circuit;
+        
+        List<T> coords = circuit.getCoords();
         if (coords != null) {
             for (T coord : coords) {
                 addWaypoint(coord);
@@ -57,7 +63,7 @@ public abstract class Map<T extends Coord, W extends Waypoint> extends JComponen
         return isVisible();
     }
     
-    public List<W> getWaypoints() {
+    public HashMap<Integer, W> getWaypoints() {
         return waypoints;
     }
     

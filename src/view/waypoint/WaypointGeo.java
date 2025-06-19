@@ -11,21 +11,13 @@ import org.jxmapviewer.viewer.GeoPosition;
  *
  * @author ugola
  */
-public class WaypointGeo extends Waypoint implements org.jxmapviewer.viewer.Waypoint {
-    private final CoordGeo coord;
-
-    public WaypointGeo(CoordGeo place) {
-        super();
-        this.coord = place;
+public class WaypointGeo extends Waypoint<CoordGeo> implements org.jxmapviewer.viewer.Waypoint {
+    public WaypointGeo(CoordGeo coord) {
+        super(coord);
     }
 
     @Override
     public GeoPosition getPosition() {
         return new GeoPosition(coord.getLatitude(), coord.getLongitude());
-    }
-    
-    
-    public CoordGeo getCoord() {
-        return coord;
     }
 }
