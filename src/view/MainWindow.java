@@ -8,11 +8,14 @@ import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import java.io.FileInputStream;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import model.circuit.CircuitEuc;
 import model.circuit.CircuitGeo;
+import model.coord.Coord;
 import model.coord.CoordEuc;
+import model.coord.CoordGeo;
 import view.waypoint.Waypoint;
 import view.waypoint.WaypointEuc;
 
@@ -51,6 +54,9 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel = new javax.swing.JSplitPane();
         tabbedPane = new javax.swing.JTabbedPane();
         algorithmPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         distancePanel = new javax.swing.JPanel();
         detailsPanel = new javax.swing.JPanel();
         idLabel = new javax.swing.JLabel();
@@ -155,15 +161,44 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setResizeWeight(0.6);
         sidePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jButton1.setText("aleatoire");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("glouton");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("jButton3");
+
         javax.swing.GroupLayout algorithmPanelLayout = new javax.swing.GroupLayout(algorithmPanel);
         algorithmPanel.setLayout(algorithmPanelLayout);
         algorithmPanelLayout.setHorizontalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(algorithmPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
+                .addContainerGap(268, Short.MAX_VALUE))
         );
         algorithmPanelLayout.setVerticalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(algorithmPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addContainerGap(197, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Algorithmes", algorithmPanel);
@@ -172,11 +207,11 @@ public class MainWindow extends javax.swing.JFrame {
         distancePanel.setLayout(distancePanelLayout);
         distancePanelLayout.setHorizontalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 351, Short.MAX_VALUE)
+            .addGap(0, 353, Short.MAX_VALUE)
         );
         distancePanelLayout.setVerticalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 290, Short.MAX_VALUE)
+            .addGap(0, 313, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Tableau des distances", distancePanel);
@@ -378,6 +413,35 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mapEucMouseReleased
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if(mapEuc.isOpen()){
+                List<CoordEuc> meilleur = currentCircuitEuc.bestGreedyAlgorithm();
+                double longueur = currentCircuitEuc.calculateCircuitLength(meilleur);
+
+                System.out.println("Meilleur circuit glouton :");
+                for (Coord c : meilleur) {
+                    System.out.println(c.getId());
+                }
+                System.out.printf("Longueur : %.2f\n", longueur);
+
+
+            } else if (mapGeo.isOpen()) {
+                List<CoordGeo> meilleur = currentCircuitGeo.bestGreedyAlgorithm();
+                double longueur = currentCircuitGeo.calculateCircuitLength(meilleur);
+
+                System.out.println("Meilleur circuit glouton :");
+                for (Coord c : meilleur) {
+                    System.out.println(c.getId());
+                }
+                System.out.printf("Longueur : %.2f\n", longueur);
+            }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private String fileType(String path) {
         String[] line;
         try (Scanner scanner = new Scanner(new FileInputStream(path))) {
@@ -449,6 +513,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idValueLabel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JSplitPane mainPane;
     private view.MapEuc mapEuc;

@@ -91,7 +91,7 @@ public abstract class Circuit<T extends Coord> {
     
     abstract public double calculateDistance(T a, T b);
     abstract public double calculateCircuitLength(List<T> circuit);
-    abstract public Object[][] createMatrix(List<T> list);
+    abstract public void createMatrix(List<T> list);
     
     abstract public List<T> bestGreedyAlgorithm();
     abstract public List<T> greedyAlgorithmFrom(T start);

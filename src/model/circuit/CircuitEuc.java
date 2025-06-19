@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import model.coord.Coord;
 import model.coord.CoordEuc;
 
 /**
@@ -42,7 +47,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
             circuit.add(coord);
         }
-        
+        circuit.add(circuit.get(0));
         return circuit;
     }
 
@@ -186,19 +191,45 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public Object[][] createMatrix(List<CoordEuc> list) {
-        int n = list.size() ;
-        Object[][] matrice = new Object[n][n];
+    public void createMatrix(List<CoordEuc> list) {
+        int n = list.size();
+
+        // Création des noms de colonnes
+        String[] nomsColonnes = new String[n + 1];
+        nomsColonnes[0] = ""; // coin vide
         for (int i = 0; i < n; i++) {
+            nomsColonnes[i + 1] = "Lieu " + (i + 1);
+        }
+
+        // Création des données
+        Object[][] data = new Object[n][n + 1];
+        for (int i = 0; i < n; i++) {
+            data[i][0] = "Lieu " + (i + 1); // première colonne = nom de la ligne
             for (int j = 0; j < n; j++) {
                 if (i == j) {
-                    matrice[i][j] = 0 ;
-                }
-                else {
-                    matrice[i][j] = calculateDistance(list.get(i), list.get(j)) ;
+                    data[i][j + 1] = "0.00";
+                } else {
+                    double distance = calculateDistance(list.get(i), list.get(j));
+                    data[i][j + 1] = String.format("%.2f", distance);
                 }
             }
         }
-        return matrice ;
+
+        // Création du modèle et de la JTable
+        DefaultTableModel model = new DefaultTableModel(data, nomsColonnes);
+        JTable table = new JTable(model);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        // JScrollPane avec scroll horizontal et vertical
+        JScrollPane scrollPane = new JScrollPane(table,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        // Création de la fenêtre
+        JFrame frame = new JFrame("Matrice des distances");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(600, 400);
+        frame.add(scrollPane);
+        frame.setVisible(true);
     }
 }
