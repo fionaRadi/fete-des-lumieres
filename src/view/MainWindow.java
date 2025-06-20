@@ -10,7 +10,10 @@ import javax.swing.JFileChooser;
 import java.io.FileInputStream;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import model.circuit.CircuitEuc;
 import model.circuit.CircuitGeo;
 import model.coord.Coord;
@@ -31,6 +34,9 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         Waypoint.loadImage();
         initComponents();
+        model = new DefaultTableModel() ;
+        tableDistance.setModel(model);
+        tableDistance.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainPane.resetToPreferredSizes();
         sidePanel.resetToPreferredSizes();
     }
@@ -54,10 +60,12 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel = new javax.swing.JSplitPane();
         tabbedPane = new javax.swing.JTabbedPane();
         algorithmPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        buttonAleatoire = new javax.swing.JButton();
+        buttonGlouton = new javax.swing.JButton();
+        buttonInsertion = new javax.swing.JButton();
         distancePanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableDistance = new javax.swing.JTable();
         detailsPanel = new javax.swing.JPanel();
         idLabel = new javax.swing.JLabel();
         idValueLabel = new javax.swing.JLabel();
@@ -161,21 +169,21 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setResizeWeight(0.6);
         sidePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jButton1.setText("aleatoire");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonAleatoire.setText("aleatoire");
+        buttonAleatoire.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonAleatoireActionPerformed(evt);
             }
         });
 
-        jButton2.setText("glouton");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonGlouton.setText("glouton");
+        buttonGlouton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                buttonGloutonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("jButton3");
+        buttonInsertion.setText("jButton3");
 
         javax.swing.GroupLayout algorithmPanelLayout = new javax.swing.GroupLayout(algorithmPanel);
         algorithmPanel.setLayout(algorithmPanelLayout);
@@ -184,34 +192,47 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(algorithmPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap(268, Short.MAX_VALUE))
+                    .addComponent(buttonAleatoire)
+                    .addComponent(buttonGlouton)
+                    .addComponent(buttonInsertion))
+                .addContainerGap(271, Short.MAX_VALUE))
         );
         algorithmPanelLayout.setVerticalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(algorithmPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(buttonAleatoire)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(buttonGlouton)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3)
+                .addComponent(buttonInsertion)
                 .addContainerGap(197, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Algorithmes", algorithmPanel);
 
+        tableDistance.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tableDistance);
+
         javax.swing.GroupLayout distancePanelLayout = new javax.swing.GroupLayout(distancePanel);
         distancePanel.setLayout(distancePanelLayout);
         distancePanelLayout.setHorizontalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 353, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
         distancePanelLayout.setVerticalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 313, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Tableau des distances", distancePanel);
@@ -219,7 +240,6 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setLeftComponent(tabbedPane);
         tabbedPane.getAccessibleContext().setAccessibleName("tabbedPane");
 
-        detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Détails du lieu"));
         detailsPanel.setName("Détails"); // NOI18N
         detailsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -323,7 +343,7 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPane)
+            .addComponent(mainPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,34 +433,53 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mapEucMouseReleased
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void buttonGloutonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGloutonActionPerformed
         // TODO add your handling code here:
         if(mapEuc.isOpen()){
-                List<CoordEuc> meilleur = currentCircuitEuc.bestGreedyAlgorithm();
-                double longueur = currentCircuitEuc.calculateCircuitLength(meilleur);
+            List<CoordEuc> meilleur = currentCircuitEuc.bestGreedyAlgorithm();
+            double longueur = currentCircuitEuc.calculateCircuitLength(meilleur);
 
-                System.out.println("Meilleur circuit glouton :");
-                for (Coord c : meilleur) {
-                    System.out.println(c.getId());
-                }
-                System.out.printf("Longueur : %.2f\n", longueur);
-
-
-            } else if (mapGeo.isOpen()) {
-                List<CoordGeo> meilleur = currentCircuitGeo.bestGreedyAlgorithm();
-                double longueur = currentCircuitGeo.calculateCircuitLength(meilleur);
-
-                System.out.println("Meilleur circuit glouton :");
-                for (Coord c : meilleur) {
-                    System.out.println(c.getId());
-                }
-                System.out.printf("Longueur : %.2f\n", longueur);
+            System.out.println("Meilleur circuit glouton :");
+            for (Coord c : meilleur) {
+                System.out.println(c.getId());
             }
-    }//GEN-LAST:event_jButton2ActionPerformed
+            System.out.printf("Longueur : %.2f\n", longueur);
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+            int n = currentCircuitEuc.getCoords().size();
+            // Création des noms de colonnes
+            String[] nomsColonnes = new String[n + 1];
+            nomsColonnes[0] = ""; // coin vide
+            for (int i = 0; i < n; i++) {
+                nomsColonnes[i + 1] = "Lieu " + (i + 1);
+            }
+
+            model.setDataVector(currentCircuitEuc.createMatrix(), nomsColonnes);
+
+        } else if (mapGeo.isOpen()) {
+            List<CoordGeo> meilleur = currentCircuitGeo.bestGreedyAlgorithm();
+            double longueur = currentCircuitGeo.calculateCircuitLength(meilleur);
+
+            System.out.println("Meilleur circuit glouton :");
+            for (Coord c : meilleur) {
+                System.out.println(c.getId());
+            }
+            System.out.printf("Longueur : %.2f\n", longueur);
+
+            int n = currentCircuitGeo.getCoords().size();
+            // Création des noms de colonnes
+            String[] nomsColonnes = new String[n + 1];
+            nomsColonnes[0] = ""; // coin vide
+            for (int i = 0; i < n; i++) {
+                nomsColonnes[i + 1] = "Lieu " + (i + 1);
+            }
+
+            model.setDataVector(currentCircuitGeo.createMatrix(), nomsColonnes);
+        }
+    }//GEN-LAST:event_buttonGloutonActionPerformed
+
+    private void buttonAleatoireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAleatoireActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buttonAleatoireActionPerformed
 
     private String fileType(String path) {
         String[] line;
@@ -504,18 +543,20 @@ public class MainWindow extends javax.swing.JFrame {
 
     private CircuitEuc currentCircuitEuc;
     private CircuitGeo currentCircuitGeo;
+    private DefaultTableModel model ;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel algorithmPanel;
+    private javax.swing.JButton buttonAleatoire;
+    private javax.swing.JButton buttonGlouton;
+    private javax.swing.JButton buttonInsertion;
     private javax.swing.JMenuItem closeFileMenuItem;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JPanel distancePanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idValueLabel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JSplitPane mainPane;
     private view.MapEuc mapEuc;
@@ -526,6 +567,7 @@ public class MainWindow extends javax.swing.JFrame {
     private java.awt.Label scaleLabel;
     private javax.swing.JSplitPane sidePanel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JTable tableDistance;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JTextField xField;
     private javax.swing.JLabel xLabel;

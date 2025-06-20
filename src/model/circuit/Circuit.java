@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import model.coord.Coord;
 
 /**
@@ -91,7 +93,7 @@ public abstract class Circuit<T extends Coord> {
     
     abstract public double calculateDistance(T a, T b);
     abstract public double calculateCircuitLength(List<T> circuit);
-    abstract public void createMatrix(List<T> list);
+    abstract public Object[][] createMatrix();
     
     abstract public List<T> bestGreedyAlgorithm();
     abstract public List<T> greedyAlgorithmFrom(T start);

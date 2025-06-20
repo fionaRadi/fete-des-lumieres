@@ -82,8 +82,8 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public void createMatrix(List<CoordGeo> list) {
-        int n = list.size();
+    public Object[][] createMatrix() {
+        int n = coords.size();
 
         // Création des noms de colonnes
         String[] nomsColonnes = new String[n + 1];
@@ -100,28 +100,12 @@ public class CircuitGeo extends Circuit<CoordGeo> {
                 if (i == j) {
                     data[i][j + 1] = "0.00";
                 } else {
-                    double distance = calculateDistance(list.get(i), list.get(j));
+                    double distance = calculateDistance(coords.get(i), coords.get(j));
                     data[i][j + 1] = String.format("%.2f", distance);
                 }
             }
         }
-
-        // Création du modèle et de la JTable
-        DefaultTableModel model = new DefaultTableModel(data, nomsColonnes);
-        JTable table = new JTable(model);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        // JScrollPane avec scroll horizontal et vertical
-        JScrollPane scrollPane = new JScrollPane(table,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-        // Création de la fenêtre
-        JFrame frame = new JFrame("Matrice des distances");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(600, 400);
-        frame.add(scrollPane);
-        frame.setVisible(true);
+        return data ;
     }
 
     @Override
