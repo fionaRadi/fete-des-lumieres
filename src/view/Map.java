@@ -7,6 +7,7 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
+import model.circuit.Circuit;
 import model.coord.Coord;
 import view.waypoint.Waypoint;
 
@@ -15,30 +16,43 @@ import view.waypoint.Waypoint;
  * @author ugola
  * @param <T>
  * @param <W>
+ * @param <C>
  */
-public abstract class Map<T extends Coord, W extends Waypoint> extends JComponent {
-    protected List<W> waypoints;
-    
-    protected List<List<Integer>> circuits;
+public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit> extends JComponent {
+    protected List<W> waypoints;    
+    protected C circuit;
     
     protected W selectedWaypoint;
     
     protected double scale;
+    
+    protected ActionMode actionMode;
+    
+    enum ActionMode {
+        SELECT,
+        ADD,
+        REMOVE
+    }
 
     protected Map() {
         this.waypoints = new ArrayList<>();
-        this.circuits = new ArrayList<>();
+        actionMode = ActionMode.SELECT;
         scale = 1.0;
         setLayout(null);
     }
 
-    public abstract W addWaypoint(T coord);
+    protected abstract void addCoord(double x, double y);
+    
+    protected abstract void addWaypoint(T coord);
         
-    public void open(List<T> coords) {
+    public void open(C circuit) {
         close();
         
         System.out.println("=> Chargement de la carte");
         
+        this.circuit = circuit;
+        
+        List<T> coords = circuit.getCoords();
         if (coords != null) {
             for (T coord : coords) {
                 addWaypoint(coord);
@@ -63,5 +77,9 @@ public abstract class Map<T extends Coord, W extends Waypoint> extends JComponen
     
     public double getScale() {
         return scale;
+    }
+    
+    public void setActionMode(ActionMode actionMode) {
+        this.actionMode = actionMode;
     }
 }

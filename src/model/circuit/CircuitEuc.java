@@ -36,7 +36,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public ArrayList<CoordEuc> randomCircuit() {
+    public void randomAlgorithm() {
         Random random = new Random();
         ArrayList<CoordEuc> circuit = new ArrayList<>();
 
@@ -47,8 +47,8 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
             circuit.add(coord);
         }
-        circuit.add(circuit.get(0));
-        return circuit;
+        
+        randomCircuit = circuit;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public List<CoordEuc> bestGreedyAlgorithm() {
+    public void bestGreedyAlgorithm() {
         Random random = new Random();
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> possibleStarts = new ArrayList<>(coords);
@@ -95,16 +95,17 @@ public class CircuitEuc extends Circuit<CoordEuc> {
                 bestCircuit = circuit;
             }
         }
-        return bestCircuit ;
+        
+        greedyCircuit = bestCircuit ;
     }
 
     @Override
     public List<CoordEuc> greedyAlgorithmFrom(CoordEuc start) {
         List<CoordEuc> toVisit = new ArrayList<>(coords);
-        List<CoordEuc> circuits = new ArrayList<>();
+        List<CoordEuc> circuit = new ArrayList<>();
 
         CoordEuc current = start;
-        circuits.add(current);
+        circuit.add(current);
         toVisit.remove(current);
 
         while(!toVisit.isEmpty()) {
@@ -119,14 +120,14 @@ public class CircuitEuc extends Circuit<CoordEuc> {
                 }
             }
             toVisit.remove(nearestCoord);
-            circuits.add(nearestCoord);
+            circuit.add(nearestCoord);
         }
-        circuits.add(start);
-        return circuits ;
+        circuit.add(start);
+        return circuit ;
     }
 
     @Override
-    public List<CoordEuc> bestInsertionAlgorithm() {
+    public void bestInsertionAlgorithm() {
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> bestCircuit = null ;
 
@@ -139,7 +140,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
                 bestCircuit = circuit;
             }
         }
-        return bestCircuit ;
+        insertionCircuit = bestCircuit ;
     }
 
     @Override

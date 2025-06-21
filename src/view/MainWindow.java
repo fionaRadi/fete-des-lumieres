@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/ /Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
 
@@ -20,7 +20,6 @@ import model.coord.Coord;
 import model.coord.CoordEuc;
 import model.coord.CoordGeo;
 import view.waypoint.Waypoint;
-import view.waypoint.WaypointEuc;
 
 /**
  *
@@ -53,6 +52,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainPane = new javax.swing.JSplitPane();
         layeredPane = new javax.swing.JLayeredPane();
+        toolBar = new javax.swing.JPanel();
+        selectToolBt = new javax.swing.JButton();
+        addToolBt = new javax.swing.JButton();
+        removeToolBt = new javax.swing.JButton();
         mapGeo = new view.MapGeo();
         mapEuc = new view.MapEuc();
         zoomLabelPanel = new javax.swing.JPanel();
@@ -85,6 +88,21 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainPane.setDividerLocation(700);
         mainPane.setResizeWeight(0.7);
+
+        selectToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/select_tool.png"))); // NOI18N
+        selectToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectToolBtActionPerformed(evt);
+            }
+        });
+        toolBar.add(selectToolBt);
+
+        addToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/add_tool.png"))); // NOI18N
+        addToolBt.setToolTipText("");
+        toolBar.add(addToolBt);
+
+        removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
+        toolBar.add(removeToolBt);
 
         mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
@@ -131,6 +149,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         scaleLabel.getAccessibleContext().setAccessibleParent(layeredPane);
 
+        layeredPane.setLayer(toolBar, javax.swing.JLayeredPane.PALETTE_LAYER);
         layeredPane.setLayer(mapGeo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredPane.setLayer(mapEuc, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredPane.setLayer(zoomLabelPanel, javax.swing.JLayeredPane.PALETTE_LAYER);
@@ -139,19 +158,25 @@ public class MainWindow extends javax.swing.JFrame {
         layeredPane.setLayout(layeredPaneLayout);
         layeredPaneLayout.setHorizontalGroup(
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGroup(layeredPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(605, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapGeo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredPaneLayout.createSequentialGroup()
-                    .addGap(0, 633, Short.MAX_VALUE)
+                    .addGap(0, 601, Short.MAX_VALUE)
                     .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layeredPaneLayout.setVerticalGroup(
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 628, Short.MAX_VALUE)
+            .addGroup(layeredPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(576, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapGeo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -276,6 +301,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         xField.setColumns(4);
         xField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        xField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         xField.setText("0");
         xField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -292,6 +318,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         yField.setColumns(4);
         yField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        yField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         yField.setText("0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -366,7 +393,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case "EUC_2D":
                     currentCircuitEuc = new CircuitEuc();
                     currentCircuitEuc.loadFile(path);
-                    mapEuc.open(currentCircuitEuc.getCoords());
+                    mapEuc.open(currentCircuitEuc);
                     SwingUtilities.invokeLater(() -> {
                         if (mapGeo != null)
                             if (mapGeo.isVisible()) {
@@ -381,7 +408,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case "GEO":
                     currentCircuitGeo = new CircuitGeo();
                     currentCircuitGeo.loadFile(path);
-                    mapGeo.open(currentCircuitGeo.getCoords());
+                    mapGeo.open(currentCircuitGeo);
                     SwingUtilities.invokeLater(() -> {
                         if (mapEuc != null)
                             if (mapEuc.isVisible()) {
@@ -424,6 +451,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_xFieldActionPerformed
 
     private void mapEucMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapEucMouseReleased
+        /*
         WaypointEuc waypoint = mapEuc.getSelectedWaypoint();
         if (waypoint != null) {
             CoordEuc coord = waypoint.getCoord();
@@ -431,6 +459,7 @@ public class MainWindow extends javax.swing.JFrame {
             xField.setText(String.valueOf(coord.getX()));
             yField.setText(String.valueOf(coord.getY()));
         }
+        */
     }//GEN-LAST:event_mapEucMouseReleased
 
     private void buttonGloutonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGloutonActionPerformed
@@ -540,12 +569,13 @@ public class MainWindow extends javax.swing.JFrame {
             new MainWindow().setVisible(true);
         });
     }
-
+    
     private CircuitEuc currentCircuitEuc;
     private CircuitGeo currentCircuitGeo;
     private DefaultTableModel model ;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addToolBt;
     private javax.swing.JPanel algorithmPanel;
     private javax.swing.JButton buttonAleatoire;
     private javax.swing.JButton buttonGlouton;
@@ -563,8 +593,10 @@ public class MainWindow extends javax.swing.JFrame {
     private view.MapGeo mapGeo;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openFileMenuItem;
+    private javax.swing.JButton removeToolBt;
     private javax.swing.JMenuItem resetMenuItem;
     private java.awt.Label scaleLabel;
+    private javax.swing.JButton selectToolBt;
     private javax.swing.JSplitPane sidePanel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTable tableDistance;

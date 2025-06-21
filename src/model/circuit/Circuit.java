@@ -24,6 +24,10 @@ public abstract class Circuit<T extends Coord> {
     protected String description;
 
     protected final List<T> coords;
+    
+    protected List<T> greedyCircuit;
+    protected List<T> insertionCircuit;
+    protected List<T> randomCircuit;
 
     protected Circuit() {
         this.coords = new ArrayList<>();
@@ -89,15 +93,29 @@ public abstract class Circuit<T extends Coord> {
         }
     }
 
-    abstract public ArrayList<T> randomCircuit();
+    abstract public void randomAlgorithm();
     
     abstract public double calculateDistance(T a, T b);
     abstract public double calculateCircuitLength(List<T> circuit);
     abstract public Object[][] createMatrix();
     
-    abstract public List<T> bestGreedyAlgorithm();
+    abstract public void bestGreedyAlgorithm();
     abstract public List<T> greedyAlgorithmFrom(T start);
     
-    abstract public List<T> bestInsertionAlgorithm();
+    abstract public void bestInsertionAlgorithm();
     abstract public List<T> insertionAlgorithmFrom(T start);
+    
+    public List<T> getGreedyCircuit() {
+        return greedyCircuit;
+    }
+    
+    public List<T> getRandomCircuit() {
+        return randomCircuit;
+    }
+    
+    public List<T> getInsertionCircuit() {
+        return insertionCircuit;
+    }
+    
+    
 }

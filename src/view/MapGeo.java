@@ -7,10 +7,12 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.beans.Beans;
-import javax.swing.event.MouseInputListener;
+import javax.swing.SwingUtilities;
+import model.circuit.CircuitGeo;
 import model.coord.CoordGeo;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -26,9 +28,9 @@ import view.waypoint.WaypointGeo;
  *
  * @author ugola
  */
-public class MapGeo extends Map<CoordGeo, WaypointGeo> {
+public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     private JXMapViewer viewer;
-
+    
     public MapGeo() {
         super();
         
@@ -47,9 +49,13 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo> {
             viewer.setAddressLocation(position);
 
             viewer.setZoom(10);
-            MouseInputListener listener = new PanMouseInputListener(viewer);
-            viewer.addMouseListener(listener);
-            viewer.addMouseMotionListener(listener);
+            
+            RightPanMouseInputListener panListener = new RightPanMouseInputListener(viewer);
+
+            viewer.addMouseListener(panListener);
+            viewer.addMouseMotionListener(panListener);
+
+            
             viewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(viewer) {
                 @Override
                 public void mouseWheelMoved(MouseWheelEvent e) {
@@ -83,10 +89,16 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo> {
     }
 
     @Override
-    public WaypointGeo addWaypoint(CoordGeo coord) {
+    protected void addCoord(double latitude, double longitude) {
+        CoordGeo coord = new CoordGeo(latitude, longitude);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
+    }
+    
+    @Override
+    protected void addWaypoint(CoordGeo coord) {
         WaypointGeo waypoint = new WaypointGeo(coord);
         waypoints.add(waypoint);
         viewer.add(waypoint);
-        return waypoint;
     }
 }

@@ -37,7 +37,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public ArrayList<CoordGeo> randomCircuit() {
+    public void randomAlgorithm() {
         Random random = new Random();
         ArrayList<CoordGeo> circuit = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
             circuit.add(coord);
         }
         circuit.add(circuit.get(0));
-        return circuit;
+        randomCircuit = circuit;
     };
 
     @Override
@@ -109,7 +109,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public List<CoordGeo> bestGreedyAlgorithm() {
+    public void bestGreedyAlgorithm() {
         Random random = new Random();
         double bestLength = Double.MAX_VALUE;
         List<CoordGeo> possibleStarts = new ArrayList<>(coords);
@@ -126,7 +126,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
                 bestCircuit = circuit;
             }
         }
-        return bestCircuit ;
+        greedyCircuit = bestCircuit ;
     }
 
     @Override
@@ -157,7 +157,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public List<CoordGeo> bestInsertionAlgorithm() {
+    public void bestInsertionAlgorithm() {
         double bestLength = Double.MAX_VALUE;
         List<CoordGeo> bestCircuit = null ;
 
@@ -170,7 +170,8 @@ public class CircuitGeo extends Circuit<CoordGeo> {
                 bestCircuit = circuit;
             }
         }
-        return bestCircuit ;
+        
+        insertionCircuit = bestCircuit ;
     }
 
     @Override
