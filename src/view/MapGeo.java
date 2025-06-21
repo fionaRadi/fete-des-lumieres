@@ -6,6 +6,8 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.beans.Beans;
 import java.util.ArrayList;
@@ -51,10 +53,16 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
 
             viewer.setZoom(10);
             
-            RightPanMouseInputListener panListener = new RightPanMouseInputListener(viewer);
+            RightPanMouseInputListener panListener = new RightPanMouseInputListener(viewer) {
+                @Override
+                public void mousePressed(MouseEvent evt) {
+                    fireMapClicked(evt);
+                    super.mousePressed(evt);
+                }
+            };
 
             viewer.addMouseListener(panListener);
-            viewer.addMouseMotionListener(panListener);
+            viewer.addMouseMotionListener(panListener);            
             
             viewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(viewer) {
                 @Override
@@ -67,7 +75,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
                 }
             });
             
-            waypointPainter = new WaypointGeoPainter(waypoints);
+            waypointPainter = new WaypointGeoPainter();
             circuitPainter = new CircuitGeoPainter(Color.BLUE, Color.YELLOW, Color.GREEN);
             
             List<Painter<JXMapViewer>> painters = new ArrayList<>();
@@ -84,7 +92,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     }
 
     @Override
-    protected void addCoord(double latitude, double longitude) {
+    public void addCoord(double latitude, double longitude) {
         CoordGeo coord = new CoordGeo(latitude, longitude);
         circuit.addCoord(coord);
         addWaypoint(coord);
@@ -96,7 +104,23 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         waypoint.addActionListener(waypointListener);
         waypoints.add(waypoint);
         viewer.add(waypoint);
+        waypointPainter.setWaypoints(waypoints);
     }
+    
+    public void addCoord(MouseEvent e) {
+        Point point = e.getPoint();
+        GeoPosition geoPos = viewer.convertPointToGeoPosition(point);
+        addCoord(geoPos.getLatitude(), geoPos.getLongitude());
+        // waypointPainter.setWaypoints(waypoints);
+        viewer.repaint();
+    }
+    
+    public void removeCoord(WaypointGeo waypoint) {
+        circuit.removeCoord(waypoint.getCoord());
+        waypoints.remove(waypoint);
+        viewer.remove(waypoint);
+        repaint();
+    } 
 
     @Override
     public void open(CircuitGeo circuit) {

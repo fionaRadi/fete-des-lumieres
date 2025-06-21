@@ -7,7 +7,6 @@ package view;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,25 +44,6 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         
         scale = 1.0;
         setLayout(null);
-        
-        addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {}
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                fireMapClicked(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-        });
     }
 
     protected abstract void addCoord(double x, double y);
@@ -117,13 +97,13 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         waypointListeners.add(listener);
     }
     
-    private void fireMapClicked(MouseEvent e) {
+    protected void fireMapClicked(MouseEvent e) {
         for (MapClickedListener listener : mapClickedListeners) {
             listener.onMapClicked(e);
         }
     }
     
-    public void addMapClickedListener(MapClickedListener listener) {
+    protected void addMapClickedListener(MapClickedListener listener) {
         mapClickedListeners.add(listener);
     }
 }

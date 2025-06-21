@@ -18,6 +18,7 @@ import model.coord.CoordEuc;
 import model.coord.CoordGeo;
 import view.waypoint.Waypoint;
 import view.waypoint.WaypointEuc;
+import view.waypoint.WaypointGeo;
 
 /**
  *
@@ -61,13 +62,19 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                     
                 case REMOVE:
-                    
+                    mapGeo.removeCoord((WaypointGeo) waypoint);                    
             }
         });
         
         mapEuc.addMapClickedListener(e -> {
-            if (actionMode == actionMode.ADD) {
+            if (SwingUtilities.isLeftMouseButton(e) && actionMode == actionMode.ADD) {
                 mapEuc.addCoord(e);
+            }
+        });
+        
+        mapGeo.addMapClickedListener(e -> {
+            if (SwingUtilities.isLeftMouseButton(e) &&actionMode == actionMode.ADD) {
+                mapGeo.addCoord(e);
             }
         });
         

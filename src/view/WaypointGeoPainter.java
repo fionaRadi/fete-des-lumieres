@@ -9,7 +9,6 @@ package view;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.util.Set;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.WaypointPainter;
 import view.waypoint.Waypoint;
@@ -19,11 +18,7 @@ import view.waypoint.WaypointGeo;
  *
  * @author ugola
  */
-public class WaypointGeoPainter extends WaypointPainter<WaypointGeo> { 
-    public WaypointGeoPainter(Set<WaypointGeo> waypoints) {
-        setWaypoints(waypoints);
-    }
-    
+public class WaypointGeoPainter extends WaypointPainter<WaypointGeo> {         
     @Override
     protected void doPaint(Graphics2D g, JXMapViewer viewer, int width, int height) {
         for (WaypointGeo waypoint : getWaypoints()) {
