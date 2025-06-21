@@ -16,6 +16,7 @@ import java.awt.event.MouseWheelEvent;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import model.Constants;
 import model.circuit.CircuitEuc;
 import model.coord.CoordEuc;
 import view.waypoint.Waypoint;
@@ -192,13 +193,15 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 
                 graphics.drawLine(x1, y1, x2, y2);
                 
-                double distance = circuit.calculateDistance(c1, c2);
-                
-                int xm = (x1 + x2) / 2;
-                int ym = (y1 + y2) / 2;
-                
-                graphics.setColor(Color.BLACK);
-                graphics.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
+                if (Constants.DISPLAY_DISTANCE) {
+                    double distance = circuit.calculateDistance(c1, c2);
+
+                    int xm = (x1 + x2) / 2;
+                    int ym = (y1 + y2) / 2;
+
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
+                }
             }
         }
     }

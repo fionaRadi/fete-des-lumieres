@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import model.Constants;
 import model.circuit.CircuitEuc;
 import model.circuit.CircuitGeo;
 import model.coord.CoordEuc;
@@ -129,6 +130,7 @@ public class MainWindow extends javax.swing.JFrame {
         closeFileMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         resetMenuItem = new javax.swing.JMenuItem();
+        displayDistanceItem = new javax.swing.JRadioButtonMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Fête des Lumières");
@@ -424,7 +426,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        windowMenu.setText("Fenêtre");
+        windowMenu.setText("Affichage");
 
         resetMenuItem.setText("Réinitialiser");
         resetMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -433,6 +435,15 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         windowMenu.add(resetMenuItem);
+
+        displayDistanceItem.setSelected(true);
+        displayDistanceItem.setText("Afficher les distances");
+        displayDistanceItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayDistanceItemActionPerformed(evt);
+            }
+        });
+        windowMenu.add(displayDistanceItem);
 
         menuBar.add(windowMenu);
 
@@ -602,6 +613,11 @@ public class MainWindow extends javax.swing.JFrame {
         actionMode = ActionMode.REMOVE;
     }//GEN-LAST:event_removeToolBtActionPerformed
 
+    private void displayDistanceItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displayDistanceItemActionPerformed
+        Constants.DISPLAY_DISTANCE = !Constants.DISPLAY_DISTANCE;
+        mainPane.repaint();
+    }//GEN-LAST:event_displayDistanceItemActionPerformed
+
     private String fileType(String path) {
         String[] line;
         try (Scanner scanner = new Scanner(new FileInputStream(path))) {
@@ -674,6 +690,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel algorithmPanel;
     private javax.swing.JMenuItem closeFileMenuItem;
     private javax.swing.JPanel detailsPanel;
+    private javax.swing.JRadioButtonMenuItem displayDistanceItem;
     private javax.swing.JPanel distancePanel;
     private javax.swing.JTable distanceTable;
     private javax.swing.JMenu fileMenu;

@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.List;
+import model.Constants;
 import model.circuit.CircuitGeo;
 import model.coord.CoordGeo;
 import org.jxmapviewer.JXMapViewer;
@@ -63,13 +64,15 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
                 
                 g.draw(new Line2D.Double(p1, p2));
                 
-                double distance = circuit.calculateDistance(c1, c2);
-                
-                int xm = (int) ((p1.getX() + p2.getX()) / 2);
-                int ym = (int) ((p1.getY() + p2.getY()) / 2);
-                
-                g.setColor(Color.BLACK);
-                g.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
+                if (Constants.DISPLAY_DISTANCE) {
+                    double distance = circuit.calculateDistance(c1, c2);
+
+                    int xm = (int) ((p1.getX() + p2.getX()) / 2);
+                    int ym = (int) ((p1.getY() + p2.getY()) / 2);
+
+                    g.setColor(Color.BLACK);
+                    g.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
+                }
             }
         }
     }
