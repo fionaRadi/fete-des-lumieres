@@ -6,9 +6,12 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.beans.Beans;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,15 +67,12 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
             viewer.addMouseListener(panListener);
             viewer.addMouseMotionListener(panListener);            
             
-            viewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(viewer) {
-                @Override
-                public void mouseWheelMoved(MouseWheelEvent e) {
-                    super.mouseWheelMoved(e);
-                    // Formule pour mettre un nombre d'un intervalle à un autre
-                    // newValue = (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin 
-                    double jxMapScale = viewer.getZoom() * 1.5 / 19 + 0.5; // Zoom de JxMapViewer convertit dans un intervalle voulu
-                    scale = 2.5 - jxMapScale; // Inversion de l'echelle pour correspondre à celle voulue (maxValue + minValue) - number
-                }
+            addMouseWheelListener((MouseWheelEvent e) -> {
+                viewer.setZoom(viewer.getZoom() + e.getWheelRotation());
+                // Formule pour mettre un nombre d'un intervalle à un autre
+                // newValue = (((oldValue - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
+                double jxMapScale = viewer.getZoom() * 1.9 / 19 + 0.1; // Zoom de JxMapViewer convertit dans un intervalle voulu
+                scale = 2.1 - jxMapScale; // Inversion de l'echelle pour correspondre à celle voulue (maxValue + minValue) - number
             });
             
             waypointPainter = new WaypointGeoPainter();

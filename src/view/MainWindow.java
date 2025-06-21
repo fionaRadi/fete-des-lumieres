@@ -166,11 +166,6 @@ public class MainWindow extends javax.swing.JFrame {
                 mapGeoMouseWheelMoved(evt);
             }
         });
-        mapGeo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                mapGeoMouseReleased(evt);
-            }
-        });
 
         mapEuc.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
@@ -557,10 +552,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void mapGeoMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_mapGeoMouseWheelMoved
         scaleLabel.setText("x " + String.format("%.1f", mapGeo.getScale()));
     }//GEN-LAST:event_mapGeoMouseWheelMoved
-
-    private void mapGeoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapGeoMouseReleased
-
-    }//GEN-LAST:event_mapGeoMouseReleased
 
     private void firstCompFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstCompFieldActionPerformed
         // TODO add your handling code here:

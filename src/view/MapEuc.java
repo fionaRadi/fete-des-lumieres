@@ -100,7 +100,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             double mapMouseY = (screenMouseY - offsetY) / scale;
             
             scale = scale + -e.getWheelRotation() * 0.1;
-            if (scale < 0.5) scale = 0.5; else if (scale > 2) scale = 2;
+            if (scale < 0.1) scale = 0.1; else if (scale > 2) scale = 2;
             
             offsetX = (int) (screenMouseX - mapMouseX * scale);
             offsetY = (int) (screenMouseY - mapMouseY * scale);
@@ -197,6 +197,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     
     @Override
     public void close() {
+        super.close();
         offsetX = 0;
         offsetY = 0;
         scale = 1;
