@@ -4,12 +4,15 @@
  */
 package view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import model.circuit.Circuit;
 import model.coord.Coord;
 import view.waypoint.Waypoint;
+import view.waypoint.WaypointEuc;
 
 /**
  *
@@ -23,16 +26,26 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     protected C circuit;
         
     protected double scale;
+    
+    private List<WaypointSelectionListener> waypointListeners = new ArrayList<>();
+    protected ActionListener waypointListener;
 
     protected Map() {
         this.waypoints = new ArrayList<>();
+        
+        waypointListener = (ActionEvent e) -> {
+            W selectedWaypoint = (W) e.getSource();
+            fireWaypointSelected(selectedWaypoint);
+        };
+        
         scale = 1.0;
         setLayout(null);
     }
 
     protected abstract void addCoord(double x, double y);
-    
     protected abstract void addWaypoint(T coord);
+    
+    
         
     public void open(C circuit) {
         close();
@@ -66,5 +79,15 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     
     public double getScale() {
         return scale;
+    }
+    
+    private void fireWaypointSelected(W waypoint) {
+        for (WaypointSelectionListener listener : waypointListeners) {
+            listener.onWaypointSelected(waypoint);
+        }
+    }
+    
+    public void addWaypointSelectionListener(WaypointSelectionListener listener) {
+        waypointListeners.add(listener);
     }
 }

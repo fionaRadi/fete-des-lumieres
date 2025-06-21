@@ -51,7 +51,6 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
 
             viewer.addMouseListener(panListener);
             viewer.addMouseMotionListener(panListener);
-
             
             viewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(viewer) {
                 @Override
@@ -95,6 +94,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     @Override
     protected void addWaypoint(CoordGeo coord) {
         WaypointGeo waypoint = new WaypointGeo(coord);
+        waypoint.addActionListener(waypointListener);
         waypoints.add(waypoint);
         viewer.add(waypoint);
     }

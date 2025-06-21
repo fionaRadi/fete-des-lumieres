@@ -31,9 +31,6 @@ import view.waypoint.WaypointEuc;
 public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     private int offsetX, offsetY;
 
-    private List<WaypointSelectionListener> waypointListeners = new ArrayList<>();
-    private ActionListener waypointListener;
-
     public MapEuc() {        
         super();
         
@@ -42,10 +39,6 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         offsetX = 0;
         offsetY = 0;
         
-        waypointListener = (ActionEvent e) -> {
-            Waypoint selectedWaypoint = (WaypointEuc) e.getSource();
-            fireWaypointSelected(selectedWaypoint);
-        };
 
         ToolTipManager.sharedInstance().registerComponent(this);
         
@@ -69,28 +62,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
     
-    private void initListeners(){
-        addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {}
-
-            @Override
-            public void mousePressed(MouseEvent e) {}
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                
-            }
-
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-            
-        });
-        
+    private void initListeners(){       
         // Gestion du déplacement sur la carte
         addMouseMotionListener(new MouseMotionListener() {
             private int lastX = -1;
@@ -198,15 +170,5 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 graphics.drawLine(x1, y1, x2, y2);
             }
         }
-    }
-    
-    private void fireWaypointSelected(Waypoint waypoint) {
-        for (WaypointSelectionListener listener : waypointListeners) {
-            listener.onWaypointSelected(waypoint);
-        }
-    }
-    
-    public void addWaypointSelectionListener(WaypointSelectionListener listener) {
-        waypointListeners.add(listener);
     }
 }
