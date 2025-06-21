@@ -82,7 +82,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public Object[][] createMatrix() {
+    public Object[][] createDistanceMatrix() {
         int n = coords.size();
 
         // Création des noms de colonnes
