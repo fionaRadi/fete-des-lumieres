@@ -87,7 +87,10 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     }
 
     public void close() {
-        removeAll();
+        for (W waypoint : waypoints) {
+            remove(waypoint);
+        }
+        
         waypoints.clear();
         setVisible(false);
     }
