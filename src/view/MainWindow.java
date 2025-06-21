@@ -38,8 +38,8 @@ public class MainWindow extends javax.swing.JFrame {
         mapEuc.addWaypointSelectionListener(waypoint -> {
             CoordEuc coord = (CoordEuc) waypoint.getCoord();
             idValueField.setText(String.valueOf(coord.getId()));
-            xField.setText(String.valueOf(coord.getX()));
-            yField.setText(String.valueOf(coord.getY()));
+            firstCompField.setText(String.valueOf(coord.getX()));
+            secondCompField.setText(String.valueOf(coord.getY()));
         });
     }
     
@@ -80,10 +80,10 @@ public class MainWindow extends javax.swing.JFrame {
         distanceTable = new javax.swing.JTable();
         detailsPanel = new javax.swing.JPanel();
         idLabel = new javax.swing.JLabel();
-        xLabel = new javax.swing.JLabel();
-        yLabel = new javax.swing.JLabel();
-        xField = new javax.swing.JTextField();
-        yField = new javax.swing.JTextField();
+        firstCompLabel = new javax.swing.JLabel();
+        secondCompLabel = new javax.swing.JLabel();
+        firstCompField = new javax.swing.JTextField();
+        secondCompField = new javax.swing.JTextField();
         idValueField = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -294,65 +294,70 @@ public class MainWindow extends javax.swing.JFrame {
         detailsPanel.setLayout(new java.awt.GridBagLayout());
 
         idLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        idLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         idLabel.setText("ID :");
         idLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 25, 10);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         detailsPanel.add(idLabel, gridBagConstraints);
 
-        xLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        xLabel.setText("X :");
-        xLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        firstCompLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        firstCompLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        firstCompLabel.setText("X :");
+        firstCompLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        detailsPanel.add(xLabel, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        detailsPanel.add(firstCompLabel, gridBagConstraints);
 
-        yLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        yLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        yLabel.setText("Y :");
-        yLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        secondCompLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        secondCompLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        secondCompLabel.setText("Y :");
+        secondCompLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        detailsPanel.add(yLabel, gridBagConstraints);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        detailsPanel.add(secondCompLabel, gridBagConstraints);
 
-        xField.setEditable(false);
-        xField.setColumns(3);
-        xField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        xField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        xField.setText("0");
-        xField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        xField.addActionListener(new java.awt.event.ActionListener() {
+        firstCompField.setEditable(false);
+        firstCompField.setColumns(3);
+        firstCompField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        firstCompField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        firstCompField.setText("0");
+        firstCompField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        firstCompField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                xFieldActionPerformed(evt);
+                firstCompFieldActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        detailsPanel.add(xField, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        detailsPanel.add(firstCompField, gridBagConstraints);
 
-        yField.setEditable(false);
-        yField.setColumns(3);
-        yField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        yField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        yField.setText("0");
-        yField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        secondCompField.setEditable(false);
+        secondCompField.setColumns(3);
+        secondCompField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        secondCompField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        secondCompField.setText("0");
+        secondCompField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        detailsPanel.add(yField, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        detailsPanel.add(secondCompField, gridBagConstraints);
 
         idValueField.setEditable(false);
         idValueField.setColumns(3);
@@ -361,10 +366,10 @@ public class MainWindow extends javax.swing.JFrame {
         idValueField.setText("0");
         idValueField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 25, 0);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         detailsPanel.add(idValueField, gridBagConstraints);
 
         sidePanel.setRightComponent(detailsPanel);
@@ -446,6 +451,7 @@ public class MainWindow extends javax.swing.JFrame {
                         mainPane.repaint();
                     });
 
+                    // Modification de la distanceTable
                     coordsCount = currentCircuitEuc.getCoords().size();
                     // Création des noms de colonnes
                     columnsNames = new String[coordsCount + 1];
@@ -455,6 +461,11 @@ public class MainWindow extends javax.swing.JFrame {
                     }
 
                     tableModel.setDataVector(currentCircuitEuc.createDistanceMatrix(), columnsNames);
+                    
+                    // Modification du panneau des détails
+                    firstCompLabel.setText("X :");
+                    secondCompLabel.setText("Y :");
+                    
                     break;
 
                 case "GEO":
@@ -471,6 +482,7 @@ public class MainWindow extends javax.swing.JFrame {
                         mainPane.repaint();
                     });
                     
+                    // Modification de la distanceTable
                     coordsCount = currentCircuitGeo.getCoords().size();
                     // Création des noms de colonnes
                     columnsNames = new String[coordsCount + 1];
@@ -480,6 +492,11 @@ public class MainWindow extends javax.swing.JFrame {
                     }
 
                     tableModel.setDataVector(currentCircuitGeo.createDistanceMatrix(), columnsNames);
+                    
+                    // Modification du panneau des détails
+                    firstCompLabel.setText("Latitude :");
+                    secondCompLabel.setText("Longitude :");
+                    
                     break;
                     
                 default: JOptionPane.showMessageDialog(mainPane, "Le type de fichier n'est pas pris en charge", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -508,9 +525,9 @@ public class MainWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mapGeoMouseReleased
 
-    private void xFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xFieldActionPerformed
+    private void firstCompFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstCompFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_xFieldActionPerformed
+    }//GEN-LAST:event_firstCompFieldActionPerformed
 
     private void mapEucMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapEucMouseReleased
 
@@ -636,6 +653,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel distancePanel;
     private javax.swing.JTable distanceTable;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JTextField firstCompField;
+    private javax.swing.JLabel firstCompLabel;
     private javax.swing.JButton greedyButton;
     private javax.swing.JLabel idLabel;
     private javax.swing.JTextField idValueField;
@@ -650,16 +669,14 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton removeToolBt;
     private javax.swing.JMenuItem resetMenuItem;
     private java.awt.Label scaleLabel;
+    private javax.swing.JTextField secondCompField;
+    private javax.swing.JLabel secondCompLabel;
     private javax.swing.JButton selectToolBt;
     private javax.swing.JSplitPane sidePanel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JPanel toolBar;
     private javax.swing.JMenu windowMenu;
-    private javax.swing.JTextField xField;
-    private javax.swing.JLabel xLabel;
-    private javax.swing.JTextField yField;
-    private javax.swing.JLabel yLabel;
     private javax.swing.JPanel zoomLabelPanel;
     // End of variables declaration//GEN-END:variables
 }
