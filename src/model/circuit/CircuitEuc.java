@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import model.coord.Coord;
 import model.coord.CoordEuc;
 
 /**
@@ -187,19 +192,25 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public Object[][] createMatrix(List<CoordEuc> list) {
-        int n = list.size() ;
-        Object[][] matrice = new Object[n][n];
+    public Object[][] createMatrix() {
+        int n = coords.size();
+
+        // Création des données
+        Object[][] data = new Object[n][n + 1];
         for (int i = 0; i < n; i++) {
+            data[i][0] = "Lieu " + (i + 1); // première colonne = nom de la ligne
             for (int j = 0; j < n; j++) {
                 if (i == j) {
-                    matrice[i][j] = 0 ;
-                }
-                else {
-                    matrice[i][j] = calculateDistance(list.get(i), list.get(j)) ;
+                    data[i][j + 1] = "0.00";
+                } else {
+                    double distance = calculateDistance(coords.get(i), coords.get(j));
+                    data[i][j + 1] = String.format("%.2f", distance);
                 }
             }
         }
-        return matrice ;
+
+        
+        return data ;
+        
     }
 }
