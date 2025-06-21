@@ -37,7 +37,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         mapEuc.addWaypointSelectionListener(waypoint -> {
             CoordEuc coord = (CoordEuc) waypoint.getCoord();
-            idValueLabel.setText(String.valueOf(coord.getId()));
+            idValueField.setText(String.valueOf(coord.getId()));
             xField.setText(String.valueOf(coord.getX()));
             yField.setText(String.valueOf(coord.getY()));
         });
@@ -80,11 +80,11 @@ public class MainWindow extends javax.swing.JFrame {
         distanceTable = new javax.swing.JTable();
         detailsPanel = new javax.swing.JPanel();
         idLabel = new javax.swing.JLabel();
-        idValueLabel = new javax.swing.JLabel();
         xLabel = new javax.swing.JLabel();
         yLabel = new javax.swing.JLabel();
         xField = new javax.swing.JTextField();
         yField = new javax.swing.JTextField();
+        idValueField = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openFileMenuItem = new javax.swing.JMenuItem();
@@ -289,44 +289,46 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setLeftComponent(tabbedPane);
         tabbedPane.getAccessibleContext().setAccessibleName("tabbedPane");
 
+        detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Détails du lieu"));
         detailsPanel.setName("Détails"); // NOI18N
         detailsPanel.setLayout(new java.awt.GridBagLayout());
 
         idLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         idLabel.setText("ID :");
+        idLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 25, 10);
         detailsPanel.add(idLabel, gridBagConstraints);
-
-        idValueLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        idValueLabel.setText("0");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        detailsPanel.add(idValueLabel, gridBagConstraints);
 
         xLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         xLabel.setText("X :");
+        xLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         detailsPanel.add(xLabel, gridBagConstraints);
 
         yLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        yLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         yLabel.setText("Y :");
+        yLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         detailsPanel.add(yLabel, gridBagConstraints);
 
-        xField.setColumns(4);
+        xField.setEditable(false);
+        xField.setColumns(3);
         xField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         xField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         xField.setText("0");
+        xField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         xField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 xFieldActionPerformed(evt);
@@ -337,20 +339,33 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.ipadx = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         detailsPanel.add(xField, gridBagConstraints);
 
-        yField.setColumns(4);
+        yField.setEditable(false);
+        yField.setColumns(3);
         yField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         yField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         yField.setText("0");
+        yField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.ipadx = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         detailsPanel.add(yField, gridBagConstraints);
+
+        idValueField.setEditable(false);
+        idValueField.setColumns(3);
+        idValueField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        idValueField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        idValueField.setText("0");
+        idValueField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 25, 0);
+        detailsPanel.add(idValueField, gridBagConstraints);
 
         sidePanel.setRightComponent(detailsPanel);
 
@@ -623,7 +638,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton greedyButton;
     private javax.swing.JLabel idLabel;
-    private javax.swing.JLabel idValueLabel;
+    private javax.swing.JTextField idValueField;
     private javax.swing.JButton insertionButton;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JSplitPane mainPane;
