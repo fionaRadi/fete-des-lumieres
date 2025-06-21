@@ -7,12 +7,13 @@ package view;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.JComponent;
 import model.circuit.Circuit;
 import model.coord.Coord;
 import view.waypoint.Waypoint;
-import view.waypoint.WaypointEuc;
 
 /**
  *
@@ -22,7 +23,7 @@ import view.waypoint.WaypointEuc;
  * @param <C>
  */
 public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit> extends JComponent {
-    protected List<W> waypoints;    
+    protected Set<W> waypoints;    
     protected C circuit;
         
     protected double scale;
@@ -31,7 +32,7 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     protected ActionListener waypointListener;
 
     protected Map() {
-        this.waypoints = new ArrayList<>();
+        this.waypoints = new HashSet<>();
         
         waypointListener = (ActionEvent e) -> {
             W selectedWaypoint = (W) e.getSource();
@@ -73,7 +74,7 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         return isVisible();
     }
     
-    public List<W> getWaypoints() {
+    public Set<W> getWaypoints() {
         return waypoints;
     }
     

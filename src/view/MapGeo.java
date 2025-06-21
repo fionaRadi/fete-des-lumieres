@@ -5,21 +5,22 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.Color;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.Point2D;
 import java.beans.Beans;
+import java.util.ArrayList;
+import java.util.List;
 import model.circuit.CircuitGeo;
 import model.coord.CoordGeo;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.viewer.WaypointPainter;
 import view.waypoint.WaypointGeo;
+import org.jxmapviewer.painter.Painter;
 
 /**
  *
@@ -27,6 +28,9 @@ import view.waypoint.WaypointGeo;
  */
 public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     private JXMapViewer viewer;
+    
+    private CircuitGeoPainter circuitPainter;
+    private WaypointGeoPainter waypointPainter;
     
     public MapGeo() {
         super();
@@ -62,21 +66,16 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
                     scale = 2.5 - jxMapScale; // Inversion de l'echelle pour correspondre à celle voulue (maxValue + minValue) - number
                 }
             });
-
-            viewer.setOverlayPainter(new WaypointPainter<WaypointGeo>() {
-                @Override
-                protected void doPaint(Graphics2D g, JXMapViewer map, int width, int height) {
-                    for (WaypointGeo waypoint : waypoints) {
-                        Point2D point = viewer.getTileFactory().geoToPixel(waypoint.getPosition(), viewer.getZoom());
-                        Rectangle rect = viewer.getViewportBounds();
-
-                        int x = (int) (point.getX() - rect.getX());
-                        int y = (int) (point.getY() - rect.getY());
-
-                        waypoint.setLocation(x - waypoint.getWidth() / 2, y - waypoint.getHeight() / 2);
-                    }
-                }
-            });
+            
+            waypointPainter = new WaypointGeoPainter(waypoints);
+            circuitPainter = new CircuitGeoPainter(Color.BLUE, Color.YELLOW, Color.GREEN);
+            
+            List<Painter<JXMapViewer>> painters = new ArrayList<>();
+            
+            painters.add(waypointPainter);
+            painters.add(circuitPainter);
+            
+            viewer.setOverlayPainter(new CompoundPainter(painters));
             
             System.out.println("=> Carte geographique creee");
             
@@ -97,5 +96,12 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         waypoint.addActionListener(waypointListener);
         waypoints.add(waypoint);
         viewer.add(waypoint);
+    }
+
+    @Override
+    public void open(CircuitGeo circuit) {
+        super.open(circuit);
+        waypointPainter.setWaypoints(waypoints);
+        circuitPainter.setCircuit(circuit);
     }
 }
