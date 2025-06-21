@@ -17,6 +17,7 @@ import model.circuit.CircuitGeo;
 import model.coord.CoordEuc;
 import model.coord.CoordGeo;
 import view.waypoint.Waypoint;
+import view.waypoint.WaypointEuc;
 
 /**
  *
@@ -46,7 +47,7 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                     
                 case REMOVE:
-                    
+                    mapEuc.removeCoord((WaypointEuc) waypoint);                    
             }
         });
         
@@ -61,6 +62,12 @@ public class MainWindow extends javax.swing.JFrame {
                     
                 case REMOVE:
                     
+            }
+        });
+        
+        mapEuc.addMapClickedListener(e -> {
+            if (actionMode == actionMode.ADD) {
+                mapEuc.addCoord(e);
             }
         });
         

@@ -148,6 +148,13 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
 
         repaint();
     }
+    
+    public void removeCoord(WaypointEuc waypoint) {
+        circuit.removeCoord(waypoint.getCoord());
+        waypoints.remove(waypoint);
+        remove(waypoint);
+        repaint();
+    }
         
     private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
         if (coords != null) {
@@ -166,5 +173,12 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 graphics.drawLine(x1, y1, x2, y2);
             }
         }
+    }
+    
+    @Override
+    public void close() {
+        offsetX = 0;
+        offsetY = 0;
+        scale = 1;
     }
 }

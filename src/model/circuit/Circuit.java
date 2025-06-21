@@ -92,6 +92,10 @@ public abstract class Circuit<T extends Coord> {
             coords.add(coord);
         }
     }
+    
+    public void removeCoord(T coord) {
+        coords.remove(coord);
+    }
 
     abstract public void randomAlgorithm();
     

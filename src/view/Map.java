@@ -6,6 +6,8 @@ package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +32,8 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     
     private List<WaypointSelectionListener> waypointListeners = new ArrayList<>();
     protected ActionListener waypointListener;
+    
+    private List<MapClickedListener> mapClickedListeners = new ArrayList<>();
 
     protected Map() {
         this.waypoints = new HashSet<>();
@@ -41,13 +45,30 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         
         scale = 1.0;
         setLayout(null);
+        
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                fireMapClicked(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
     }
 
     protected abstract void addCoord(double x, double y);
     protected abstract void addWaypoint(T coord);
     
-    
-        
     public void open(C circuit) {
         close();
         
@@ -66,6 +87,7 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     }
 
     public void close() {
+        removeAll();
         waypoints.clear();
         setVisible(false);
     }
@@ -90,5 +112,15 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     
     public void addWaypointSelectionListener(WaypointSelectionListener listener) {
         waypointListeners.add(listener);
+    }
+    
+    private void fireMapClicked(MouseEvent e) {
+        for (MapClickedListener listener : mapClickedListeners) {
+            listener.onMapClicked(e);
+        }
+    }
+    
+    public void addMapClickedListener(MapClickedListener listener) {
+        mapClickedListeners.add(listener);
     }
 }
