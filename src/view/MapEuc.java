@@ -177,10 +177,10 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     }
         
     private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
-        if (coords != null) {
-            graphics.setColor(color);
-            
+        if (coords != null) {            
             for (int i = 0; i < coords.size() - 1; i++) {                
+                graphics.setColor(color);
+                
                 CoordEuc c1 = coords.get(i);
                 CoordEuc c2 = coords.get(i + 1);
                 
@@ -191,6 +191,14 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 int y2 = (int) (scale * c2.getY()) + offsetY + Waypoint.getWaypointIcon().getIconHeight() / 2;
                 
                 graphics.drawLine(x1, y1, x2, y2);
+                
+                double distance = circuit.calculateDistance(c1, c2);
+                
+                int xm = (x1 + x2) / 2;
+                int ym = (y1 + y2) / 2;
+                
+                graphics.setColor(Color.BLACK);
+                graphics.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
             }
         }
     }

@@ -47,21 +47,29 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
         g.dispose();
     }
     
-    private void drawCircuit(List<CoordGeo> circuit, Graphics2D g, JXMapViewer map, Color color) {
-        if (circuit != null) {
-            g.setColor(color);
-            
-            for (int i = 0; i < circuit.size() - 1; i++) {
-                CoordGeo coord1 = circuit.get(i);
-                CoordGeo coord2 = circuit.get(i + 1);
+    private void drawCircuit(List<CoordGeo> circuitToDraw, Graphics2D g, JXMapViewer map, Color color) {
+        if (circuitToDraw != null) {            
+            for (int i = 0; i < circuitToDraw.size() - 1; i++) {
+                g.setColor(color);
+                            
+                CoordGeo c1 = circuitToDraw.get(i);
+                CoordGeo c2 = circuitToDraw.get(i + 1);
 
-                GeoPosition pos1 = new GeoPosition(coord1.getLatitude(), coord1.getLongitude());
-                GeoPosition pos2 = new GeoPosition(coord2.getLatitude(), coord2.getLongitude());
+                GeoPosition pos1 = new GeoPosition(c1.getLatitude(), c1.getLongitude());
+                GeoPosition pos2 = new GeoPosition(c2.getLatitude(), c2.getLongitude());
                 
                 Point2D p1 = map.convertGeoPositionToPoint(pos1);
                 Point2D p2 = map.convertGeoPositionToPoint(pos2);
                 
                 g.draw(new Line2D.Double(p1, p2));
+                
+                double distance = circuit.calculateDistance(c1, c2);
+                
+                int xm = (int) ((p1.getX() + p2.getX()) / 2);
+                int ym = (int) ((p1.getY() + p2.getY()) / 2);
+                
+                g.setColor(Color.BLACK);
+                g.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
             }
         }
     }
