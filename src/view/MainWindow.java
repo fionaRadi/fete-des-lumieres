@@ -8,17 +8,13 @@ import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import java.io.FileInputStream;
-import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.circuit.CircuitEuc;
 import model.circuit.CircuitGeo;
-import model.coord.Coord;
 import model.coord.CoordEuc;
-import model.coord.CoordGeo;
 import view.waypoint.Waypoint;
 
 /**
@@ -38,6 +34,19 @@ public class MainWindow extends javax.swing.JFrame {
         distanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainPane.resetToPreferredSizes();
         sidePanel.resetToPreferredSizes();
+        
+        mapEuc.addWaypointSelectionListener(waypoint -> {
+            CoordEuc coord = (CoordEuc) waypoint.getCoord();
+            idValueLabel.setText(String.valueOf(coord.getId()));
+            xField.setText(String.valueOf(coord.getX()));
+            yField.setText(String.valueOf(coord.getY()));
+        });
+    }
+    
+    enum ActionMode {
+        SELECT,
+        ADD,
+        REMOVE
     }
 
     /**
@@ -99,9 +108,19 @@ public class MainWindow extends javax.swing.JFrame {
 
         addToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/add_tool.png"))); // NOI18N
         addToolBt.setToolTipText("");
+        addToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addToolBtActionPerformed(evt);
+            }
+        });
         toolBar.add(addToolBt);
 
         removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
+        removeToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeToolBtActionPerformed(evt);
+            }
+        });
         toolBar.add(removeToolBt);
 
         mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -479,15 +498,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_xFieldActionPerformed
 
     private void mapEucMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapEucMouseReleased
-        /*
-        WaypointEuc waypoint = mapEuc.getSelectedWaypoint();
-        if (waypoint != null) {
-            CoordEuc coord = waypoint.getCoord();
-            idValueLabel.setText(String.valueOf(coord.getId()));
-            xField.setText(String.valueOf(coord.getX()));
-            yField.setText(String.valueOf(coord.getY()));
-        }
-        */
+
     }//GEN-LAST:event_mapEucMouseReleased
 
     private void greedyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greedyButtonActionPerformed
@@ -513,7 +524,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_randomButtonActionPerformed
 
     private void selectToolBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectToolBtActionPerformed
-        // TODO add your handling code here:
+        actionMode = ActionMode.SELECT;
     }//GEN-LAST:event_selectToolBtActionPerformed
 
     private void insertionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertionButtonActionPerformed
@@ -526,6 +537,14 @@ public class MainWindow extends javax.swing.JFrame {
             mapGeo.repaint();
         }
     }//GEN-LAST:event_insertionButtonActionPerformed
+
+    private void addToolBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToolBtActionPerformed
+        actionMode = ActionMode.ADD;
+    }//GEN-LAST:event_addToolBtActionPerformed
+
+    private void removeToolBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeToolBtActionPerformed
+        actionMode = ActionMode.REMOVE;
+    }//GEN-LAST:event_removeToolBtActionPerformed
 
     private String fileType(String path) {
         String[] line;
@@ -592,6 +611,7 @@ public class MainWindow extends javax.swing.JFrame {
     private CircuitEuc currentCircuitEuc;
     private CircuitGeo currentCircuitGeo;
     private DefaultTableModel tableModel ;
+    private ActionMode actionMode;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addToolBt;
