@@ -17,6 +17,12 @@ public class CoordGeo extends Coord {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    
+    public CoordGeo(double latitude, double longitude) {
+        super(maxId + 1);
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public double getLatitude() { return latitude; }
     public double getLongitude() { return longitude; }

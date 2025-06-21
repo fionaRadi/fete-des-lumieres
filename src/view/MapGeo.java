@@ -7,10 +7,11 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.beans.Beans;
-import javax.swing.event.MouseInputListener;
+import javax.swing.SwingUtilities;
 import model.circuit.CircuitGeo;
 import model.coord.CoordGeo;
 import org.jxmapviewer.JXMapViewer;
@@ -29,7 +30,7 @@ import view.waypoint.WaypointGeo;
  */
 public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     private JXMapViewer viewer;
-
+    
     public MapGeo() {
         super();
         
@@ -48,9 +49,13 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
             viewer.setAddressLocation(position);
 
             viewer.setZoom(10);
-            MouseInputListener listener = new PanMouseInputListener(viewer);
-            viewer.addMouseListener(listener);
-            viewer.addMouseMotionListener(listener);
+            
+            RightPanMouseInputListener panListener = new RightPanMouseInputListener(viewer);
+
+            viewer.addMouseListener(panListener);
+            viewer.addMouseMotionListener(panListener);
+
+            
             viewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(viewer) {
                 @Override
                 public void mouseWheelMoved(MouseWheelEvent e) {
@@ -65,7 +70,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
             viewer.setOverlayPainter(new WaypointPainter<WaypointGeo>() {
                 @Override
                 protected void doPaint(Graphics2D g, JXMapViewer map, int width, int height) {
-                    for (WaypointGeo waypoint : waypoints.values()) {
+                    for (WaypointGeo waypoint : waypoints) {
                         Point2D point = viewer.getTileFactory().geoToPixel(waypoint.getPosition(), viewer.getZoom());
                         Rectangle rect = viewer.getViewportBounds();
 
@@ -84,12 +89,16 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     }
 
     @Override
-    public void addCoord(double x, double y) {
-        
+    protected void addCoord(double latitude, double longitude) {
+        CoordGeo coord = new CoordGeo(latitude, longitude);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
     }
     
     @Override
-    public void addWaypoint(CoordGeo coord) {
-
+    protected void addWaypoint(CoordGeo coord) {
+        WaypointGeo waypoint = new WaypointGeo(coord);
+        waypoints.add(waypoint);
+        viewer.add(waypoint);
     }
 }

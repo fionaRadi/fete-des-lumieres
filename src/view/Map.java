@@ -4,7 +4,7 @@
  */
 package view;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import model.circuit.Circuit;
@@ -19,23 +19,31 @@ import view.waypoint.Waypoint;
  * @param <C>
  */
 public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit> extends JComponent {
-    protected HashMap<Integer, W> waypoints;
-    
+    protected List<W> waypoints;    
     protected C circuit;
     
     protected W selectedWaypoint;
     
     protected double scale;
+    
+    protected ActionMode actionMode;
+    
+    enum ActionMode {
+        SELECT,
+        ADD,
+        REMOVE
+    }
 
     protected Map() {
-        this.waypoints = new HashMap<>();
+        this.waypoints = new ArrayList<>();
+        actionMode = ActionMode.SELECT;
         scale = 1.0;
         setLayout(null);
     }
 
-    public abstract void addCoord(double x, double y);
+    protected abstract void addCoord(double x, double y);
     
-    public abstract void addWaypoint(T coord);
+    protected abstract void addWaypoint(T coord);
         
     public void open(C circuit) {
         close();
@@ -63,11 +71,15 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         return isVisible();
     }
     
-    public HashMap<Integer, W> getWaypoints() {
+    public List<W> getWaypoints() {
         return waypoints;
     }
     
     public double getScale() {
         return scale;
+    }
+    
+    public void setActionMode(ActionMode actionMode) {
+        this.actionMode = actionMode;
     }
 }

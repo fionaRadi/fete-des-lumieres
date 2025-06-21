@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/ /Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
 
@@ -42,6 +42,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainPane = new javax.swing.JSplitPane();
         layeredPane = new javax.swing.JLayeredPane();
+        toolBar = new javax.swing.JPanel();
+        selectToolBt = new javax.swing.JButton();
+        addToolBt = new javax.swing.JButton();
+        removeToolBt = new javax.swing.JButton();
         mapGeo = new view.MapGeo();
         mapEuc = new view.MapEuc();
         zoomLabelPanel = new javax.swing.JPanel();
@@ -49,6 +53,9 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel = new javax.swing.JSplitPane();
         tabbedPane = new javax.swing.JTabbedPane();
         algorithmPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         distancePanel = new javax.swing.JPanel();
         detailsPanel = new javax.swing.JPanel();
         idLabel = new javax.swing.JLabel();
@@ -69,6 +76,21 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainPane.setDividerLocation(700);
         mainPane.setResizeWeight(0.7);
+
+        selectToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/select_tool.png"))); // NOI18N
+        selectToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectToolBtActionPerformed(evt);
+            }
+        });
+        toolBar.add(selectToolBt);
+
+        addToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/add_tool.png"))); // NOI18N
+        addToolBt.setToolTipText("");
+        toolBar.add(addToolBt);
+
+        removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
+        toolBar.add(removeToolBt);
 
         mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
@@ -115,6 +137,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         scaleLabel.getAccessibleContext().setAccessibleParent(layeredPane);
 
+        layeredPane.setLayer(toolBar, javax.swing.JLayeredPane.PALETTE_LAYER);
         layeredPane.setLayer(mapGeo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredPane.setLayer(mapEuc, javax.swing.JLayeredPane.DEFAULT_LAYER);
         layeredPane.setLayer(zoomLabelPanel, javax.swing.JLayeredPane.PALETTE_LAYER);
@@ -123,19 +146,25 @@ public class MainWindow extends javax.swing.JFrame {
         layeredPane.setLayout(layeredPaneLayout);
         layeredPaneLayout.setHorizontalGroup(
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGroup(layeredPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(605, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapGeo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredPaneLayout.createSequentialGroup()
-                    .addGap(0, 633, Short.MAX_VALUE)
+                    .addGap(0, 601, Short.MAX_VALUE)
                     .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layeredPaneLayout.setVerticalGroup(
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 628, Short.MAX_VALUE)
+            .addGroup(layeredPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(576, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapGeo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,15 +182,49 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setResizeWeight(0.6);
         sidePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jButton1.setText("Glouton");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Insertion");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Random");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout algorithmPanelLayout = new javax.swing.GroupLayout(algorithmPanel);
         algorithmPanel.setLayout(algorithmPanelLayout);
         algorithmPanelLayout.setHorizontalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(algorithmPanelLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton3)
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
         algorithmPanelLayout.setVerticalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(algorithmPanelLayout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Algorithmes", algorithmPanel);
@@ -170,7 +233,7 @@ public class MainWindow extends javax.swing.JFrame {
         distancePanel.setLayout(distancePanelLayout);
         distancePanelLayout.setHorizontalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 351, Short.MAX_VALUE)
+            .addGap(0, 383, Short.MAX_VALUE)
         );
         distancePanelLayout.setVerticalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,6 +282,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         xField.setColumns(4);
         xField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        xField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         xField.setText("0");
         xField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,6 +299,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         yField.setColumns(4);
         yField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        yField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         yField.setText("0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -378,6 +443,46 @@ public class MainWindow extends javax.swing.JFrame {
         */
     }//GEN-LAST:event_mapEucMouseReleased
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (mapEuc.isOpen()) {
+            currentCircuitEuc.bestGreedyAlgorithm();
+            mapEuc.repaint();
+        }
+        
+        if (mapGeo.isOpen()) {
+            currentCircuitGeo.bestGreedyAlgorithm();
+            mapGeo.repaint();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (mapEuc.isOpen()) {
+            currentCircuitEuc.bestInsertionAlgorithm();
+            mapEuc.repaint();
+        }
+        
+        if (mapGeo.isOpen()) {
+            currentCircuitGeo.bestInsertionAlgorithm();
+            mapGeo.repaint();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (mapEuc.isOpen()) {
+            currentCircuitEuc.randomAlgorithm();
+            mapEuc.repaint();
+        }
+        
+        if (mapGeo.isOpen()) {
+            currentCircuitGeo.randomAlgorithm();
+            mapGeo.repaint();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void selectToolBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectToolBtActionPerformed
+        mapEuc.setActionMode(Map.ActionMode.SELECT);
+    }//GEN-LAST:event_selectToolBtActionPerformed
+
     private String fileType(String path) {
         String[] line;
         try (Scanner scanner = new Scanner(new FileInputStream(path))) {
@@ -442,6 +547,7 @@ public class MainWindow extends javax.swing.JFrame {
     private CircuitGeo currentCircuitGeo;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addToolBt;
     private javax.swing.JPanel algorithmPanel;
     private javax.swing.JMenuItem closeFileMenuItem;
     private javax.swing.JPanel detailsPanel;
@@ -449,16 +555,22 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idValueLabel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JSplitPane mainPane;
     private view.MapEuc mapEuc;
     private view.MapGeo mapGeo;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openFileMenuItem;
+    private javax.swing.JButton removeToolBt;
     private javax.swing.JMenuItem resetMenuItem;
     private java.awt.Label scaleLabel;
+    private javax.swing.JButton selectToolBt;
     private javax.swing.JSplitPane sidePanel;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JPanel toolBar;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JTextField xField;
     private javax.swing.JLabel xLabel;
