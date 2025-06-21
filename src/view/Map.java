@@ -21,22 +21,11 @@ import view.waypoint.Waypoint;
 public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit> extends JComponent {
     protected List<W> waypoints;    
     protected C circuit;
-    
-    protected W selectedWaypoint;
-    
+        
     protected double scale;
-    
-    protected ActionMode actionMode;
-    
-    enum ActionMode {
-        SELECT,
-        ADD,
-        REMOVE
-    }
 
     protected Map() {
         this.waypoints = new ArrayList<>();
-        actionMode = ActionMode.SELECT;
         scale = 1.0;
         setLayout(null);
     }
@@ -77,9 +66,5 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
     
     public double getScale() {
         return scale;
-    }
-    
-    public void setActionMode(ActionMode actionMode) {
-        this.actionMode = actionMode;
     }
 }

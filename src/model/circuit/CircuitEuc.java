@@ -192,7 +192,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public Object[][] createMatrix() {
+    public Object[][] createDistanceMatrix() {
         int n = coords.size();
 
         // Création des données
