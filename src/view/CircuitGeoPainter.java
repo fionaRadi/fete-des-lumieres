@@ -56,8 +56,8 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
                 CoordGeo c1 = circuitToDraw.get(i);
                 CoordGeo c2 = circuitToDraw.get(i + 1);
 
-                GeoPosition pos1 = new GeoPosition(c1.getLatitude(), c1.getLongitude());
-                GeoPosition pos2 = new GeoPosition(c2.getLatitude(), c2.getLongitude());
+                GeoPosition pos1 = c1.getPosition();
+                GeoPosition pos2 = c2.getPosition();
                 
                 Point2D p1 = map.convertGeoPositionToPoint(pos1);
                 Point2D p2 = map.convertGeoPositionToPoint(pos2);

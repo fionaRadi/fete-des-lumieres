@@ -25,6 +25,28 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeFileMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="saveFileItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+S"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Enregistrer"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveFileItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="saveAsFileItem">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Shift+Ctrl+S"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Enregistrer sous"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveAsFileItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exportResultFileItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Exporter fichier r&#xe9;sultat"/>
@@ -471,7 +493,7 @@
                 <Component class="javax.swing.JTextField" name="firstCompField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="columns" type="int" value="4"/>
+                    <Property name="columns" type="int" value="6"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="16" style="0"/>
                     </Property>
@@ -493,7 +515,7 @@
                 <Component class="javax.swing.JTextField" name="secondCompField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="columns" type="int" value="4"/>
+                    <Property name="columns" type="int" value="6"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="16" style="0"/>
                     </Property>
@@ -512,7 +534,7 @@
                 <Component class="javax.swing.JTextField" name="idValueField">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="columns" type="int" value="4"/>
+                    <Property name="columns" type="int" value="6"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="16" style="0"/>
                     </Property>

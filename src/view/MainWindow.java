@@ -5,10 +5,7 @@
 package view;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
 import javax.swing.JFileChooser;
-import java.io.FileInputStream;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -60,8 +57,8 @@ public class MainWindow extends javax.swing.JFrame {
                 case SELECT:
                     CoordGeo coord = (CoordGeo) waypoint.getCoord();
                     idValueField.setText(String.valueOf(coord.getId()));
-                    firstCompField.setText(String.format("%.3f", coord.getLatitude()));
-                    secondCompField.setText(String.format("%.3f", coord.getLongitude()));
+                    firstCompField.setText(String.format("%.3f", coord.getDecimalLatitude()));
+                    secondCompField.setText(String.format("%.3f", coord.getDecimalLongitude()));
                     break;
                     
                 case REMOVE:
@@ -130,6 +127,8 @@ public class MainWindow extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         openFileMenuItem = new javax.swing.JMenuItem();
         closeFileMenuItem = new javax.swing.JMenuItem();
+        saveFileItem = new javax.swing.JMenuItem();
+        saveAsFileItem = new javax.swing.JMenuItem();
         exportResultFileItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         resetMenuItem = new javax.swing.JMenuItem();
@@ -360,7 +359,7 @@ public class MainWindow extends javax.swing.JFrame {
         detailsPanel.add(secondCompLabel, gridBagConstraints);
 
         firstCompField.setEditable(false);
-        firstCompField.setColumns(4);
+        firstCompField.setColumns(6);
         firstCompField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         firstCompField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         firstCompField.setText("0");
@@ -379,7 +378,7 @@ public class MainWindow extends javax.swing.JFrame {
         detailsPanel.add(firstCompField, gridBagConstraints);
 
         secondCompField.setEditable(false);
-        secondCompField.setColumns(4);
+        secondCompField.setColumns(6);
         secondCompField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         secondCompField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         secondCompField.setText("0");
@@ -393,7 +392,7 @@ public class MainWindow extends javax.swing.JFrame {
         detailsPanel.add(secondCompField, gridBagConstraints);
 
         idValueField.setEditable(false);
-        idValueField.setColumns(4);
+        idValueField.setColumns(6);
         idValueField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         idValueField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         idValueField.setText("0");
@@ -426,6 +425,24 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         fileMenu.add(closeFileMenuItem);
+
+        saveFileItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        saveFileItem.setText("Enregistrer");
+        saveFileItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveFileItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveFileItem);
+
+        saveAsFileItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        saveAsFileItem.setText("Enregistrer sous");
+        saveAsFileItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsFileItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveAsFileItem);
 
         exportResultFileItem.setText("Exporter fichier résultat");
         exportResultFileItem.addActionListener(new java.awt.event.ActionListener() {
@@ -476,7 +493,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void openFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileMenuItemActionPerformed
         JFileChooser selectionWindow = new JFileChooser();
-        selectionWindow.showOpenDialog(mainPane);
+        selectionWindow.showOpenDialog(this);
 
         if (selectionWindow.getSelectedFile() != null) {
             String path = selectionWindow.getSelectedFile().getAbsolutePath();
@@ -489,7 +506,7 @@ public class MainWindow extends javax.swing.JFrame {
             switch (type) {
                 case "EUC_2D":
                     currentCircuitEuc = new CircuitEuc();
-                    currentCircuitEuc.loadFile(path);
+                    currentCircuitEuc.loadFile(selectionWindow.getSelectedFile());
                     mapEuc.open(currentCircuitEuc);
                     SwingUtilities.invokeLater(() -> {
                         if (mapGeo != null)
@@ -515,14 +532,12 @@ public class MainWindow extends javax.swing.JFrame {
                     // Modification du panneau des détails
                     firstCompLabel.setText("X :");
                     secondCompLabel.setText("Y :");
-                    firstCompField.setColumns(4);
-                    secondCompField.setColumns(4);
                     
                     break;
 
                 case "GEO":
                     currentCircuitGeo = new CircuitGeo();
-                    currentCircuitGeo.loadFile(path);
+                    currentCircuitGeo.loadFile(selectionWindow.getSelectedFile());
                     mapGeo.open(currentCircuitGeo);
                     SwingUtilities.invokeLater(() -> {
                         if (mapEuc != null)
@@ -548,8 +563,6 @@ public class MainWindow extends javax.swing.JFrame {
                     // Modification du panneau des détails
                     firstCompLabel.setText("Latitude :");
                     secondCompLabel.setText("Longitude :");
-                    firstCompField.setColumns(12);
-                    secondCompField.setColumns(12);
                     
                     break;
                     
@@ -650,6 +663,47 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_exportResultFileItemActionPerformed
+
+    private void saveFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileItemActionPerformed
+        boolean success = false;
+        
+        if (mapEuc.isOpen()) success = currentCircuitEuc.saveFile();
+        else if (mapGeo.isOpen()) success = currentCircuitGeo.saveFile();
+
+        if (success) 
+            JOptionPane.showMessageDialog(this, "Le fichier a bien été sauvegardé", "Fichier sauvegardé", JOptionPane.PLAIN_MESSAGE);
+        else {
+            if (!mapGeo.isOpen() && !mapEuc.isOpen())
+                JOptionPane.showMessageDialog(this, "Aucun fichier ouvert à sauvegarder", "Erreur", JOptionPane.ERROR_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Erreur lors de la sauvegarde", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_saveFileItemActionPerformed
+
+    private void saveAsFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileItemActionPerformed
+        boolean success = false;
+        
+        if (mapEuc.isOpen() || mapGeo.isOpen()) {
+            JFileChooser chooser = new JFileChooser();
+            int result = chooser.showSaveDialog(this);
+            
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = chooser.getSelectedFile();
+                
+                if (mapEuc.isOpen()) success = currentCircuitEuc.saveFileAs(selectedFile);
+                else success = currentCircuitGeo.saveFileAs(selectedFile);
+
+                if (success) 
+                    JOptionPane.showMessageDialog(this, "Le fichier a bien été sauvegardé", "Fichier sauvegardé", JOptionPane.PLAIN_MESSAGE);
+                else {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la sauvegarde", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Aucun fichier ouvert à sauvegarder", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_saveAsFileItemActionPerformed
     
     public void closeMap() {
         if (mapGeo.isOpen()) {
@@ -722,6 +776,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton randomButton;
     private javax.swing.JButton removeToolBt;
     private javax.swing.JMenuItem resetMenuItem;
+    private javax.swing.JMenuItem saveAsFileItem;
+    private javax.swing.JMenuItem saveFileItem;
     private java.awt.Label scaleLabel;
     private javax.swing.JTextField secondCompField;
     private javax.swing.JLabel secondCompLabel;

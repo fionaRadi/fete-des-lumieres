@@ -28,6 +28,8 @@ public abstract class Circuit<T extends Coord> {
     protected List<T> greedyCircuit;
     protected List<T> insertionCircuit;
     protected List<T> randomCircuit;
+    
+    protected File file;
 
     protected Circuit() {
         this.coords = new ArrayList<>();
@@ -67,10 +69,12 @@ public abstract class Circuit<T extends Coord> {
 
     protected abstract void loadData(Scanner scanner) throws IOException;
 
-    public void loadFile(String path) {        
+    public void loadFile(File file) {        
         coords.clear();
+        
+        this.file = file;
 
-        try (Scanner scanner = new Scanner(new FileInputStream(path))) {
+        try (Scanner scanner = new Scanner(new FileInputStream(file.getAbsolutePath()))) {
             System.out.println("=> Chargement du fichier");
 
             scanner.useLocale(Locale.US);
@@ -131,8 +135,6 @@ public abstract class Circuit<T extends Coord> {
             for (int i = 0; i < inputFiles.length; i++) {
                 File inputFile = inputFiles[i];
                 
-                String path = inputFile.getAbsolutePath();
-
                 writer.write(inputFile.getName() + ";");
                 
                 String fileType = Circuit.getFileType(inputFile.getAbsolutePath());
@@ -140,12 +142,12 @@ public abstract class Circuit<T extends Coord> {
                 switch (fileType) {                 
                     case "EUC_2D":
                         circuit = new CircuitEuc();
-                        circuit.loadFile(path);           
+                        circuit.loadFile(inputFile);           
                         break;
                         
                     case "GEO":
                         circuit = new CircuitGeo();
-                        circuit.loadFile(path);
+                        circuit.loadFile(inputFile);
                         break;
                         
                     default:
@@ -197,9 +199,7 @@ public abstract class Circuit<T extends Coord> {
     
     protected abstract void saveData(FileWriter writer) throws IOException;
     
-    public void saveFile(String outputPath, String fileName) {
-        File file = new File(outputPath, fileName);
-        
+    public boolean saveFile() {        
         try (FileWriter writer = new FileWriter(file)) {
             System.out.println("=> Sauvegarde du fichier");
             
@@ -207,9 +207,27 @@ public abstract class Circuit<T extends Coord> {
             saveData(writer);
 
             System.out.println("=> Sauvegarde terminée");
+            return true;
 
         } catch (IOException e) {
             System.out.println("Erreur : " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean saveFileAs(File newFile) {        
+        try (FileWriter writer = new FileWriter(newFile)) {
+            System.out.println("=> Sauvegarde du fichier");
+            
+            saveHeader(writer);
+            saveData(writer);
+
+            System.out.println("=> Sauvegarde terminée");
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("Erreur : " + e.getMessage());
+            return false;
         }
     }
 }

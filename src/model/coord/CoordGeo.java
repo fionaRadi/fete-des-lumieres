@@ -14,29 +14,45 @@ public class CoordGeo extends Coord {
     private GeoPosition position;
 
     public CoordGeo(int id, double latitude, double longitude) {
-    super(id);
+        super(id);
 
-    this.position = new GeoPosition(convertToDecimal(latitude), convertToDecimal(longitude)
-    );
-}
+        this.position = new GeoPosition(convertToDecimal(latitude), convertToDecimal(longitude));
+    }
+    
+    public CoordGeo(GeoPosition position) {
+        super(maxId + 1);
+        
+        this.position = position;
+    }
 
-    private static double convertToDecimal(double coord) {
-        int deg = (int) coord;
-        double min = Math.abs((coord - deg) * 100);
+    private static double convertToDecimal(double degreeMinute) {
+        int deg = (int) degreeMinute;
+        double min = Math.abs((degreeMinute - deg) * 100);
 
-        if (coord < 0) {
+        if (degreeMinute < 0) {
             return deg - (min / 60.0);
         } else {
             return deg + (min / 60.0);
         }
+    }
+    
+    private static double convertToDegreeMinute(double decimalDegree) {
+        int deg = (int) decimalDegree;
+        double fractional = Math.abs(decimalDegree - deg);
+        int min = (int) Math.round(fractional * 60);
+
+        return deg >= 0 ? deg + (min / 100.0) : deg - (min / 100.0);
     }
 
     public CoordGeo(double latitude, double longitude) {
         this(maxId + 1, latitude, longitude);
     }
 
-    public double getLatitude() { return position.getLatitude(); }
-    public double getLongitude() { return position.getLongitude(); }
+    public double getDecimalLatitude() { return position.getLatitude(); }
+    public double getDecimalLongitude() { return position.getLongitude(); }
+    
+    public double getDegreeMinuteLatitude() { return convertToDegreeMinute(position.getLatitude()); }
+    public double getDegreeMinuteLongitude() { return convertToDegreeMinute(position.getLongitude()); }
     
     public GeoPosition getPosition() { return position; }
 }

@@ -90,13 +90,6 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     }
 
     @Override
-    public void addCoord(double latitude, double longitude) {
-        CoordGeo coord = new CoordGeo(latitude, longitude);
-        circuit.addCoord(coord);
-        addWaypoint(coord);
-    }
-    
-    @Override
     protected void addWaypoint(CoordGeo coord) {
         WaypointGeo waypoint = new WaypointGeo(coord);
         waypoint.addActionListener(waypointListener);
@@ -108,8 +101,9 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     public void addCoord(MouseEvent e) {
         Point point = e.getPoint();
         GeoPosition geoPos = viewer.convertPointToGeoPosition(point);
-        addCoord(geoPos.getLatitude(), geoPos.getLongitude());
-        // waypointPainter.setWaypoints(waypoints);
+        CoordGeo coord = new CoordGeo(geoPos);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
         viewer.repaint();
     }
     
@@ -125,5 +119,14 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         super.open(circuit);
         waypointPainter.setWaypoints(waypoints);
         circuitPainter.setCircuit(circuit);
+    }
+    
+    @Override
+    public void close() {
+        for (WaypointGeo waypoint : waypoints) {
+            viewer.remove(waypoint);
+        }
+        
+        super.close();
     }
 }

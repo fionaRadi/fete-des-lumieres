@@ -53,11 +53,11 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     public double calculateDistance(CoordGeo a, CoordGeo b) {
         final double EARTH_RADIUS_KM = 6371.0;
         
-        double radianLat1 = Math.toRadians(a.getLatitude());
-        double radianLat2 = Math.toRadians(b.getLatitude());
+        double radianLat1 = Math.toRadians(a.getDecimalLatitude());
+        double radianLat2 = Math.toRadians(b.getDecimalLatitude());
         
-        double radianLong1 = Math.toRadians(a.getLongitude());
-        double radianLong2 = Math.toRadians(b.getLongitude());
+        double radianLong1 = Math.toRadians(a.getDecimalLongitude());
+        double radianLong2 = Math.toRadians(b.getDecimalLongitude());
 
         double distance = EARTH_RADIUS_KM * Math.acos(Math.sin(radianLat1) * Math.sin(radianLat2) + Math.cos(radianLat1) *  Math.cos(radianLat2) * Math.cos(radianLong1 - radianLong2));
 
@@ -258,7 +258,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
         System.out.println("=> Sauvegarde des données");
         
         for (CoordGeo coord : coords) {
-            writer.write(coord.getId() + " " + coord.getLatitude()+ " " + coord.getLongitude()+ "\r\n");
+            writer.write(coord.getId() + " " + coord.getDegreeMinuteLatitude()+ " " + coord.getDegreeMinuteLongitude() + "\r\n");
         }
 
         writer.write("EOF");

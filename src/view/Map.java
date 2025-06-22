@@ -46,7 +46,6 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         setLayout(null);
     }
 
-    protected abstract void addCoord(double x, double y);
     protected abstract void addWaypoint(T coord);
     
     public void open(C circuit) {
@@ -66,11 +65,7 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         setVisible(true);
     }
 
-    public void close() {
-        for (W waypoint : waypoints) {
-            remove(waypoint);
-        }
-        
+    public void close() {        
         waypoints.clear();
         setVisible(false);
     }

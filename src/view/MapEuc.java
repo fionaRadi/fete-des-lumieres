@@ -148,13 +148,6 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         drawCircuit(circuit.getGreedyCircuit(), g2d, Color.YELLOW);
         drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);        
     }
-
-    @Override
-    protected void addCoord(double x, double y) {
-        CoordEuc coord = new CoordEuc(x, y);
-        circuit.addCoord(coord);
-        addWaypoint(coord);
-    }
     
     @Override
     protected void addWaypoint(CoordEuc coord) {
@@ -169,7 +162,9 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         int x = (int) (e.getX() / scale - offsetX / scale - Waypoint.getWaypointIcon().getIconWidth() / 2 / scale);
         int y = (int) (e.getY() / scale - offsetY / scale - Waypoint.getWaypointIcon().getIconHeight() / 2 / scale);
 
-        addCoord(x, y);
+        CoordEuc coord = new CoordEuc(x, y);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
 
         repaint();
     }
@@ -212,9 +207,14 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     
     @Override
     public void close() {
-        super.close();
+        for (WaypointEuc waypoint : waypoints) {
+            remove(waypoint);
+        }
+        
         offsetX = 0;
         offsetY = 0;
         scale = 1;
+        
+        super.close();
     }
 }
