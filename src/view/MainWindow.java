@@ -566,7 +566,7 @@ public class MainWindow extends javax.swing.JFrame {
                     
                     break;
                     
-                default: JOptionPane.showMessageDialog(mainPane, "Le type de fichier n'est pas pris en charge", "Erreur", JOptionPane.ERROR_MESSAGE);
+                default: JOptionPane.showMessageDialog(this, "Le type de fichier n'est pas pris en charge", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_openFileMenuItemActionPerformed
@@ -645,21 +645,19 @@ public class MainWindow extends javax.swing.JFrame {
     private void exportResultFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportResultFileItemActionPerformed
         JFileChooser inputChooser = new JFileChooser();
         inputChooser.setMultiSelectionEnabled(true);
-        inputChooser.showOpenDialog(mainPane);
+        int result = inputChooser.showOpenDialog(this);
         File[] files = inputChooser.getSelectedFiles();
         
-        if (files != null) {
-            if (files.length > 0) {
-                JFileChooser outputChooser = new JFileChooser();
-                outputChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                outputChooser.setMultiSelectionEnabled(false);
-                outputChooser.showOpenDialog(mainPane);
-                
-                if (outputChooser.getSelectedFile() != null) {
-                    String outputFilePath = outputChooser.getSelectedFile().getAbsolutePath();
-                    Circuit.exportResultFile(files, outputFilePath);
-                    JOptionPane.showMessageDialog(mainPane, "Le fichier de résultat a été exporté", "Fichier résultat", JOptionPane.PLAIN_MESSAGE);
-                }
+        if (result == JFileChooser.APPROVE_OPTION) {
+            JFileChooser outputChooser = new JFileChooser();
+            outputChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            outputChooser.setMultiSelectionEnabled(false);
+            outputChooser.showOpenDialog(this);
+
+            if (outputChooser.getSelectedFile() != null) {
+                String outputFilePath = outputChooser.getSelectedFile().getAbsolutePath();
+                Circuit.exportResultFile(files, outputFilePath);
+                JOptionPane.showMessageDialog(this, "Le fichier de résultat a été exporté", "Fichier résultat", JOptionPane.PLAIN_MESSAGE);
             }
         }
     }//GEN-LAST:event_exportResultFileItemActionPerformed
@@ -681,13 +679,13 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_saveFileItemActionPerformed
 
     private void saveAsFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileItemActionPerformed
-        boolean success = false;
-        
-        if (mapEuc.isOpen() || mapGeo.isOpen()) {
+        if (mapEuc.isOpen() || mapGeo.isOpen()) {            
             JFileChooser chooser = new JFileChooser();
             int result = chooser.showSaveDialog(this);
             
             if (result == JFileChooser.APPROVE_OPTION) {
+                boolean success = false;
+                
                 File selectedFile = chooser.getSelectedFile();
                 
                 if (mapEuc.isOpen()) success = currentCircuitEuc.saveFileAs(selectedFile);
