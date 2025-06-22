@@ -4,14 +4,14 @@
  */
 package model.circuit;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import model.coord.Coord;
 
 /**
@@ -67,10 +67,10 @@ public abstract class Circuit<T extends Coord> {
 
     protected abstract void loadData(Scanner scanner) throws IOException;
 
-    public void loadFile(String chemin) {        
+    public void loadFile(String path) {        
         coords.clear();
 
-        try (Scanner scanner = new Scanner(new FileInputStream(chemin))) {
+        try (Scanner scanner = new Scanner(new FileInputStream(path))) {
             System.out.println("=> Chargement du fichier");
 
             scanner.useLocale(Locale.US);
@@ -121,5 +121,75 @@ public abstract class Circuit<T extends Coord> {
         return insertionCircuit;
     }
     
+    public static void exportResultFile(File[] inputFiles, String outputPath) {
+        File file = new File(outputPath, "resultatsX_Y.csv");
+        
+        try (FileWriter writer = new FileWriter(file)){
+                     
+            Circuit circuit;
+            
+            for (int i = 0; i < inputFiles.length; i++) {
+                File inputFile = inputFiles[i];
+                
+                String path = inputFile.getAbsolutePath();
+
+                writer.write(inputFile.getName() + ";");
+                
+                String fileType = Circuit.getFileType(inputFile.getAbsolutePath());
+                
+                switch (fileType) {                 
+                    case "EUC_2D":
+                        circuit = new CircuitEuc();
+                        circuit.loadFile(path);           
+                        break;
+                        
+                    case "GEO":
+                        circuit = new CircuitGeo();
+                        circuit.loadFile(path);
+                        break;
+                        
+                    default:
+                        System.out.println("Erreur, le type du fichier est inconnu");
+                        continue;
+                }
+                
+                circuit.bestGreedyAlgorithm();
+                circuit.bestInsertionAlgorithm();
+                        
+                double greedyLength = circuit.calculateCircuitLength(circuit.getGreedyCircuit());
+                double insertionLength = circuit.calculateCircuitLength(circuit.getInsertionCircuit());
+                double best = Math.max(greedyLength, insertionLength);
+           
+                writer.write(greedyLength + ";" + insertionLength + ";" + best + "\r\n");
+                
+                circuit.exportBestCircuit(outputPath, "voyage" + (i + 1) + ".txt");
+            }
+            
+        } catch (IOException ex) {
+            System.out.println("Erreur lors de la sauvegarde du fichier résultat");
+        }
+    }
     
+    protected abstract void exportBestCircuit(String outputPath, String fileName);
+    
+    public static String getFileType(String path) {
+        String[] line;
+        try (Scanner scanner = new Scanner(new FileInputStream(path))) {
+            do {
+                line = scanner.nextLine().split("\\s*:\\s+");
+                if (line.length == 0) {
+                    throw new IOException();
+                }
+
+                if (line[0].equals("EDGE_WEIGHT_TYPE"))
+                    return line[1];
+            }
+            while (!line[0].equals("NODE_COORD_SECTION") && !line[0].equals("EOF"));
+
+        } catch (IOException e) {
+            return "ERREUR";
+        }
+
+        return "ERREUR";
+    }
 }

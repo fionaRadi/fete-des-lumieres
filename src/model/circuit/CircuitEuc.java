@@ -4,17 +4,16 @@
  */
 package model.circuit;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import model.coord.Coord;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.coord.CoordEuc;
 
 /**
@@ -212,5 +211,26 @@ public class CircuitEuc extends Circuit<CoordEuc> {
         
         return data ;
         
+    }
+
+    @Override
+    protected void exportBestCircuit(String outputPath, String fileName) {
+        File bestCircuitFile = new File(outputPath, fileName);
+        
+        try (FileWriter writer = new FileWriter(bestCircuitFile)) {
+            if (calculateCircuitLength(getGreedyCircuit()) >= calculateCircuitLength(getInsertionCircuit())) {            
+                for (CoordEuc coord : getGreedyCircuit()) {
+                    writer.write(coord.getId() + "\r\n");
+                }
+            } 
+            
+            else {
+                for (CoordEuc coord : getInsertionCircuit()) {
+                    writer.write(coord.getId() + "\r\n");
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Erreur lors de l'export du meilleur circuit");
+        }
     }
 }

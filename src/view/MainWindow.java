@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
@@ -13,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import model.Constants;
+import model.circuit.Circuit;
 import model.circuit.CircuitEuc;
 import model.circuit.CircuitGeo;
 import model.coord.CoordEuc;
@@ -128,6 +130,7 @@ public class MainWindow extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         openFileMenuItem = new javax.swing.JMenuItem();
         closeFileMenuItem = new javax.swing.JMenuItem();
+        exportResultFileItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         resetMenuItem = new javax.swing.JMenuItem();
         displayDistanceItem = new javax.swing.JRadioButtonMenuItem();
@@ -424,6 +427,14 @@ public class MainWindow extends javax.swing.JFrame {
         });
         fileMenu.add(closeFileMenuItem);
 
+        exportResultFileItem.setText("Exporter fichier résultat");
+        exportResultFileItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportResultFileItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exportResultFileItem);
+
         menuBar.add(fileMenu);
 
         windowMenu.setText("Affichage");
@@ -469,7 +480,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         if (selectionWindow.getSelectedFile() != null) {
             String path = selectionWindow.getSelectedFile().getAbsolutePath();
-            String type = fileType(path);
+            String type = Circuit.getFileType(path);
             closeMap();
 
             int coordsCount;
@@ -618,26 +629,27 @@ public class MainWindow extends javax.swing.JFrame {
         mainPane.repaint();
     }//GEN-LAST:event_displayDistanceItemActionPerformed
 
-    private String fileType(String path) {
-        String[] line;
-        try (Scanner scanner = new Scanner(new FileInputStream(path))) {
-            do {
-                line = scanner.nextLine().split("\\s*:\\s+");
-                if (line.length == 0) {
-                    throw new IOException();
+    private void exportResultFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportResultFileItemActionPerformed
+        JFileChooser inputChooser = new JFileChooser();
+        inputChooser.setMultiSelectionEnabled(true);
+        inputChooser.showOpenDialog(mainPane);
+        File[] files = inputChooser.getSelectedFiles();
+        
+        if (files != null) {
+            if (files.length > 0) {
+                JFileChooser outputChooser = new JFileChooser();
+                outputChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                outputChooser.setMultiSelectionEnabled(false);
+                outputChooser.showOpenDialog(mainPane);
+                
+                if (outputChooser.getSelectedFile() != null) {
+                    String outputFilePath = outputChooser.getSelectedFile().getAbsolutePath();
+                    Circuit.exportResultFile(files, outputFilePath);
+                    JOptionPane.showMessageDialog(mainPane, "Le fichier de résultat a été exporté", "Fichier résultat", JOptionPane.PLAIN_MESSAGE);
                 }
-
-                if (line[0].equals("EDGE_WEIGHT_TYPE"))
-                    return line[1];
             }
-            while (!line[0].equals("NODE_COORD_SECTION") && !line[0].equals("EOF"));
-
-        } catch (IOException e) {
-            return "ERREUR";
         }
-
-        return "ERREUR";
-    }
+    }//GEN-LAST:event_exportResultFileItemActionPerformed
     
     public void closeMap() {
         if (mapGeo.isOpen()) {
@@ -693,6 +705,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JRadioButtonMenuItem displayDistanceItem;
     private javax.swing.JPanel distancePanel;
     private javax.swing.JTable distanceTable;
+    private javax.swing.JMenuItem exportResultFileItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTextField firstCompField;
     private javax.swing.JLabel firstCompLabel;
