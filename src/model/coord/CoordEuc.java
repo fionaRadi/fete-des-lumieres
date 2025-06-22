@@ -5,7 +5,8 @@
 package model.coord;
 
 /**
- *
+ * Coordonnée euclidienne qui possède un X et un Y
+ * 
  * @author ugola
  */
 public class CoordEuc extends Coord {

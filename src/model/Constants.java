@@ -5,7 +5,8 @@
 package model;
 
 /**
- *
+ * Classe qui centralise les paramètres de l'app.
+ * 
  * @author ugola
  */
 public class Constants {

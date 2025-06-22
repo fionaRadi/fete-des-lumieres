@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package view;
+package view.listeners;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -13,7 +13,8 @@ import javax.swing.event.MouseInputAdapter;
 import org.jxmapviewer.JXMapViewer;
 
 /**
- *
+ * Version alternative du PanMouseInputListener de JxMapViewer permettant d'effectuer le déplacement avec le clic droit
+ * 
  * @author ugola
  */
 public class RightPanMouseInputListener extends MouseInputAdapter {

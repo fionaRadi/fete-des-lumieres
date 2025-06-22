@@ -8,7 +8,8 @@ import model.coord.CoordGeo;
 import org.jxmapviewer.viewer.GeoPosition;
 
 /**
- *
+ * Représentation visuelle d'une coordonnée géographique
+ * 
  * @author ugola
  */
 public class WaypointGeo extends Waypoint<CoordGeo> implements org.jxmapviewer.viewer.Waypoint {
@@ -16,6 +17,11 @@ public class WaypointGeo extends Waypoint<CoordGeo> implements org.jxmapviewer.v
         super(coord);
     }
 
+    /**
+     * Renvoie la position de la coordonnée associée au waypoint
+     * 
+     * @return La position de la coordonnée
+     */
     @Override
     public GeoPosition getPosition() {
         return coord.getPosition();

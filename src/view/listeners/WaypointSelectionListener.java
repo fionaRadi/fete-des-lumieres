@@ -2,14 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package view;
+package view.listeners;
 
-import java.awt.event.MouseEvent;
+import view.waypoint.Waypoint;
 
 /**
+ * Un listener qui sera déclenché au moment où un waypoint est sélectionné
  *
  * @author ugola
  */
-public interface MapClickedListener {
-    void onMapClicked(MouseEvent e);
+public interface WaypointSelectionListener {
+    void onWaypointSelected(Waypoint waypoint);
 }

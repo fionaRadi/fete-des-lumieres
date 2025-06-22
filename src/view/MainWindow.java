@@ -21,7 +21,9 @@ import view.waypoint.WaypointEuc;
 import view.waypoint.WaypointGeo;
 
 /**
- *
+ * Le point de lancement de l'application (IHM).
+ * Centralise la logique de l'app.
+ * 
  * @author ugola
  */
 public class MainWindow extends javax.swing.JFrame {
@@ -44,7 +46,7 @@ public class MainWindow extends javax.swing.JFrame {
                     CoordEuc coord = (CoordEuc) waypoint.getCoord();
                     idValueField.setText(String.valueOf(coord.getId()));
                     firstCompField.setText(String.format("%.3f", coord.getX()));
-                    secondCompField.setText(String.format("%.3f", coord.getY()));
+                    secondCompField.setText(String.format("%.3f", coord.getY()));  
                     break;
                     
                 case REMOVE:
@@ -507,7 +509,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case "EUC_2D":
                     currentCircuitEuc = new CircuitEuc();
                     currentCircuitEuc.loadFile(selectionWindow.getSelectedFile());
-                    mapEuc.open(currentCircuitEuc);
+                    mapEuc.load(currentCircuitEuc);
                     SwingUtilities.invokeLater(() -> {
                         if (mapGeo != null)
                             if (mapGeo.isVisible()) {
@@ -538,7 +540,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case "GEO":
                     currentCircuitGeo = new CircuitGeo();
                     currentCircuitGeo.loadFile(selectionWindow.getSelectedFile());
-                    mapGeo.open(currentCircuitGeo);
+                    mapGeo.load(currentCircuitGeo);
                     SwingUtilities.invokeLater(() -> {
                         if (mapEuc != null)
                             if (mapEuc.isVisible()) {
@@ -593,23 +595,23 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_firstCompFieldActionPerformed
 
     private void greedyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greedyButtonActionPerformed
-        if (mapEuc.isOpen()) {
-            currentCircuitEuc.bestGreedyAlgorithm();
+        if (mapEuc.displayed()) {
+            currentCircuitEuc.calculateGreedyAlgorithm();
             mapEuc.repaint();
         }
-        if (mapGeo.isOpen()) {
-            currentCircuitGeo.bestGreedyAlgorithm();
+        if (mapGeo.displayed()) {
+            currentCircuitGeo.calculateGreedyAlgorithm();
             mapGeo.repaint();
         }
     }//GEN-LAST:event_greedyButtonActionPerformed
 
     private void randomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomButtonActionPerformed
-        if (mapEuc.isOpen()) {
-            currentCircuitEuc.randomAlgorithm();
+        if (mapEuc.displayed()) {
+            currentCircuitEuc.calculateRandomAlgorithm();
             mapEuc.repaint();
         }
-        if (mapGeo.isOpen()) {
-            currentCircuitGeo.randomAlgorithm();
+        if (mapGeo.displayed()) {
+            currentCircuitGeo.calculateRandomAlgorithm();
             mapGeo.repaint();
         }
     }//GEN-LAST:event_randomButtonActionPerformed
@@ -619,12 +621,12 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_selectToolBtActionPerformed
 
     private void insertionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertionButtonActionPerformed
-        if (mapEuc.isOpen()) {
-            currentCircuitEuc.bestInsertionAlgorithm();
+        if (mapEuc.displayed()) {
+            currentCircuitEuc.calculateBestInsertionAlgorithm();
             mapEuc.repaint();
         }
-        if (mapGeo.isOpen()) {
-            currentCircuitGeo.bestInsertionAlgorithm();
+        if (mapGeo.displayed()) {
+            currentCircuitGeo.calculateBestInsertionAlgorithm();
             mapGeo.repaint();
         }
     }//GEN-LAST:event_insertionButtonActionPerformed
@@ -665,13 +667,13 @@ public class MainWindow extends javax.swing.JFrame {
     private void saveFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileItemActionPerformed
         boolean success = false;
         
-        if (mapEuc.isOpen()) success = currentCircuitEuc.saveFile();
-        else if (mapGeo.isOpen()) success = currentCircuitGeo.saveFile();
+        if (mapEuc.displayed()) success = currentCircuitEuc.saveFile();
+        else if (mapGeo.displayed()) success = currentCircuitGeo.saveFile();
 
         if (success) 
             JOptionPane.showMessageDialog(this, "Le fichier a bien été sauvegardé", "Fichier sauvegardé", JOptionPane.PLAIN_MESSAGE);
         else {
-            if (!mapGeo.isOpen() && !mapEuc.isOpen())
+            if (!mapGeo.displayed() && !mapEuc.displayed())
                 JOptionPane.showMessageDialog(this, "Aucun fichier ouvert à sauvegarder", "Erreur", JOptionPane.ERROR_MESSAGE);
             else
                 JOptionPane.showMessageDialog(this, "Erreur lors de la sauvegarde", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -679,7 +681,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_saveFileItemActionPerformed
 
     private void saveAsFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsFileItemActionPerformed
-        if (mapEuc.isOpen() || mapGeo.isOpen()) {            
+        if (mapEuc.displayed() || mapGeo.displayed()) {            
             JFileChooser chooser = new JFileChooser();
             int result = chooser.showSaveDialog(this);
             
@@ -688,7 +690,7 @@ public class MainWindow extends javax.swing.JFrame {
                 
                 File selectedFile = chooser.getSelectedFile();
                 
-                if (mapEuc.isOpen()) success = currentCircuitEuc.saveFileAs(selectedFile);
+                if (mapEuc.displayed()) success = currentCircuitEuc.saveFileAs(selectedFile);
                 else success = currentCircuitGeo.saveFileAs(selectedFile);
 
                 if (success) 
@@ -704,11 +706,11 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_saveAsFileItemActionPerformed
     
     public void closeMap() {
-        if (mapGeo.isOpen()) {
+        if (mapGeo.displayed()) {
             mapGeo.close();
         }
 
-        if (mapEuc.isOpen()) {
+        if (mapEuc.displayed()) {
             mapEuc.close();
         }
         

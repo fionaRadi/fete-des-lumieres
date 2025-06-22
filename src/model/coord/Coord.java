@@ -5,7 +5,8 @@
 package model.coord;
 
 /**
- *
+ * Classe abstraite qui représente une coordonnée munie d'un ID
+ * 
  * @author ugola
  */
 public abstract class Coord {
@@ -19,6 +20,10 @@ public abstract class Coord {
     }
 
     public int getId() { return id; }
-    
+
+    /**
+     * Renvoie l'ID maximum utilisé
+     * @return L'ID en question
+     */
     public static int getMaxId() { return maxId; }
 }

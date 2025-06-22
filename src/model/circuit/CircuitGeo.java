@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.circuit;
 
 import java.io.File;
@@ -15,7 +11,8 @@ import java.util.Comparator;
 import model.coord.CoordGeo;
 
 /**
- *
+ * Représente un circuit géographique constitué d'une liste de coordonnées.
+ * 
  * @author ugola
  */
 public class CircuitGeo extends Circuit<CoordGeo> {
@@ -33,7 +30,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public void randomAlgorithm() {
+    public void calculateRandomAlgorithm() {
         Random random = new Random();
         ArrayList<CoordGeo> circuit = new ArrayList<>();
 
@@ -105,7 +102,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public void bestGreedyAlgorithm() {
+    public void calculateGreedyAlgorithm() {
         Random random = new Random();
         double bestLength = Double.MAX_VALUE;
         List<CoordGeo> possibleStarts = new ArrayList<>(coords);
@@ -153,7 +150,7 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     }
 
     @Override
-    public void bestInsertionAlgorithm() {
+    public void calculateBestInsertionAlgorithm() {
         double bestLength = Double.MAX_VALUE;
         List<CoordGeo> bestCircuit = null ;
 
