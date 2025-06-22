@@ -192,4 +192,24 @@ public abstract class Circuit<T extends Coord> {
 
         return "ERREUR";
     }
+    
+    protected abstract void saveHeader(FileWriter writer) throws IOException;
+    
+    protected abstract void saveData(FileWriter writer) throws IOException;
+    
+    public void saveFile(String outputPath, String fileName) {
+        File file = new File(outputPath, fileName);
+        
+        try (FileWriter writer = new FileWriter(file)) {
+            System.out.println("=> Sauvegarde du fichier");
+            
+            saveHeader(writer);
+            saveData(writer);
+
+            System.out.println("=> Sauvegarde terminée");
+
+        } catch (IOException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        }
+    }
 }

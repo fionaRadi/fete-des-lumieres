@@ -24,8 +24,8 @@ public class CircuitGeo extends Circuit<CoordGeo> {
         System.out.println("=> Chargement des lieux");
         do {
             int id = scanner.nextInt();
-            double latitude = scanner.nextFloat();
-            double longitude = scanner.nextFloat();
+            double latitude = scanner.nextDouble();
+            double longitude = scanner.nextDouble();
 
             coords.add(new CoordGeo(id, latitude, longitude));
 
@@ -237,5 +237,30 @@ public class CircuitGeo extends Circuit<CoordGeo> {
         } catch (IOException ex) {
             System.out.println("Erreur lors de l'export du meilleur circuit");
         }
+    }
+
+    @Override
+    protected void saveHeader(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde de l'en-tete");
+
+        writer.write("NAME : " + name + "\r\n");
+        writer.write("COMMENT : " + description + "\r\n");
+        writer.write("TYPE : TSP" + "\r\n");
+        writer.write("DIMENSION : " + coords.size() + "\r\n");
+        writer.write("EDGE_WEIGHT_TYPE : GEO\r\n");
+        writer.write("EDGE_WEIGHT_FORMAT: FUNCTION");
+        writer.write("DISPLAY_DATA_TYPE: COORD_DISPLAY\r\n");
+        writer.write("NODE_COORD_SECTION\r\n");
+    }
+
+    @Override
+    protected void saveData(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde des données");
+        
+        for (CoordGeo coord : coords) {
+            writer.write(coord.getId() + " " + coord.getLatitude()+ " " + coord.getLongitude()+ "\r\n");
+        }
+
+        writer.write("EOF");
     }
 }

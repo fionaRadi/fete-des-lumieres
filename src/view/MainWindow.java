@@ -46,8 +46,8 @@ public class MainWindow extends javax.swing.JFrame {
                 case SELECT:
                     CoordEuc coord = (CoordEuc) waypoint.getCoord();
                     idValueField.setText(String.valueOf(coord.getId()));
-                    firstCompField.setText(String.valueOf(coord.getX()));
-                    secondCompField.setText(String.valueOf(coord.getY()));
+                    firstCompField.setText(String.format("%.3f", coord.getX()));
+                    secondCompField.setText(String.format("%.3f", coord.getY()));
                     break;
                     
                 case REMOVE:
@@ -60,8 +60,8 @@ public class MainWindow extends javax.swing.JFrame {
                 case SELECT:
                     CoordGeo coord = (CoordGeo) waypoint.getCoord();
                     idValueField.setText(String.valueOf(coord.getId()));
-                    firstCompField.setText(String.valueOf(coord.getLatitude()));
-                    secondCompField.setText(String.valueOf(coord.getLongitude()));
+                    firstCompField.setText(String.format("%.3f", coord.getLatitude()));
+                    secondCompField.setText(String.format("%.3f", coord.getLongitude()));
                     break;
                     
                 case REMOVE:

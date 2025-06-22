@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.coord.CoordEuc;
 
 /**
@@ -232,5 +230,28 @@ public class CircuitEuc extends Circuit<CoordEuc> {
         } catch (IOException ex) {
             System.out.println("Erreur lors de l'export du meilleur circuit");
         }
+    }
+
+    @Override
+    protected void saveHeader(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde de l'en-tete");
+
+        writer.write("NAME : " + name + "\r\n");
+        writer.write("COMMENT : " + description + "\r\n");
+        writer.write("TYPE : TSP" + "\r\n");
+        writer.write("DIMENSION : " + coords.size() + "\r\n");
+        writer.write("EDGE_WEIGHT_TYPE : EUC_2D\r\n");
+        writer.write("NODE_COORD_SECTION\r\n");
+    }
+
+    @Override
+    protected void saveData(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde des données");
+        
+        for (CoordEuc coord : coords) {
+            writer.write(coord.getId() + " " + coord.getX() + " " + coord.getY() + "\r\n");
+        }
+
+        writer.write("EOF");
     }
 }
