@@ -5,6 +5,8 @@
 package view;
 
 import java.io.File;
+import java.util.List;
+import java.util.Random;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -32,7 +34,12 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         Waypoint.loadImage();
         initComponents();
-        tableModel = new DefaultTableModel() ;
+        tableModel = new DefaultTableModel() {
+        @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         distanceTable.setModel(tableModel);
         distanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainPane.resetToPreferredSizes();
@@ -113,6 +120,8 @@ public class MainWindow extends javax.swing.JFrame {
         randomButton = new javax.swing.JButton();
         greedyButton = new javax.swing.JButton();
         insertionButton = new javax.swing.JButton();
+        generationButton = new javax.swing.JButton();
+        ameliorationButton = new javax.swing.JButton();
         distancePanel = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
         distanceTable = new javax.swing.JTable();
@@ -266,6 +275,20 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        generationButton.setText("Generation");
+        generationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generationButtonActionPerformed(evt);
+            }
+        });
+
+        ameliorationButton.setText("Amelioration");
+        ameliorationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ameliorationButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout algorithmPanelLayout = new javax.swing.GroupLayout(algorithmPanel);
         algorithmPanel.setLayout(algorithmPanelLayout);
         algorithmPanelLayout.setHorizontalGroup(
@@ -275,8 +298,10 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(randomButton)
                     .addComponent(greedyButton)
-                    .addComponent(insertionButton))
-                .addContainerGap(283, Short.MAX_VALUE))
+                    .addComponent(insertionButton)
+                    .addComponent(generationButton)
+                    .addComponent(ameliorationButton))
+                .addContainerGap(350, Short.MAX_VALUE))
         );
         algorithmPanelLayout.setVerticalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,7 +312,11 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(greedyButton)
                 .addGap(18, 18, 18)
                 .addComponent(insertionButton)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addComponent(generationButton)
+                .addGap(30, 30, 30)
+                .addComponent(ameliorationButton)
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Algorithmes", algorithmPanel);
@@ -597,9 +626,12 @@ public class MainWindow extends javax.swing.JFrame {
             currentCircuitEuc.bestGreedyAlgorithm();
             mapEuc.repaint();
         }
-        if (mapGeo.isOpen()) {
+        else if (mapGeo.isOpen()) {
             currentCircuitGeo.bestGreedyAlgorithm();
             mapGeo.repaint();
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_greedyButtonActionPerformed
 
@@ -608,9 +640,12 @@ public class MainWindow extends javax.swing.JFrame {
             currentCircuitEuc.randomAlgorithm();
             mapEuc.repaint();
         }
-        if (mapGeo.isOpen()) {
+        else if (mapGeo.isOpen()) {
             currentCircuitGeo.randomAlgorithm();
             mapGeo.repaint();
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_randomButtonActionPerformed
 
@@ -621,11 +656,15 @@ public class MainWindow extends javax.swing.JFrame {
     private void insertionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertionButtonActionPerformed
         if (mapEuc.isOpen()) {
             currentCircuitEuc.bestInsertionAlgorithm();
+            System.out.println("Longueur : " + currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getInsertionCircuit()));
             mapEuc.repaint();
         }
-        if (mapGeo.isOpen()) {
+        else if (mapGeo.isOpen()) {
             currentCircuitGeo.bestInsertionAlgorithm();
             mapGeo.repaint();
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_insertionButtonActionPerformed
 
@@ -702,6 +741,78 @@ public class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Aucun fichier ouvert à sauvegarder", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveAsFileItemActionPerformed
+
+    private void generationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generationButtonActionPerformed
+        // TODO add your handling code here:
+        String message = "Entrez le nombre de lieux que vous voulez générer !" ;
+        String reponseStr = JOptionPane.showInputDialog(mainPane, message, "Génération", JOptionPane.PLAIN_MESSAGE);
+        int reponse = 0;
+
+        if (reponseStr != null) { // Vérifie si l'utilisateur n'a pas annulé
+            try {
+                reponse = Integer.parseInt(reponseStr); // Convertit la chaîne en entier
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(mainPane, "Veuillez entrer un nombre valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return; // Ou une autre gestion d'erreur
+            }
+        } else {
+            return; // Annulé par l'utilisateur
+        }
+        Random random = new Random();
+
+        for (int i = 1; i <= reponse; i++) {
+            double x = 10 + (200 - 10) * random.nextDouble();
+            double y = 10 + (200 - 10) * random.nextDouble();
+            if (mapEuc.isOpen()) {
+                CoordEuc coord1 = new CoordEuc(x, y) ;
+                WaypointEuc w = new WaypointEuc(coord1) ;
+                mapEuc.addWaypoint(coord1);
+                currentCircuitEuc.addCoord(coord1);
+            }
+            else if (mapGeo.isOpen()) {
+                CoordGeo coord1 = new CoordGeo(x, y) ;
+                WaypointGeo w = new WaypointGeo(coord1) ;
+                mapGeo.addWaypoint(coord1);
+                mapGeo.addWaypoint(coord1);
+                currentCircuitGeo.addCoord(coord1);
+            }
+            else {
+                 JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.ERROR_MESSAGE);
+            }
+        }    
+    }//GEN-LAST:event_generationButtonActionPerformed
+
+    private void ameliorationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ameliorationButtonActionPerformed
+        // TODO add your handling code here:
+        if (mapEuc.isOpen()) {
+            currentCircuitEuc.bestGreedyAlgorithm();
+            List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit() ;
+            currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+            List<CoordEuc> circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+            
+            System.out.println("Longueur : " + currentCircuitEuc.calculateCircuitLength(circuit));
+            System.out.println("Longueur : " + currentCircuitEuc.calculateCircuitLength(circuitAm));
+            
+            mapEuc.repaint();
+        }
+        
+        
+        else if (mapGeo.isOpen()) {
+            currentCircuitGeo.bestGreedyAlgorithm();
+            List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit() ;
+            currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+            List<CoordGeo> circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+            
+            System.out.println("Longueur  du circuit initial : " + currentCircuitGeo.calculateCircuitLength(circuit));
+            System.out.println("Longueur après amélioration: " + currentCircuitGeo.calculateCircuitLength(circuitAm));
+            
+            mapGeo.repaint();
+            
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_ameliorationButtonActionPerformed
     
     public void closeMap() {
         if (mapGeo.isOpen()) {
@@ -711,7 +822,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (mapEuc.isOpen()) {
             mapEuc.close();
         }
-        
+        tableModel.setColumnCount(0);
         tableModel.setRowCount(0);
     }
     
@@ -752,6 +863,7 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addToolBt;
     private javax.swing.JPanel algorithmPanel;
+    private javax.swing.JButton ameliorationButton;
     private javax.swing.JMenuItem closeFileMenuItem;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JRadioButtonMenuItem displayDistanceItem;
@@ -761,6 +873,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTextField firstCompField;
     private javax.swing.JLabel firstCompLabel;
+    private javax.swing.JButton generationButton;
     private javax.swing.JButton greedyButton;
     private javax.swing.JLabel idLabel;
     private javax.swing.JTextField idValueField;

@@ -31,6 +31,37 @@ public class CircuitGeo extends Circuit<CoordGeo> {
 
         } while (!scanner.hasNext("EOF"));
     }
+    
+    @Override
+    public void ameliorerCircuitParEchange(List<CoordGeo> circuitInitial) {
+        boolean amelioration = true;
+        if (circuitInitial == null) {
+            System.err.println("Erreur : circuitInitial est null");
+        }
+        List<CoordGeo> circuit = circuitInitial;
+        double longueurActuelle = calculateCircuitLength(circuit);
+
+        while (amelioration) {
+            amelioration = false;
+
+            for (int i = 1; i < circuit.size() - 2; i++) {
+                for (int j = i + 1; j < circuit.size() - 1; j++) {
+                    List<CoordGeo> nouveauCircuit = new ArrayList<>(circuit); // Échange les deux positions
+                    CoordGeo temp = nouveauCircuit.get(i);
+                    nouveauCircuit.set(i, nouveauCircuit.get(j));
+                    nouveauCircuit.set(j, temp);
+
+                    double nouvelleLongueur = calculateCircuitLength(nouveauCircuit);
+                    if (nouvelleLongueur < longueurActuelle) {
+                        circuit = nouveauCircuit;
+                        longueurActuelle = nouvelleLongueur;
+                        amelioration = true;
+                    }
+                }
+            }
+        }
+        ameliorateCircuit = circuit ;
+    }
 
     @Override
     public void randomAlgorithm() {

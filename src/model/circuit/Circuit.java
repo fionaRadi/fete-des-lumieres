@@ -28,6 +28,7 @@ public abstract class Circuit<T extends Coord> {
     protected List<T> greedyCircuit;
     protected List<T> insertionCircuit;
     protected List<T> randomCircuit;
+    protected List<T> ameliorateCircuit;
     
     protected File file;
 
@@ -112,6 +113,7 @@ public abstract class Circuit<T extends Coord> {
     
     abstract public void bestInsertionAlgorithm();
     abstract public List<T> insertionAlgorithmFrom(T start);
+    abstract public void ameliorerCircuitParEchange(List<T> circuitInitial) ;
     
     public List<T> getGreedyCircuit() {
         return greedyCircuit;
@@ -123,6 +125,10 @@ public abstract class Circuit<T extends Coord> {
     
     public List<T> getInsertionCircuit() {
         return insertionCircuit;
+    }
+    
+    public List<T> getAmeliorateCircuit() {
+        return ameliorateCircuit;
     }
     
     public static void exportResultFile(File[] inputFiles, String outputPath) {

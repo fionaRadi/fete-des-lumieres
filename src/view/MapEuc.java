@@ -146,11 +146,12 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         
         drawCircuit(circuit.getInsertionCircuit(), g2d, Color.BLUE);
         drawCircuit(circuit.getGreedyCircuit(), g2d, Color.YELLOW);
-        drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);        
+        drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);    
+        drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
     }
     
     @Override
-    protected void addWaypoint(CoordEuc coord) {
+    public void addWaypoint(CoordEuc coord) {
         WaypointEuc waypoint = new WaypointEuc(coord);
         waypoint.addActionListener(waypointListener);
         waypoints.add(waypoint);

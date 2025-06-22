@@ -332,8 +332,10 @@
                                   <Component id="randomButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="greedyButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="insertionButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="generationButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ameliorationButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="283" max="32767" attributes="0"/>
+                              <EmptySpace pref="350" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -346,7 +348,11 @@
                               <Component id="greedyButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="insertionButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="197" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <Component id="generationButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="ameliorationButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="75" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -374,6 +380,22 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="insertionButtonActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="generationButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Generation"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generationButtonActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="ameliorationButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Amelioration"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ameliorationButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
