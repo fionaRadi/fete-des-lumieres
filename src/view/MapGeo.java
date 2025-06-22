@@ -6,6 +6,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -60,6 +61,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
                 }
             };
 
+            viewer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             viewer.addMouseListener(panListener);
             viewer.addMouseMotionListener(panListener);            
             

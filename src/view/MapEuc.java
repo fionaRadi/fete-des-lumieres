@@ -69,6 +69,8 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                    
                     if (lastX != -1 && lastY != -1) {
                         offsetX += e.getX() - lastX;
                         offsetY += e.getY() - lastY;
@@ -123,7 +125,9 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            }
 
             @Override
             public void mouseEntered(MouseEvent e) {}
