@@ -73,7 +73,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
             circuit.add(coord);
         }
-        
+        circuit.add(circuit.get(0));
         randomCircuit = circuit;
     }
 
