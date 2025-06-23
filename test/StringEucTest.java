@@ -63,7 +63,7 @@ public class StringEucTest {
         circuit.addCoord(new CoordEuc(0.0, 0.0));
         circuit.addCoord(new CoordEuc(1.0, 0.0));
         circuit.addCoord(new CoordEuc(1.0, 1.0));
-        circuit.bestGreedyAlgorithm();
+        circuit.calculateBestGreedyCircuit();
 
         List<CoordEuc> result = circuit.getGreedyCircuit();
 
@@ -81,10 +81,10 @@ public class StringEucTest {
         circuit.addCoord(a);
         circuit.addCoord(b);
         circuit.addCoord(c);
-        circuit.bestInsertionAlgorithm();
+        circuit.calculateBestInsertionCircuit();
         List<CoordEuc> result = circuit.getInsertionCircuit();
 
-        assertEquals(result.get(0), result.get(result.size() - 1)); 
+        assertTrue(result.get(0) == result.get(result.size() - 1)); 
         
         // Vérifie que chaque point de départ apparaît une seule fois (hors dernier point)
         int occurrencesA = Collections.frequency(result.subList(0, 3), a);
@@ -110,7 +110,7 @@ public class StringEucTest {
         circuit.addCoord(b);
         circuit.addCoord(c);
 
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordEuc> result = circuit.getRandomCircuit();
         assertEquals(result.get(0), result.get(result.size() - 1)); 
         
@@ -123,48 +123,13 @@ public class StringEucTest {
         assertEquals(1, Collections.frequency(result.subList(0, 3), c));
         
         // plusieurs appels donnent des résultats différents
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordEuc> result1 = new ArrayList<>(circuit.getRandomCircuit());
 
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordEuc> result2 = new ArrayList<>(circuit.getRandomCircuit());
         
         assertTrue(result1 != result2) ;
-    }
-    
-    @Test
-    public void ameliorerCircuitParEchangeTest() {
-        List<CoordEuc> original = Arrays.asList(new CoordEuc(0.0, 0.0),
-        new CoordEuc(1.0, 3.0),
-        new CoordEuc(5.0, 2.0),
-        new CoordEuc(2.0, 7.0),
-        new CoordEuc(0.0, 0.0) ) ;
-        
-        // Le circuit de base et le circuit amélioré font la même raille et contiennent les mêmes points
-        circuit.ameliorerCircuitParEchange(original);
-        List<CoordEuc> improved = circuit.getAmeliorateCircuit();
-
-        assertEquals(original.size(), improved.size());
-        assertTrue(improved.containsAll(original));
-        
-        // Le circuit amélioré a une distance inférieur ou égale au circuit original
-        double originalLength = circuit.calculateCircuitLength(original);
-        double newLength = circuit.calculateCircuitLength(circuit.getAmeliorateCircuit());
-        assertTrue(newLength <= originalLength);
-        
-        // Si circuit déja optimal, alors rien ne cchange
-        List<CoordEuc> optimal = Arrays.asList(
-            new CoordEuc(0.0, 0.0),
-            new CoordEuc(0.0, 1.0),
-            new CoordEuc(1.0, 1.0),
-            new CoordEuc(1.0, 0.0),
-            new CoordEuc(0.0, 0.0)
-        );
-        double before = circuit.calculateCircuitLength(optimal);
-        circuit.ameliorerCircuitParEchange(optimal);
-        double after = circuit.calculateCircuitLength(circuit.getAmeliorateCircuit());
-
-        assertTrue(before == after);
     }
     
     @Test
@@ -194,6 +159,13 @@ public class StringEucTest {
         //Test des noms de colonnes
         assertEquals("Lieu 1", matrix[0][0]);
         assertEquals("Lieu 2", matrix[1][0]);
+        
+        //Test pour un circuit vide
+        CircuitEuc circuitVide = new CircuitEuc();
+        List<CoordEuc> emptyList = new ArrayList<>();
+        matrix = circuitVide.createDistanceMatrix();
+        assertNotNull(matrix);
+        assertEquals(0, matrix.length);
     }
     
     @Test
@@ -210,32 +182,20 @@ public class StringEucTest {
             new CoordEuc(3.0, -1.0),
             new CoordEuc(1.0, 1.0)
         );
-        //Pour calculateDistance
-        //Pour bestGreedy
         
         //Pour bestInsertion
-        circuitNeg.bestInsertionAlgorithm();
+        circuitNeg.calculateBestInsertionCircuit();
         List<CoordEuc> result = circuitNeg.getInsertionCircuit();
         assertEquals(5, result.size());
         assertTrue(result.containsAll(circuitNeg.getCoords()));
         assertNotNull(result);
         
         //Pour randomAlgorithm
-        circuitNeg.randomAlgorithm();
+        circuitNeg.calculateRandomCircuit();
         result = circuitNeg.getRandomCircuit();
         assertNotNull(result);
         assertEquals(5, result.size());
         assertTrue(result.containsAll(circuitNeg.getCoords()));
-        
-        //Pour ameliorerCircuitParEchange
-        double originalLength = circuitNeg.calculateCircuitLength(original);
-        circuitNeg.ameliorerCircuitParEchange(original);
-        List<CoordEuc> improved = circuitNeg.getAmeliorateCircuit();
-        double improvedLength = circuitNeg.calculateCircuitLength(improved);
-        assertNotNull(improved);
-        assertEquals(original.size(), improved.size());
-        assertTrue(improved.containsAll(original));
-        assertTrue(improvedLength <= originalLength);
         
         //Pour createDistanceMatrix
         Object[][] matrix = circuitNeg.createDistanceMatrix();
@@ -250,22 +210,13 @@ public class StringEucTest {
         CircuitEuc circuit1 = new CircuitEuc();
         circuit1.addCoord(new CoordEuc(5.0, 0.0));
         List<CoordEuc> onePoint = List.of(new CoordEuc(0.0, 0.0));
-        //Pour calculateDistance
-        //Pour bestGreedy
-        //Pour bestInsertion
-        
-        
+       
         //Pour randomAlgorithm
-        circuit1.randomAlgorithm();
+        circuit1.calculateRandomCircuit();
         List<CoordEuc> result = circuit1.getRandomCircuit();
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(circuit1.getCoords().get(0), result.get(0));
-        
-        //Pour ameliorerCircuitParEchange
-        circuit1.ameliorerCircuitParEchange(onePoint);
-        result = circuit1.getAmeliorateCircuit();
-        assertEquals(onePoint, result);
         
         //Pour createDistanceMatrix
         Object[][] matrix = circuit1.createDistanceMatrix();
@@ -275,28 +226,6 @@ public class StringEucTest {
         assertEquals("0.00", matrix[0][1]);
     }
     
-    @Test
-    public void emptyTest() {
-        CircuitEuc circuitVide = new CircuitEuc();
-        List<CoordEuc> emptyList = new ArrayList<>();
-        
-        //Pour calculateDistance
-        //Pour bestGreedy
-        //Pour bestInsertion
-        //Pour randomAlgorithm
-  
-        //Pour ameliorerCircuitParEchange
-        circuitVide.ameliorerCircuitParEchange(emptyList);
-        List<CoordEuc>result = circuitVide.getAmeliorateCircuit();
-        assertNotNull(result);
-        assertEquals(0, result.size());
-        
-        //Pour createDistanceMatrix
-        Object[][] matrix = circuitVide.createDistanceMatrix();
-        assertNotNull(matrix);
-        assertEquals(0, matrix.length);
-    }
-     
     public StringEucTest() {
     }
     

@@ -26,36 +26,28 @@ public class StringGeoTest {
     private CircuitGeo circuit;
     
     @Test
-    public void calculateDistanceTest() {
-      
+    public void calculateLengthTest(){
         CoordGeo a = new CoordGeo(3.0, 4.0);
         CoordGeo b = new CoordGeo(3.0, 4.0);
         CoordGeo c = new CoordGeo(0.0, 0.0);
         CoordGeo d = new CoordGeo(6.0, 0.0);
+        CoordGeo neg1 = new CoordGeo(-1.0, -1.0);
+        CoordGeo neg2 = new CoordGeo(-4.0, -5.0);
 
-        List<CoordGeo> coords = Arrays.asList(a, b);
-        List<CoordGeo> coords2 = Arrays.asList(c, a);
-        List<CoordGeo> coords3 = Arrays.asList(a, c);
-        List<CoordGeo> coords4 = Arrays.asList(c, a, d);
-        
-        // Distance null pour 2 points identiques
-        double result = circuit.calculateCircuitLength(coords);
-        double expected = 0.0;
-        assertEquals(expected, result, 1e-6);
-        
-        // Distance égale à celle attendu
-        double result2 = circuit.calculateCircuitLength(coords2);
-        double expected2 = 5.0;
-        assertEquals(expected2, result2, 1e-6);
-        
-        // Distance égale entre 2 points peu importe le sens
-        double result3 = circuit.calculateCircuitLength(coords3);
-        assertEquals(result2, result3, 1e-6);
-        
-        // Distance entre trois points
-        double result4 = circuit.calculateCircuitLength(coords4);
-        double expected4 = 10.0;
-        assertEquals(expected4, result4, 1e-6);
+        // Deux points identiques → distance 0
+        assertEquals(0.0, circuit.calculateCircuitLength(Arrays.asList(a, b)), 1e-3);
+
+        // Distance correcte entre deux points
+        assertTrue(circuit.calculateCircuitLength(Arrays.asList(c, a)) > 500 && circuit.calculateCircuitLength(Arrays.asList(c, a)) < 600);
+
+        // Même distance dans l’autre sens
+        assertTrue(circuit.calculateCircuitLength(Arrays.asList(a, c)) > 500 && circuit.calculateCircuitLength(Arrays.asList(a, c)) < 600);
+
+        // Cas vide
+        assertEquals(0.0, circuit.calculateCircuitLength(new ArrayList<>()), 1e-3);
+
+        // Un seul point
+        assertEquals(0.0, circuit.calculateCircuitLength(Arrays.asList(a)), 1e-3);
     }
     
     @Test
@@ -63,7 +55,7 @@ public class StringGeoTest {
         circuit.addCoord(new CoordGeo(0.0, 0.0));
         circuit.addCoord(new CoordGeo(1.0, 0.0));
         circuit.addCoord(new CoordGeo(1.0, 1.0));
-        circuit.bestGreedyAlgorithm();
+        circuit.calculateBestGreedyCircuit();
 
         List<CoordGeo> result = circuit.getGreedyCircuit();
 
@@ -81,7 +73,7 @@ public class StringGeoTest {
         circuit.addCoord(a);
         circuit.addCoord(b);
         circuit.addCoord(c);
-        circuit.bestInsertionAlgorithm();
+        circuit.calculateBestInsertionCircuit();
         List<CoordGeo> result = circuit.getInsertionCircuit();
 
         assertEquals(result.get(0), result.get(result.size() - 1)); 
@@ -110,7 +102,7 @@ public class StringGeoTest {
         circuit.addCoord(b);
         circuit.addCoord(c);
 
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordGeo> result = circuit.getRandomCircuit();
         assertEquals(result.get(0), result.get(result.size() - 1)); 
         
@@ -123,10 +115,10 @@ public class StringGeoTest {
         assertEquals(1, Collections.frequency(result.subList(0, 3), c));
         
         // plusieurs appels donnent des résultats différents
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordGeo> result1 = new ArrayList<>(circuit.getRandomCircuit());
 
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordGeo> result2 = new ArrayList<>(circuit.getRandomCircuit());
         
         assertTrue(result1 != result2) ;
@@ -152,14 +144,6 @@ public class StringGeoTest {
         
         //Test si c'est symétrique
         assertEquals(matrix[0][2], matrix[1][1]);
-        
-        //Test distances correctes
-        assertEquals("5,00", matrix[0][2]); 
-        assertEquals("5,00", matrix[1][1]);
-        
-        //Test des noms de colonnes
-        assertEquals("Lieu 1", matrix[0][0]);
-        assertEquals("Lieu 2", matrix[1][0]);
     }
     
     @Test
@@ -180,35 +164,24 @@ public class StringGeoTest {
         //Pour bestGreedy
         
         //Pour bestInsertion
-        circuitNeg.bestInsertionAlgorithm();
+        circuitNeg.calculateBestInsertionCircuit();
         List<CoordGeo> result = circuitNeg.getInsertionCircuit();
         assertEquals(5, result.size());
         assertTrue(result.containsAll(circuitNeg.getCoords()));
         assertNotNull(result);
         
         //Pour randomAlgorithm
-        circuitNeg.randomAlgorithm();
+        circuitNeg.calculateRandomCircuit();
         result = circuitNeg.getRandomCircuit();
         assertNotNull(result);
         assertEquals(5, result.size());
         assertTrue(result.containsAll(circuitNeg.getCoords()));
-        
-        //Pour ameliorerCircuitParEchange
-        double originalLength = circuitNeg.calculateCircuitLength(original);
-        circuitNeg.ameliorerCircuitParEchange(original);
-        List<CoordGeo> improved = circuitNeg.getAmeliorateCircuit();
-        double improvedLength = circuitNeg.calculateCircuitLength(improved);
-        assertNotNull(improved);
-        assertEquals(original.size(), improved.size());
-        assertTrue(improved.containsAll(original));
-        assertTrue(improvedLength <= originalLength);
         
         //Pour createDistanceMatrix
         Object[][] matrix = circuitNeg.createDistanceMatrix();
         assertEquals("Lieu 1", matrix[0][0]);
         assertEquals("Lieu 2", matrix[1][0]);
         assertEquals("0.00", matrix[0][1]);
-        assertEquals("5,00", matrix[0][2]);
     }
     
     @Test
@@ -222,16 +195,11 @@ public class StringGeoTest {
         
         
         //Pour randomAlgorithm
-        circuit1.randomAlgorithm();
+        circuit1.calculateRandomCircuit();
         List<CoordGeo> result = circuit1.getRandomCircuit();
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(circuit1.getCoords().get(0), result.get(0));
-        
-        //Pour ameliorerCircuitParEchange
-        circuit1.ameliorerCircuitParEchange(onePoint);
-        result = circuit1.getAmeliorateCircuit();
-        assertEquals(onePoint, result);
         
         //Pour createDistanceMatrix
         Object[][] matrix = circuit1.createDistanceMatrix();
@@ -250,12 +218,6 @@ public class StringGeoTest {
         //Pour bestGreedy
         //Pour bestInsertion
         //Pour randomAlgorithm
-  
-        //Pour ameliorerCircuitParEchange
-        circuitVide.ameliorerCircuitParEchange(emptyList);
-        List<CoordGeo>result = circuitVide.getAmeliorateCircuit();
-        assertNotNull(result);
-        assertEquals(0, result.size());
         
         //Pour createDistanceMatrix
         Object[][] matrix = circuitVide.createDistanceMatrix();
