@@ -11,4 +11,5 @@ package model;
  */
 public class Constants {
     public static boolean DISPLAY_DISTANCE = true;
+    public static int TRACE_SIZE = 3;
 }

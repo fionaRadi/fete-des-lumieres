@@ -141,6 +141,9 @@ public class MainWindow extends javax.swing.JFrame {
         idValueField = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        newFileMenu = new javax.swing.JMenu();
+        newFileEucItem = new javax.swing.JMenuItem();
+        newFileGeoItem = new javax.swing.JMenuItem();
         openFileMenuItem = new javax.swing.JMenuItem();
         closeFileMenuItem = new javax.swing.JMenuItem();
         saveFileItem = new javax.swing.JMenuItem();
@@ -552,6 +555,26 @@ public class MainWindow extends javax.swing.JFrame {
 
         fileMenu.setText("Fichier");
 
+        newFileMenu.setText("Nouvelle carte");
+
+        newFileEucItem.setText("Euclidienne");
+        newFileEucItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newFileEucItemActionPerformed(evt);
+            }
+        });
+        newFileMenu.add(newFileEucItem);
+
+        newFileGeoItem.setText("Géographique");
+        newFileGeoItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newFileGeoItemActionPerformed(evt);
+            }
+        });
+        newFileMenu.add(newFileGeoItem);
+
+        fileMenu.add(newFileMenu);
+
         openFileMenuItem.setText("Ouvrir une carte");
         openFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -832,14 +855,17 @@ public class MainWindow extends javax.swing.JFrame {
         Random random = new Random();
 
         for (int i = 1; i <= reponse; i++) {
-            double x = 10 + (200 - 10) * random.nextDouble();
-            double y = 10 + (200 - 10) * random.nextDouble();
-            
             if (mapEuc.displayed()) {
+                double x = 10000 * random.nextDouble();
+                double y = 10000 * random.nextDouble();
+                
                 mapEuc.addCoord(x, y);
                 updateTable(currentCircuitEuc);
             }
             else if (mapGeo.displayed()) {
+                double x = 10 + (200 - 10) * random.nextDouble();
+                double y = 10 + (200 - 10) * random.nextDouble();
+                
                 mapGeo.addCoord(x, y);
                 updateTable(currentCircuitGeo);
             }
@@ -996,6 +1022,18 @@ public class MainWindow extends javax.swing.JFrame {
     private void mapEucMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_mapEucMouseWheelMoved
         scaleLabel.setText("x " + String.format("%.1f", mapEuc.getScale()));
     }//GEN-LAST:event_mapEucMouseWheelMoved
+
+    private void newFileEucItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFileEucItemActionPerformed
+        closeCurrentMap();
+        currentCircuitEuc = new CircuitEuc();
+        mapEuc.load(currentCircuitEuc);
+    }//GEN-LAST:event_newFileEucItemActionPerformed
+
+    private void newFileGeoItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFileGeoItemActionPerformed
+        closeCurrentMap();
+        currentCircuitGeo = new CircuitGeo();
+        mapGeo.load(currentCircuitGeo);
+    }//GEN-LAST:event_newFileGeoItemActionPerformed
     
     private void updateTable(Circuit currentCircuit) {        
         // Modification du model (distanceTable)
@@ -1084,6 +1122,9 @@ public class MainWindow extends javax.swing.JFrame {
     private view.MapEuc mapEuc;
     private view.MapGeo mapGeo;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem newFileEucItem;
+    private javax.swing.JMenuItem newFileGeoItem;
+    private javax.swing.JMenu newFileMenu;
     private javax.swing.JMenuItem openFileMenuItem;
     private javax.swing.JButton randomButton;
     private javax.swing.JButton removeToolBt;

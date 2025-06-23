@@ -14,6 +14,29 @@
             <Property name="text" type="java.lang.String" value="Fichier"/>
           </Properties>
           <SubComponents>
+            <Menu class="javax.swing.JMenu" name="newFileMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Nouvelle carte"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="newFileEucItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Euclidienne"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newFileEucItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="newFileGeoItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="G&#xe9;ographique"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newFileGeoItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="openFileMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ouvrir une carte"/>
