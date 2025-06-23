@@ -63,7 +63,7 @@ public class StringEucTest {
         circuit.addCoord(new CoordEuc(0.0, 0.0));
         circuit.addCoord(new CoordEuc(1.0, 0.0));
         circuit.addCoord(new CoordEuc(1.0, 1.0));
-        circuit.bestGreedyAlgorithm();
+        circuit.calculateBestGreedyCircuit();
 
         List<CoordEuc> result = circuit.getGreedyCircuit();
 
@@ -81,7 +81,7 @@ public class StringEucTest {
         circuit.addCoord(a);
         circuit.addCoord(b);
         circuit.addCoord(c);
-        circuit.bestInsertionAlgorithm();
+        circuit.calculateBestGreedyCircuit();
         List<CoordEuc> result = circuit.getInsertionCircuit();
 
         assertEquals(result.get(0), result.get(result.size() - 1)); 
@@ -110,7 +110,7 @@ public class StringEucTest {
         circuit.addCoord(b);
         circuit.addCoord(c);
 
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordEuc> result = circuit.getRandomCircuit();
         assertEquals(result.get(0), result.get(result.size() - 1)); 
         
@@ -123,10 +123,10 @@ public class StringEucTest {
         assertEquals(1, Collections.frequency(result.subList(0, 3), c));
         
         // plusieurs appels donnent des résultats différents
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordEuc> result1 = new ArrayList<>(circuit.getRandomCircuit());
 
-        circuit.randomAlgorithm();
+        circuit.calculateRandomCircuit();
         List<CoordEuc> result2 = new ArrayList<>(circuit.getRandomCircuit());
         
         assertTrue(result1 != result2) ;
@@ -141,8 +141,8 @@ public class StringEucTest {
         new CoordEuc(0.0, 0.0) ) ;
         
         // Le circuit de base et le circuit amélioré font la même raille et contiennent les mêmes points
-        circuit.ameliorerCircuitParEchange(original);
-        List<CoordEuc> improved = circuit.getAmeliorateCircuit();
+        circuit.improveCircuitBySwapping(original, "GLOUTON");
+        //List<CoordEuc> improved = circuit.getAmeliorateCircuit();
 
         assertEquals(original.size(), improved.size());
         assertTrue(improved.containsAll(original));
@@ -214,14 +214,14 @@ public class StringEucTest {
         //Pour bestGreedy
         
         //Pour bestInsertion
-        circuitNeg.bestInsertionAlgorithm();
+        circuitNeg.calculateBestInsertionCircuit();
         List<CoordEuc> result = circuitNeg.getInsertionCircuit();
         assertEquals(5, result.size());
         assertTrue(result.containsAll(circuitNeg.getCoords()));
         assertNotNull(result);
         
         //Pour randomAlgorithm
-        circuitNeg.randomAlgorithm();
+        circuitNeg.calculateRandomCircuit();
         result = circuitNeg.getRandomCircuit();
         assertNotNull(result);
         assertEquals(5, result.size());
@@ -256,7 +256,7 @@ public class StringEucTest {
         
         
         //Pour randomAlgorithm
-        circuit1.randomAlgorithm();
+        circuit1.calculateRandomCircuit();
         List<CoordEuc> result = circuit1.getRandomCircuit();
         assertNotNull(result);
         assertEquals(2, result.size());
