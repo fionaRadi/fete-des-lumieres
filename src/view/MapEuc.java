@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.beans.Beans;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -34,21 +35,23 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     public MapEuc() {        
         super();
         
-        System.out.println("=> Creation de la carte euclidienne");
+        if (!Beans.isDesignTime()) {
+            System.out.println("=> Creation de la carte euclidienne");
 
-        offsetX = 0;
-        offsetY = 0;
-        
+            offsetX = 0;
+            offsetY = 0;
 
-        ToolTipManager.sharedInstance().registerComponent(this);
-        
-        setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        
-        initListeners();
-        
-        System.out.println("=> Carte euclidienne creee");
-        
-        setVisible(false);
+
+            ToolTipManager.sharedInstance().registerComponent(this);
+
+            setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+
+            initListeners();
+
+            System.out.println("=> Carte euclidienne creee");
+
+            setVisible(false);
+        }
     }
     
     @Override
@@ -144,12 +147,12 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         super.paintComponent(g);
         
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setStroke(new BasicStroke(3));
         
-        drawCircuit(circuit.getInsertionCircuit(), g2d, Color.YELLOW);
-        drawCircuit(circuit.getGreedyCircuit(), g2d, Color.BLUE);
-        drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);    
-        drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
+        drawCircuit(circuit.getGreedyCircuit(), g2d, highlightGreedyCircuit, Color.BLUE);
+        drawCircuit(circuit.getInsertionCircuit(), g2d, highlightInsertionCircuit, Color.YELLOW);
+        drawCircuit(circuit.getRandomCircuit(), g2d, highlightRandomCircuit, Color.GREEN);    
+        
+        // drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
     }
     
     @Override
@@ -172,6 +175,14 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
     
+    public void addCoord(double x, double y) {
+        CoordEuc coord = new CoordEuc(x, y);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
+
+        repaint();
+    }
+    
     public void removeCoord(WaypointEuc waypoint) {
         circuit.removeCoord(waypoint.getCoord());
         waypoints.remove(waypoint);
@@ -185,12 +196,19 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
      * 
      * @param coords La liste ordonnée de coordonnées correspondant au circuit
      * @param graphics L'objet Graphics2D permettant l'affichage
-     * @param color La couleur du circuit
+     * @param hightlightColor La couleur du circuit
      */
-    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
+    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, boolean highlight, Color hightlightColor) {
         if (coords != null) {            
-            for (int i = 0; i < coords.size() - 1; i++) {                
-                graphics.setColor(color);
+            for (int i = 0; i < coords.size() - 1; i++) {  
+                if (highlight) {
+                    graphics.setColor(hightlightColor);
+                    graphics.setStroke(new BasicStroke(2));
+                    
+                } else {
+                    graphics.setColor(Color.LIGHT_GRAY);
+                    graphics.setStroke(new BasicStroke(3));
+                }
                 
                 CoordEuc c1 = coords.get(i);
                 CoordEuc c2 = coords.get(i + 1);
@@ -203,7 +221,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 
                 graphics.drawLine(x1, y1, x2, y2);
                 
-                if (Constants.DISPLAY_DISTANCE) {
+                if (Constants.DISPLAY_DISTANCE && highlight) {
                     double distance = circuit.calculateDistance(c1, c2);
 
                     int xm = (x1 + x2) / 2;

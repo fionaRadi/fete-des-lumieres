@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.awt.Dimension;
 import view.listeners.MapClickedListener;
 import view.listeners.WaypointSelectionListener;
 import java.awt.event.ActionEvent;
@@ -32,6 +33,10 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         
     protected double scale;
     
+    protected boolean highlightGreedyCircuit;
+    protected boolean highlightInsertionCircuit;
+    protected boolean highlightRandomCircuit;
+    
     private List<WaypointSelectionListener> waypointListeners = new ArrayList<>();
     protected ActionListener waypointListener;
     
@@ -47,6 +52,10 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         
         scale = 1.0;
         setLayout(null);
+        
+        highlightGreedyCircuit = false;
+        highlightInsertionCircuit = false;
+        highlightRandomCircuit = false;
     }
 
     public abstract void addWaypoint(T coord);
@@ -75,6 +84,9 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
 
     public void close() {        
         waypoints.clear();
+        highlightGreedyCircuit = false;
+        highlightInsertionCircuit = false;
+        highlightRandomCircuit = false;
         setVisible(false);
     }
 
@@ -135,5 +147,32 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
      */
     protected void addMapClickedListener(MapClickedListener listener) {
         mapClickedListeners.add(listener);
+    }
+    
+    public void highlightGreedyCircuit(boolean value) {
+        highlightGreedyCircuit = value;
+        repaint();
+    }
+    
+    public void highlightInsertionCircuit(boolean value) {
+        highlightInsertionCircuit = value;
+        repaint();
+    }
+    
+    public void highlightRandomCircuit(boolean value) {
+        highlightRandomCircuit = value;
+        repaint();
+    }
+    
+    public boolean greedyCircuitHighlighted() {
+        return highlightGreedyCircuit;
+    }
+    
+    public boolean insertionCircuitHighlighted() {
+        return highlightInsertionCircuit;
+    }
+    
+    public boolean randomCircuitHighlighted() {
+        return highlightRandomCircuit;
     }
 }

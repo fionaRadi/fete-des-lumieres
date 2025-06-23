@@ -44,8 +44,6 @@ public class MainWindow extends javax.swing.JFrame {
         };
         distanceTable.setModel(tableModel);
         distanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        mainPane.resetToPreferredSizes();
-        sidePanel.resetToPreferredSizes();
         
         mapEuc.addWaypointSelectionListener(waypoint -> {
             switch (actionMode) {
@@ -78,12 +76,14 @@ public class MainWindow extends javax.swing.JFrame {
         mapEuc.addMapClickedListener(e -> {
             if (SwingUtilities.isLeftMouseButton(e) && actionMode == actionMode.ADD) {
                 mapEuc.addCoord(e);
+                updateTable(currentCircuitEuc);
             }
         });
         
         mapGeo.addMapClickedListener(e -> {
             if (SwingUtilities.isLeftMouseButton(e) &&actionMode == actionMode.ADD) {
                 mapGeo.addCoord(e);
+                updateTable(currentCircuitGeo);
             }
         });
         
@@ -108,31 +108,25 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainPane = new javax.swing.JSplitPane();
         layeredPane = new javax.swing.JLayeredPane();
+        zoomLabelPanel = new javax.swing.JPanel();
+        scaleLabel = new java.awt.Label();
         toolBar = new javax.swing.JPanel();
         selectToolBt = new javax.swing.JButton();
         addToolBt = new javax.swing.JButton();
         removeToolBt = new javax.swing.JButton();
-        mapGeo = new view.MapGeo();
         mapEuc = new view.MapEuc();
-        zoomLabelPanel = new javax.swing.JPanel();
-        scaleLabel = new java.awt.Label();
+        mapGeo = new view.MapGeo();
         sidePanel = new javax.swing.JSplitPane();
         tabbedPane = new javax.swing.JTabbedPane();
         algorithmPanel = new javax.swing.JPanel();
-        ameliorationButton = new javax.swing.JButton();
-        executeButton = new javax.swing.JButton();
-        aleatoire = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        feuilleDeRoute = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        textRandom = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        textGreedy = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        textInsertion = new javax.swing.JTextArea();
-        checkRandom = new javax.swing.JCheckBox();
-        checkGreedy = new javax.swing.JCheckBox();
-        checkInsertion = new javax.swing.JCheckBox();
+        buttonsPanel = new javax.swing.JPanel();
+        improveButton = new javax.swing.JButton();
+        findButton = new javax.swing.JButton();
+        randomButton = new javax.swing.JButton();
+        resultPanel = new javax.swing.JPanel();
+        toggleInsertionHightlightBt = new view.CircuitToggleButton();
+        toggleGreedyHighlightBt = new view.CircuitToggleButton();
+        toggleRandomHighlightBt = new view.CircuitToggleButton();
         distancePanel = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
         distanceTable = new javax.swing.JTable();
@@ -156,52 +150,23 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Fête des Lumières");
+        setMaximumSize(new java.awt.Dimension(1920, 1080));
+        setPreferredSize(new java.awt.Dimension(1150, 800));
+        setSize(new java.awt.Dimension(1150, 700));
 
         mainPane.setDividerLocation(700);
         mainPane.setResizeWeight(0.7);
+        mainPane.setPreferredSize(new java.awt.Dimension(1150, 700));
 
         layeredPane.setBackground(new java.awt.Color(204, 204, 204));
+        layeredPane.setMinimumSize(new java.awt.Dimension(400, 400));
         layeredPane.setOpaque(true);
-
-        selectToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/select_tool.png"))); // NOI18N
-        selectToolBt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectToolBtActionPerformed(evt);
-            }
-        });
-        toolBar.add(selectToolBt);
-
-        addToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/add_tool.png"))); // NOI18N
-        addToolBt.setToolTipText("");
-        addToolBt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addToolBtActionPerformed(evt);
-            }
-        });
-        toolBar.add(addToolBt);
-
-        removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
-        removeToolBt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeToolBtActionPerformed(evt);
-            }
-        });
-        toolBar.add(removeToolBt);
-
-        mapGeo.setOpaque(true);
-        mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                mapGeoMouseWheelMoved(evt);
-            }
-        });
-
-        mapEuc.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                mapEucMouseWheelMoved(evt);
-            }
-        });
+        layeredPane.setPreferredSize(new java.awt.Dimension(700, 675));
 
         zoomLabelPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        zoomLabelPanel.setAlignmentX(0.0F);
+        zoomLabelPanel.setAlignmentY(0.0F);
+        zoomLabelPanel.setMaximumSize(new java.awt.Dimension(90, 30));
 
         scaleLabel.setAlignment(java.awt.Label.CENTER);
         scaleLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
@@ -211,224 +176,245 @@ public class MainWindow extends javax.swing.JFrame {
         zoomLabelPanel.setLayout(zoomLabelPanelLayout);
         zoomLabelPanelLayout.setHorizontalGroup(
             zoomLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 63, Short.MAX_VALUE)
-            .addGroup(zoomLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(scaleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
+            .addGroup(zoomLabelPanelLayout.createSequentialGroup()
+                .addComponent(scaleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         zoomLabelPanelLayout.setVerticalGroup(
             zoomLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 28, Short.MAX_VALUE)
-            .addGroup(zoomLabelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(scaleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(scaleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
         scaleLabel.getAccessibleContext().setAccessibleParent(layeredPane);
 
-        layeredPane.setLayer(toolBar, javax.swing.JLayeredPane.PALETTE_LAYER);
-        layeredPane.setLayer(mapGeo, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        toolBar.setAlignmentX(0.0F);
+        toolBar.setAlignmentY(0.0F);
+        toolBar.setAutoscrolls(true);
+        toolBar.setMaximumSize(new java.awt.Dimension(200, 30));
+
+        selectToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/select_tool.png"))); // NOI18N
+        selectToolBt.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        selectToolBt.setMaximumSize(new java.awt.Dimension(50, 50));
+        selectToolBt.setMinimumSize(new java.awt.Dimension(10, 10));
+        selectToolBt.setPreferredSize(new java.awt.Dimension(40, 35));
+        selectToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectToolBtActionPerformed(evt);
+            }
+        });
+        toolBar.add(selectToolBt);
+
+        addToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/add_tool.png"))); // NOI18N
+        addToolBt.setToolTipText("");
+        addToolBt.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        addToolBt.setMaximumSize(new java.awt.Dimension(50, 50));
+        addToolBt.setMinimumSize(new java.awt.Dimension(10, 10));
+        addToolBt.setPreferredSize(new java.awt.Dimension(40, 35));
+        addToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addToolBtActionPerformed(evt);
+            }
+        });
+        toolBar.add(addToolBt);
+
+        removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
+        removeToolBt.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        removeToolBt.setMaximumSize(new java.awt.Dimension(50, 50));
+        removeToolBt.setMinimumSize(new java.awt.Dimension(10, 10));
+        removeToolBt.setPreferredSize(new java.awt.Dimension(40, 35));
+        removeToolBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeToolBtActionPerformed(evt);
+            }
+        });
+        toolBar.add(removeToolBt);
+
+        mapGeo.setOpaque(true);
+        mapGeo.setPreferredSize(new java.awt.Dimension(700, 700));
+        mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                mapGeoMouseWheelMoved(evt);
+            }
+        });
+
+        layeredPane.setLayer(zoomLabelPanel, javax.swing.JLayeredPane.POPUP_LAYER);
+        layeredPane.setLayer(toolBar, javax.swing.JLayeredPane.POPUP_LAYER);
         layeredPane.setLayer(mapEuc, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        layeredPane.setLayer(zoomLabelPanel, javax.swing.JLayeredPane.PALETTE_LAYER);
+        layeredPane.setLayer(mapGeo, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layeredPaneLayout = new javax.swing.GroupLayout(layeredPane);
         layeredPane.setLayout(layeredPaneLayout);
         layeredPaneLayout.setHorizontalGroup(
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layeredPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layeredPaneLayout.createSequentialGroup()
-                        .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 512, Short.MAX_VALUE))
-                    .addComponent(mapGeo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(mapGeo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layeredPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredPaneLayout.createSequentialGroup()
-                    .addGap(0, 632, Short.MAX_VALUE)
-                    .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
         );
         layeredPaneLayout.setVerticalGroup(
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layeredPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3)
-                .addComponent(mapGeo, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(mapGeo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mapEuc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layeredPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(649, Short.MAX_VALUE)))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredPaneLayout.createSequentialGroup()
-                    .addGap(0, 722, Short.MAX_VALUE)
-                    .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
         );
 
         mainPane.setLeftComponent(layeredPane);
 
-        sidePanel.setDividerLocation(325);
+        sidePanel.setDividerLocation(500);
         sidePanel.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         sidePanel.setResizeWeight(0.6);
         sidePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        sidePanel.setPreferredSize(new java.awt.Dimension(300, 700));
 
         tabbedPane.setBackground(new java.awt.Color(255, 255, 255));
 
-        algorithmPanel.setBackground(new java.awt.Color(255, 51, 51));
+        buttonsPanel.setLayout(new java.awt.GridBagLayout());
 
-        ameliorationButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        ameliorationButton.setText("Améliorer mon Trajet");
-        ameliorationButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        ameliorationButton.setContentAreaFilled(false);
-        ameliorationButton.setOpaque(true);
-        ameliorationButton.addActionListener(new java.awt.event.ActionListener() {
+        improveButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        improveButton.setText("Améliorer mon Trajet");
+        improveButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        improveButton.setContentAreaFilled(false);
+        improveButton.setOpaque(true);
+        improveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ameliorationButtonActionPerformed(evt);
+                improveButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        buttonsPanel.add(improveButton, gridBagConstraints);
 
-        executeButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        executeButton.setText("Recherche d'itinéraire");
-        executeButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        executeButton.setContentAreaFilled(false);
-        executeButton.setOpaque(true);
-        executeButton.addActionListener(new java.awt.event.ActionListener() {
+        findButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        findButton.setText("Recherche d'itinéraire");
+        findButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        findButton.setContentAreaFilled(false);
+        findButton.setOpaque(true);
+        findButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                executeButtonActionPerformed(evt);
+                findButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        buttonsPanel.add(findButton, gridBagConstraints);
 
-        aleatoire.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        aleatoire.setText("Points Aléatoires");
-        aleatoire.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        aleatoire.setContentAreaFilled(false);
-        aleatoire.setOpaque(true);
-        aleatoire.addActionListener(new java.awt.event.ActionListener() {
+        randomButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        randomButton.setText("Points Aléatoires");
+        randomButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        randomButton.setContentAreaFilled(false);
+        randomButton.setOpaque(true);
+        randomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aleatoireActionPerformed(evt);
+                randomButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        buttonsPanel.add(randomButton, gridBagConstraints);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        resultPanel.setLayout(new java.awt.GridBagLayout());
 
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        textRandom.setEditable(false);
-        textRandom.setColumns(20);
-        textRandom.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        textRandom.setLineWrap(true);
-        textRandom.setRows(5);
-        textRandom.setText("Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n\nCouleur sur la map : VERT\nDistance à parcourir : ");
-        textRandom.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(textRandom);
-
-        textGreedy.setEditable(false);
-        textGreedy.setColumns(20);
-        textGreedy.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        textGreedy.setLineWrap(true);
-        textGreedy.setRows(5);
-        textGreedy.setText("Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter  !\n\nCouleur sur la map : BLEU\nDistance à parcourir : ");
-        textGreedy.setWrapStyleWord(true);
-        jScrollPane3.setViewportView(textGreedy);
-
-        textInsertion.setEditable(false);
-        textInsertion.setColumns(20);
-        textInsertion.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        textInsertion.setLineWrap(true);
-        textInsertion.setRows(5);
-        textInsertion.setText("Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n\nCouleur sur la map : JAUNE\nDistance à parcourir : ");
-        textInsertion.setWrapStyleWord(true);
-        jScrollPane4.setViewportView(textInsertion);
-
-        checkRandom.setBackground(new java.awt.Color(255, 255, 255));
-        checkRandom.setText("Algorithme Aléatoire");
-        checkRandom.addActionListener(new java.awt.event.ActionListener() {
+        toggleInsertionHightlightBt.setText("Avec algorithme par insertion");
+        toggleInsertionHightlightBt.setTitleText("Itinéraire 2");
+        toggleInsertionHightlightBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkRandomActionPerformed(evt);
+                toggleInsertionHightlightBtActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        resultPanel.add(toggleInsertionHightlightBt, gridBagConstraints);
 
-        checkGreedy.setBackground(new java.awt.Color(255, 255, 255));
-        checkGreedy.setText("Algorithme Glouton");
+        toggleGreedyHighlightBt.setText("Avec algorithme glouton");
+        toggleGreedyHighlightBt.setTitleText("Itinéraire 1");
+        toggleGreedyHighlightBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleGreedyHighlightBtActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        resultPanel.add(toggleGreedyHighlightBt, gridBagConstraints);
 
-        checkInsertion.setBackground(new java.awt.Color(255, 255, 255));
-        checkInsertion.setText("Algorithme par Insertion");
-
-        javax.swing.GroupLayout feuilleDeRouteLayout = new javax.swing.GroupLayout(feuilleDeRoute);
-        feuilleDeRoute.setLayout(feuilleDeRouteLayout);
-        feuilleDeRouteLayout.setHorizontalGroup(
-            feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(checkGreedy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(checkRandom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(checkInsertion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(529, Short.MAX_VALUE))
-        );
-        feuilleDeRouteLayout.setVerticalGroup(
-            feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(checkRandom)))
-                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(checkGreedy)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(checkInsertion)
-                        .addGap(157, 157, 157))
-                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(98, 98, 98)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(117, 117, 117))))
-        );
-
-        jScrollPane1.setViewportView(feuilleDeRoute);
+        toggleRandomHighlightBt.setText("Avec algorithme aléatoire");
+        toggleRandomHighlightBt.setTitleText("Itinéraire 3");
+        toggleRandomHighlightBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleRandomHighlightBtActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        resultPanel.add(toggleRandomHighlightBt, gridBagConstraints);
 
         javax.swing.GroupLayout algorithmPanelLayout = new javax.swing.GroupLayout(algorithmPanel);
         algorithmPanel.setLayout(algorithmPanelLayout);
         algorithmPanelLayout.setHorizontalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(algorithmPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, algorithmPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(algorithmPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(algorithmPanelLayout.createSequentialGroup()
-                        .addComponent(ameliorationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(115, 115, 115)
-                        .addComponent(executeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-                        .addComponent(aleatoire, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
                 .addContainerGap())
         );
         algorithmPanelLayout.setVerticalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(algorithmPanelLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(executeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ameliorationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(aleatoire, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                .addGap(28, 28, 28))
+                .addGap(0, 0, 0)
+                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(resultPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Itinéraires", algorithmPanel);
@@ -455,13 +441,11 @@ public class MainWindow extends javax.swing.JFrame {
         distancePanel.setLayout(distancePanelLayout);
         distancePanelLayout.setHorizontalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
+            .addComponent(tableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
         );
         distancePanelLayout.setVerticalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(distancePanelLayout.createSequentialGroup()
-                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Tableau des distances", distancePanel);
@@ -469,7 +453,6 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setTopComponent(tabbedPane);
         tabbedPane.getAccessibleContext().setAccessibleName("tabbedPane");
 
-        detailsPanel.setBackground(new java.awt.Color(255, 51, 51));
         detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Détails du lieu"));
         detailsPanel.setName("Détails"); // NOI18N
         detailsPanel.setLayout(new java.awt.GridBagLayout());
@@ -557,6 +540,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainPane.setRightComponent(sidePanel);
 
+        menuBar.setPreferredSize(new java.awt.Dimension(118, 25));
+
         fileMenu.setText("Fichier");
 
         openFileMenuItem.setText("Ouvrir une carte");
@@ -630,11 +615,11 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPane)
+            .addComponent(mainPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPane)
+            .addComponent(mainPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -647,7 +632,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (selectionWindow.getSelectedFile() != null) {
             String path = selectionWindow.getSelectedFile().getAbsolutePath();
             String type = Circuit.getFileType(path);
-            closeMap();
+            closeCurrentMap();
 
             int coordsCount;
             String[] columnsNames;
@@ -667,16 +652,7 @@ public class MainWindow extends javax.swing.JFrame {
                         mainPane.repaint();
                     });
 
-                    // Modification de la distanceTable
-                    coordsCount = currentCircuitEuc.getCoords().size();
-                    // Création des noms de colonnes
-                    columnsNames = new String[coordsCount + 1];
-                    columnsNames[0] = ""; // coin vide
-                    for (int i = 0; i < coordsCount; i++) {
-                        columnsNames[i + 1] = "Lieu " + (i + 1);
-                    }
-
-                    tableModel.setDataVector(currentCircuitEuc.createDistanceMatrix(), columnsNames);
+                    updateTable(currentCircuitEuc);
                     
                     // Modification du panneau des détails
                     firstCompLabel.setText("X :");
@@ -698,16 +674,7 @@ public class MainWindow extends javax.swing.JFrame {
                         mainPane.repaint();
                     });
                     
-                    // Modification de la distanceTable
-                    coordsCount = currentCircuitGeo.getCoords().size();
-                    // Création des noms de colonnes
-                    columnsNames = new String[coordsCount + 1];
-                    columnsNames[0] = ""; // coin vide
-                    for (int i = 0; i < coordsCount; i++) {
-                        columnsNames[i + 1] = "Lieu " + (i + 1);
-                    }
-
-                    tableModel.setDataVector(currentCircuitGeo.createDistanceMatrix(), columnsNames);
+                    updateTable(currentCircuitGeo);
                     
                     // Modification du panneau des détails
                     firstCompLabel.setText("Latitude :");
@@ -721,12 +688,8 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_openFileMenuItemActionPerformed
 
     private void closeFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeFileMenuItemActionPerformed
-        closeMap();
+        closeCurrentMap();
     }//GEN-LAST:event_closeFileMenuItemActionPerformed
-
-    private void mapEucMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_mapEucMouseWheelMoved
-        scaleLabel.setText("x " + String.format("%.1f", mapEuc.getScale()));
-    }//GEN-LAST:event_mapEucMouseWheelMoved
 
     private void resetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMenuItemActionPerformed
         mainPane.resetToPreferredSizes();
@@ -819,158 +782,34 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveAsFileItemActionPerformed
 
-    private void ameliorationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ameliorationButtonActionPerformed
-        // TODO add your handling code here:
+    private void toggleRandomHighlightBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleRandomHighlightBtActionPerformed
         if (mapEuc.displayed()) {
-            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
-            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            switch (choix) {
-                case 0:
-                    // L'utilisateur a cliqué sur "Glouton"
-                    currentCircuitEuc.calculateBestGreedyCircuit();
-                    List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit() ;
-                    currentCircuitEuc.ameliorerCircuitParEchange(circuit);
-                    List<CoordEuc> circuitAm = currentCircuitEuc.getAmeliorateCircuit();
-                    mapEuc.repaint();
-                    break;
-                case 1:
-                    // L'utilisateur a cliqué sur "Insertion"
-                    currentCircuitEuc.calculateBestInsertionCircuit();
-                    circuit = currentCircuitEuc.getInsertionCircuit() ;
-                    currentCircuitEuc.ameliorerCircuitParEchange(circuit);
-                    circuitAm = currentCircuitEuc.getAmeliorateCircuit();
-                    mapEuc.repaint();
-                    break;
-                case 2:
-                    // L'utilisateur a cliqué sur "Aléatoire"
-                    currentCircuitEuc.calculateRandomCircuit();
-                    circuit = currentCircuitEuc.getRandomCircuit() ;
-                    currentCircuitEuc.ameliorerCircuitParEchange(circuit);
-                    circuitAm = currentCircuitEuc.getAmeliorateCircuit();
-                    mapEuc.repaint();
-                    break;
-                default:
-                    // Fenêtre fermée ou aucune sélection
-                    System.out.println("Aucun algorithme sélectionné");
-                    break;
-            }
+            mapEuc.highlightRandomCircuit(!mapEuc.randomCircuitHighlighted());
         }
 
-        else if (mapGeo.displayed()) {
-            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
-            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            switch (choix) {
-                case 0:
-                    // L'utilisateur a cliqué sur "Glouton"
-                    currentCircuitGeo.calculateBestGreedyCircuit();
-                    List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit() ;
-                    currentCircuitGeo.ameliorerCircuitParEchange(circuit);
-                    List<CoordGeo> circuitAm = currentCircuitGeo.getAmeliorateCircuit();
-                    mapEuc.repaint();
-                    break;
-
-
-                case 1:
-                    // L'utilisateur a cliqué sur "Insertion"
-                    currentCircuitGeo.calculateBestInsertionCircuit();
-                    circuit = currentCircuitGeo.getInsertionCircuit() ;
-                    currentCircuitGeo.ameliorerCircuitParEchange(circuit);
-                    circuitAm = currentCircuitGeo.getAmeliorateCircuit();
-                    mapEuc.repaint();
-                    break;
-                case 2:
-                    // L'utilisateur a cliqué sur "Aléatoire"
-                    currentCircuitGeo.calculateRandomCircuit();
-                    circuit = currentCircuitGeo.getRandomCircuit() ;
-                    currentCircuitGeo.ameliorerCircuitParEchange(circuit);
-                    circuitAm = currentCircuitGeo.getAmeliorateCircuit();
-                    mapEuc.repaint();
-                    break;
-                default:
-                    // Fenêtre fermée ou aucune sélection
-                    System.out.println("Aucun algorithme sélectionné");
-                    break;
-            }
+        if (mapGeo.displayed()) {
+            mapGeo.highlightRandomCircuit(!mapGeo.randomCircuitHighlighted());
         }
-        else {
-            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_ameliorationButtonActionPerformed
+    }//GEN-LAST:event_toggleRandomHighlightBtActionPerformed
 
-    private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
+    private void toggleGreedyHighlightBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleGreedyHighlightBtActionPerformed
+        if (mapEuc.displayed()) {
+            mapEuc.highlightGreedyCircuit(!mapEuc.greedyCircuitHighlighted());
+        }
+
+        if (mapGeo.displayed()) {
+            mapGeo.highlightGreedyCircuit(!mapGeo.greedyCircuitHighlighted());
+        }
+    }//GEN-LAST:event_toggleGreedyHighlightBtActionPerformed
+
+    private void randomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomButtonActionPerformed
         if (!mapEuc.displayed() && !mapGeo.displayed()) {
             JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
-        if (checkGreedy.isSelected()) {
-            if (mapEuc.displayed()) {
-                currentCircuitEuc.calculateBestGreedyCircuit();
-                mapEuc.repaint();
-                List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit();
-                String message = "Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter\n\n!Couleur sur la map : BLEU\nDistance à parcourir : " ;
-                double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
-                textGreedy.setText(message + String.format("%.2f", distance) + " km\n");
-                
-            } else {
-                currentCircuitGeo.calculateBestGreedyCircuit();
-                mapGeo.repaint();
-                List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit();
-                String message = "Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter\n\n!Couleur sur la map : BLEU\nDistance à parcourir : " ;
-                double distance = currentCircuitGeo.calculateCircuitLength(circuit) ;
-                textGreedy.setText(message + String.format("%.2f", distance) + " km\n");
-                
-            }
-        } if (checkRandom.isSelected()) {
-            if (mapEuc.displayed()) {
-                currentCircuitEuc.calculateRandomCircuit();
-                mapEuc.repaint();
-                List<CoordEuc> circuit = currentCircuitEuc.getRandomCircuit();
-                String message = "Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n" +"\n" +"Couleur sur la map : VERT\n" +"Distance à parcourir :  " ;
-                double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
-                textRandom.setText(message + String.format("%.2f", distance) + " km\n");
-            } else {
-                currentCircuitGeo.calculateRandomCircuit();
-                mapGeo.repaint();
-                List<CoordGeo> circuit = currentCircuitGeo.getRandomCircuit();
-                String message = "Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n" +"\n" +"Couleur sur la map : VERT\n" +"Distance à parcourir :  " ;
-                double distance = currentCircuitGeo.calculateCircuitLength(circuit) ;
-                textRandom.setText(message + String.format("%.2f", distance) + " km\n");
-            }
-        } if (checkInsertion.isSelected()) {
-            if (mapEuc.displayed()) {
-                currentCircuitEuc.calculateBestInsertionCircuit();
-                mapEuc.repaint();
-                List<CoordEuc> circuit = currentCircuitEuc.getInsertionCircuit();
-                String message = "Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n" +"\n" +"Couleur sur la map : JAUNE\n" +"Distance à parcourir :  " ;
-                double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
-                textInsertion.setText(message + String.format("%.2f", distance) + " km\n");
-            } else {
-                currentCircuitGeo.calculateBestInsertionCircuit();
-                mapGeo.repaint();
-                List<CoordGeo> circuit = currentCircuitGeo.getInsertionCircuit();
-                String message = "Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n" +"\n" +"Couleur sur la map : JAUNE\n" +"Distance à parcourir :  " ;
-                double distance = currentCircuitGeo.calculateCircuitLength(circuit) ;
-                textInsertion.setText(message + String.format("%.2f", distance) + " km\n");
-            }
-        } if (!checkGreedy.isSelected() && !checkRandom.isSelected() && !checkInsertion.isSelected()) {
-            JOptionPane.showMessageDialog(mainPane, "Aucun algorithme sélectionné", "Erreur", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_executeButtonActionPerformed
-
-    private void checkRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkRandomActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkRandomActionPerformed
-
-    private void aleatoireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aleatoireActionPerformed
-        // TODO add your handling code here:
-        if (!mapEuc.displayed() && !mapGeo.displayed()) {
-                JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
         String message = "Entrez le nombre de lieux que vous voulez générer !" ;
         String reponseStr = JOptionPane.showInputDialog(mainPane, message, "Génération", JOptionPane.PLAIN_MESSAGE);
-        int reponse = 0;
+        int reponse;
 
         if (reponseStr != null) { // Vérifie si l'utilisateur n'a pas annulé
             try {
@@ -987,23 +826,151 @@ public class MainWindow extends javax.swing.JFrame {
         for (int i = 1; i <= reponse; i++) {
             double x = 10 + (200 - 10) * random.nextDouble();
             double y = 10 + (200 - 10) * random.nextDouble();
+            
             if (mapEuc.displayed()) {
-                CoordEuc coord1 = new CoordEuc(x, y) ;
-                WaypointEuc w = new WaypointEuc(coord1) ;
-                mapEuc.addWaypoint(coord1);
-                currentCircuitEuc.addCoord(coord1);
+                mapEuc.addCoord(x, y);
+                updateTable(currentCircuitEuc);
             }
             else if (mapGeo.displayed()) {
-                CoordGeo coord1 = new CoordGeo(x, y) ;
-                WaypointGeo w = new WaypointGeo(coord1) ;
-                mapGeo.addWaypoint(coord1);
-                mapGeo.addWaypoint(coord1);
-                currentCircuitGeo.addCoord(coord1);
+                mapGeo.addCoord(x, y);
+                updateTable(currentCircuitGeo);
             }
         }
-    }//GEN-LAST:event_aleatoireActionPerformed
+    }//GEN-LAST:event_randomButtonActionPerformed
+
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        if (!mapEuc.displayed() && !mapGeo.displayed()) {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (mapEuc.displayed()) {
+            currentCircuitEuc.calculateBestGreedyCircuit();
+            currentCircuitEuc.calculateBestInsertionCircuit();
+            currentCircuitEuc.calculateRandomCircuit();
+            
+            toggleGreedyHighlightBt.setSubtitleText("Distance : " + String.format("%.2f", currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getGreedyCircuit())) + " km");
+            toggleInsertionHightlightBt.setSubtitleText("Distance : " + String.format("%.2f", currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getInsertionCircuit())) + " km");
+            toggleRandomHighlightBt.setSubtitleText("Distance : " + String.format("%.2f", currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getRandomCircuit())) + " km");
+            
+            mapEuc.repaint();
+        }
+        
+        else if (mapGeo.displayed()) {
+            currentCircuitGeo.calculateBestGreedyCircuit();
+            currentCircuitGeo.calculateBestInsertionCircuit();
+            currentCircuitGeo.calculateRandomCircuit();
+            
+            toggleGreedyHighlightBt.setSubtitleText("Distance : " + currentCircuitGeo.calculateCircuitLength(currentCircuitGeo.getGreedyCircuit()) + " km");
+            toggleInsertionHightlightBt.setSubtitleText("Distance : " + currentCircuitGeo.calculateCircuitLength(currentCircuitGeo.getInsertionCircuit()) + " km");
+            toggleRandomHighlightBt.setSubtitleText("Distance : " + currentCircuitGeo.calculateCircuitLength(currentCircuitGeo.getRandomCircuit()) + " km");
+
+            mapGeo.repaint();
+        }
+    }//GEN-LAST:event_findButtonActionPerformed
+
+    private void improveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_improveButtonActionPerformed
+        // TODO add your handling code here:
+        if (mapEuc.displayed()) {
+            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
+            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            switch (choix) {
+                case 0:
+                // L'utilisateur a cliqué sur "Glouton"
+                currentCircuitEuc.calculateBestGreedyCircuit();
+                List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit() ;
+                currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+                List<CoordEuc> circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+                mapEuc.repaint();
+                break;
+                case 1:
+                // L'utilisateur a cliqué sur "Insertion"
+                currentCircuitEuc.calculateBestInsertionCircuit();
+                circuit = currentCircuitEuc.getInsertionCircuit() ;
+                currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+                circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+                mapEuc.repaint();
+                break;
+                case 2:
+                // L'utilisateur a cliqué sur "Aléatoire"
+                currentCircuitEuc.calculateRandomCircuit();
+                circuit = currentCircuitEuc.getRandomCircuit() ;
+                currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+                circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+                mapEuc.repaint();
+                break;
+                default:
+                // Fenêtre fermée ou aucune sélection
+                System.out.println("Aucun algorithme sélectionné");
+                break;
+            }
+        }
+
+        else if (mapGeo.displayed()) {
+            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
+            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            switch (choix) {
+                case 0:
+                // L'utilisateur a cliqué sur "Glouton"
+                currentCircuitGeo.calculateBestGreedyCircuit();
+                List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit() ;
+                currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+                List<CoordGeo> circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+                mapEuc.repaint();
+                break;
+
+                case 1:
+                // L'utilisateur a cliqué sur "Insertion"
+                currentCircuitGeo.calculateBestInsertionCircuit();
+                circuit = currentCircuitGeo.getInsertionCircuit() ;
+                currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+                circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+                mapEuc.repaint();
+                break;
+                case 2:
+                // L'utilisateur a cliqué sur "Aléatoire"
+                currentCircuitGeo.calculateRandomCircuit();
+                circuit = currentCircuitGeo.getRandomCircuit() ;
+                currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+                circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+                mapEuc.repaint();
+                break;
+                default:
+                // Fenêtre fermée ou aucune sélection
+                System.out.println("Aucun algorithme sélectionné");
+                break;
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_improveButtonActionPerformed
+
+    private void toggleInsertionHightlightBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleInsertionHightlightBtActionPerformed
+        if (mapEuc.displayed()) {
+            mapEuc.highlightInsertionCircuit(!mapEuc.insertionCircuitHighlighted());
+        }
+
+        if (mapGeo.displayed()) {
+            mapGeo.highlightInsertionCircuit(!mapGeo.insertionCircuitHighlighted());
+        }
+    }//GEN-LAST:event_toggleInsertionHightlightBtActionPerformed
     
-    public void closeMap() {
+    private void updateTable(Circuit currentCircuit) {        
+        // Modification du model (distanceTable)
+        int coordsCount = currentCircuit.getCoords().size();
+        
+        // Création des noms de colonnes
+        String[] columnsNames = new String[coordsCount + 1];
+        columnsNames[0] = ""; // coin vide
+        for (int i = 0; i < coordsCount; i++) {
+            columnsNames[i + 1] = "Lieu " + (i + 1);
+        }
+
+        tableModel.setDataVector(currentCircuit.createDistanceMatrix(), columnsNames);
+    }
+    
+    public void closeCurrentMap() {
         if (mapGeo.displayed()) {
             mapGeo.close();
         }
@@ -1051,37 +1018,31 @@ public class MainWindow extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addToolBt;
-    private javax.swing.JButton aleatoire;
     private javax.swing.JPanel algorithmPanel;
-    private javax.swing.JButton ameliorationButton;
-    private javax.swing.JCheckBox checkGreedy;
-    private javax.swing.JCheckBox checkInsertion;
-    private javax.swing.JCheckBox checkRandom;
+    private javax.swing.JPanel buttonsPanel;
     private javax.swing.JMenuItem closeFileMenuItem;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JRadioButtonMenuItem displayDistanceItem;
     private javax.swing.JPanel distancePanel;
     private javax.swing.JTable distanceTable;
-    private javax.swing.JButton executeButton;
     private javax.swing.JMenuItem exportResultFileItem;
-    private javax.swing.JPanel feuilleDeRoute;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JButton findButton;
     private javax.swing.JTextField firstCompField;
     private javax.swing.JLabel firstCompLabel;
     private javax.swing.JLabel idLabel;
     private javax.swing.JTextField idValueField;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JButton improveButton;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JSplitPane mainPane;
     private view.MapEuc mapEuc;
     private view.MapGeo mapGeo;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openFileMenuItem;
+    private javax.swing.JButton randomButton;
     private javax.swing.JButton removeToolBt;
     private javax.swing.JMenuItem resetMenuItem;
+    private javax.swing.JPanel resultPanel;
     private javax.swing.JMenuItem saveAsFileItem;
     private javax.swing.JMenuItem saveFileItem;
     private java.awt.Label scaleLabel;
@@ -1091,9 +1052,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSplitPane sidePanel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JScrollPane tableScrollPane;
-    private javax.swing.JTextArea textGreedy;
-    private javax.swing.JTextArea textInsertion;
-    private javax.swing.JTextArea textRandom;
+    private view.CircuitToggleButton toggleGreedyHighlightBt;
+    private view.CircuitToggleButton toggleInsertionHightlightBt;
+    private view.CircuitToggleButton toggleRandomHighlightBt;
     private javax.swing.JPanel toolBar;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JPanel zoomLabelPanel;

@@ -111,6 +111,13 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         viewer.repaint();
     }
     
+    public void addCoord(double latitude, double longitude) {
+        CoordGeo coord = new CoordGeo(latitude, longitude);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
+        viewer.repaint();
+    }
+    
     public void removeCoord(WaypointGeo waypoint) {
         circuit.removeCoord(waypoint.getCoord());
         waypoints.remove(waypoint);
