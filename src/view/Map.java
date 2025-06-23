@@ -49,7 +49,7 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         setLayout(null);
     }
 
-    protected abstract void addWaypoint(T coord);
+    public abstract void addWaypoint(T coord);
     
     /**
      * Charge un circuit dans la map afin de l'afficher (Waypoints)

@@ -28,6 +28,7 @@ public abstract class Circuit<T extends Coord> {
     protected List<T> greedyCircuit;
     protected List<T> insertionCircuit;
     protected List<T> randomCircuit;
+    protected List<T> ameliorateCircuit;
     
     protected File file;
 
@@ -187,6 +188,7 @@ public abstract class Circuit<T extends Coord> {
      * @return La liste de coordonnées ordonnées (circuit insertion)
      */
     abstract public List<T> insertionAlgorithmFrom(T start);
+    abstract public void ameliorerCircuitParEchange(List<T> circuitInitial) ;
     
     /**
      * Renvoie le dernier meilleur circuit glouton calculé.
@@ -215,15 +217,10 @@ public abstract class Circuit<T extends Coord> {
         return insertionCircuit;
     }
     
-    /**
-     * Génère un fichier de résultat .csv dans le dossier attendu (outputPath).
-     * Le fichier résultat consiste en un fichier qui contient une ligne pour 
-     * chaque fichier passé en paramètre : 
-     * nomDuFichier;distanceCircuitGlouton;distanceCircuitInsertion;distanceMeilleurCircuit
-     * 
-     * @param inputFiles Les fichiers à prendre en compte dans le fichier résultat
-     * @param outputPath Le dossier qui recevra le fichier résultat
-     */
+    public List<T> getAmeliorateCircuit() {
+        return ameliorateCircuit;
+    }
+    
     public static void exportResultFile(File[] inputFiles, String outputPath) {
         File file = new File(outputPath, "resultatsX_Y.csv");
         

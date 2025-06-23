@@ -78,7 +78,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
             });
             
             waypointPainter = new WaypointGeoPainter();
-            circuitPainter = new CircuitGeoPainter(Color.BLUE, Color.YELLOW, Color.GREEN);
+            circuitPainter = new CircuitGeoPainter(Color.BLUE, Color.YELLOW, Color.GREEN, Color.RED);
             
             List<Painter<JXMapViewer>> painters = new ArrayList<>();
             
@@ -94,7 +94,7 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     }
 
     @Override
-    protected void addWaypoint(CoordGeo coord) {
+    public void addWaypoint(CoordGeo coord) {
         WaypointGeo waypoint = new WaypointGeo(coord);
         waypoint.addActionListener(waypointListener);
         waypoints.add(waypoint);

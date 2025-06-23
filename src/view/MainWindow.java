@@ -5,6 +5,8 @@
 package view;
 
 import java.io.File;
+import java.util.List;
+import java.util.Random;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -34,7 +36,12 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         Waypoint.loadImage();
         initComponents();
-        tableModel = new DefaultTableModel() ;
+        tableModel = new DefaultTableModel() {
+        @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         distanceTable.setModel(tableModel);
         distanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         mainPane.resetToPreferredSizes();
@@ -112,9 +119,20 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel = new javax.swing.JSplitPane();
         tabbedPane = new javax.swing.JTabbedPane();
         algorithmPanel = new javax.swing.JPanel();
-        randomButton = new javax.swing.JButton();
-        greedyButton = new javax.swing.JButton();
-        insertionButton = new javax.swing.JButton();
+        ameliorationButton = new javax.swing.JButton();
+        executeButton = new javax.swing.JButton();
+        aleatoire = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        feuilleDeRoute = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textRandom = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        textGreedy = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        textInsertion = new javax.swing.JTextArea();
+        checkRandom = new javax.swing.JCheckBox();
+        checkGreedy = new javax.swing.JCheckBox();
+        checkInsertion = new javax.swing.JCheckBox();
         distancePanel = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
         distanceTable = new javax.swing.JTable();
@@ -142,6 +160,9 @@ public class MainWindow extends javax.swing.JFrame {
         mainPane.setDividerLocation(700);
         mainPane.setResizeWeight(0.7);
 
+        layeredPane.setBackground(new java.awt.Color(204, 204, 204));
+        layeredPane.setOpaque(true);
+
         selectToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/select_tool.png"))); // NOI18N
         selectToolBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,6 +180,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         toolBar.add(addToolBt);
 
+        removeToolBt.setBackground(new java.awt.Color(255, 255, 255));
         removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
         removeToolBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,6 +189,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         toolBar.add(removeToolBt);
 
+        mapGeo.setOpaque(true);
         mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
                 mapGeoMouseWheelMoved(evt);
@@ -213,15 +236,17 @@ public class MainWindow extends javax.swing.JFrame {
             layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layeredPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(605, Short.MAX_VALUE))
-            .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mapGeo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layeredPaneLayout.createSequentialGroup()
+                        .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 512, Short.MAX_VALUE))
+                    .addComponent(mapGeo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredPaneLayout.createSequentialGroup()
-                    .addGap(0, 601, Short.MAX_VALUE)
+                    .addGap(0, 632, Short.MAX_VALUE)
                     .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layeredPaneLayout.setVerticalGroup(
@@ -229,14 +254,14 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layeredPaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(576, Short.MAX_VALUE))
-            .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mapGeo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(3, 3, 3)
+                .addComponent(mapGeo, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(70, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mapEuc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layeredPaneLayout.createSequentialGroup()
-                    .addGap(0, 596, Short.MAX_VALUE)
+                    .addGap(0, 722, Short.MAX_VALUE)
                     .addComponent(zoomLabelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
@@ -247,26 +272,138 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setResizeWeight(0.6);
         sidePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        randomButton.setText("Aleatoire");
-        randomButton.addActionListener(new java.awt.event.ActionListener() {
+        tabbedPane.setBackground(new java.awt.Color(255, 255, 255));
+
+        algorithmPanel.setBackground(new java.awt.Color(255, 51, 51));
+
+        ameliorationButton.setBackground(new java.awt.Color(255, 255, 255));
+        ameliorationButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        ameliorationButton.setText("Améliorer mon Trajet");
+        ameliorationButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ameliorationButton.setContentAreaFilled(false);
+        ameliorationButton.setOpaque(true);
+        ameliorationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                randomButtonActionPerformed(evt);
+                ameliorationButtonActionPerformed(evt);
             }
         });
 
-        greedyButton.setText("Glouton");
-        greedyButton.addActionListener(new java.awt.event.ActionListener() {
+        executeButton.setBackground(new java.awt.Color(255, 255, 255));
+        executeButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        executeButton.setText("Recherche d'itinéraire");
+        executeButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        executeButton.setContentAreaFilled(false);
+        executeButton.setOpaque(true);
+        executeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                greedyButtonActionPerformed(evt);
+                executeButtonActionPerformed(evt);
             }
         });
 
-        insertionButton.setText("Insertion");
-        insertionButton.addActionListener(new java.awt.event.ActionListener() {
+        aleatoire.setBackground(new java.awt.Color(255, 255, 255));
+        aleatoire.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        aleatoire.setText("Points Aléatoires");
+        aleatoire.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        aleatoire.setContentAreaFilled(false);
+        aleatoire.setOpaque(true);
+        aleatoire.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                insertionButtonActionPerformed(evt);
+                aleatoireActionPerformed(evt);
             }
         });
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        textRandom.setEditable(false);
+        textRandom.setColumns(20);
+        textRandom.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        textRandom.setLineWrap(true);
+        textRandom.setRows(5);
+        textRandom.setText("Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n\nCouleur sur la map : VERT\nDistance à parcourir : ");
+        textRandom.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(textRandom);
+
+        textGreedy.setEditable(false);
+        textGreedy.setColumns(20);
+        textGreedy.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        textGreedy.setLineWrap(true);
+        textGreedy.setRows(5);
+        textGreedy.setText("Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter  !\n\nCouleur sur la map : BLEU\nDistance à parcourir : ");
+        textGreedy.setWrapStyleWord(true);
+        jScrollPane3.setViewportView(textGreedy);
+
+        textInsertion.setEditable(false);
+        textInsertion.setColumns(20);
+        textInsertion.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        textInsertion.setLineWrap(true);
+        textInsertion.setRows(5);
+        textInsertion.setText("Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n\nCouleur sur la map : JAUNE\nDistance à parcourir : ");
+        textInsertion.setWrapStyleWord(true);
+        jScrollPane4.setViewportView(textInsertion);
+
+        checkRandom.setBackground(new java.awt.Color(255, 255, 255));
+        checkRandom.setText("Algorithme Aléatoire");
+        checkRandom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkRandomActionPerformed(evt);
+            }
+        });
+
+        checkGreedy.setBackground(new java.awt.Color(255, 255, 255));
+        checkGreedy.setText("Algorithme Glouton");
+
+        checkInsertion.setBackground(new java.awt.Color(255, 255, 255));
+        checkInsertion.setText("Algorithme par Insertion");
+
+        javax.swing.GroupLayout feuilleDeRouteLayout = new javax.swing.GroupLayout(feuilleDeRoute);
+        feuilleDeRoute.setLayout(feuilleDeRouteLayout);
+        feuilleDeRouteLayout.setHorizontalGroup(
+            feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(checkGreedy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(checkRandom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(checkInsertion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(529, Short.MAX_VALUE))
+        );
+        feuilleDeRouteLayout.setVerticalGroup(
+            feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(checkRandom)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(checkGreedy)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
+                        .addComponent(checkInsertion)
+                        .addGap(157, 157, 157))
+                    .addGroup(feuilleDeRouteLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(98, 98, 98)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(117, 117, 117))))
+        );
+
+        jScrollPane1.setViewportView(feuilleDeRoute);
 
         javax.swing.GroupLayout algorithmPanelLayout = new javax.swing.GroupLayout(algorithmPanel);
         algorithmPanel.setLayout(algorithmPanelLayout);
@@ -275,24 +412,36 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(algorithmPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(randomButton)
-                    .addComponent(greedyButton)
-                    .addComponent(insertionButton))
-                .addContainerGap(283, Short.MAX_VALUE))
+                    .addGroup(algorithmPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(algorithmPanelLayout.createSequentialGroup()
+                        .addComponent(ameliorationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(115, 115, 115)
+                        .addComponent(executeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                        .addComponent(aleatoire, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         algorithmPanelLayout.setVerticalGroup(
             algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(algorithmPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(randomButton)
+                .addGap(13, 13, 13)
+                .addGroup(algorithmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(executeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ameliorationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(aleatoire, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(greedyButton)
-                .addGap(18, 18, 18)
-                .addComponent(insertionButton)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addGap(28, 28, 28))
         );
 
         tabbedPane.addTab("Algorithmes", algorithmPanel);
+
+        distancePanel.setBackground(new java.awt.Color(204, 204, 204));
+
+        tableScrollPane.setBackground(new java.awt.Color(204, 204, 204));
+        tableScrollPane.setOpaque(false);
 
         distanceTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -311,18 +460,21 @@ public class MainWindow extends javax.swing.JFrame {
         distancePanel.setLayout(distancePanelLayout);
         distancePanelLayout.setHorizontalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
         );
         distancePanelLayout.setVerticalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+            .addGroup(distancePanelLayout.createSequentialGroup()
+                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Tableau des distances", distancePanel);
 
-        sidePanel.setLeftComponent(tabbedPane);
+        sidePanel.setTopComponent(tabbedPane);
         tabbedPane.getAccessibleContext().setAccessibleName("tabbedPane");
 
+        detailsPanel.setBackground(new java.awt.Color(255, 51, 51));
         detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Détails du lieu"));
         detailsPanel.setName("Détails"); // NOI18N
         detailsPanel.setLayout(new java.awt.GridBagLayout());
@@ -409,6 +561,8 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setRightComponent(detailsPanel);
 
         mainPane.setRightComponent(sidePanel);
+
+        menuBar.setBackground(new java.awt.Color(255, 255, 255));
 
         fileMenu.setText("Fichier");
 
@@ -594,42 +748,9 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_firstCompFieldActionPerformed
 
-    private void greedyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greedyButtonActionPerformed
-        if (mapEuc.displayed()) {
-            currentCircuitEuc.calculateGreedyAlgorithm();
-            mapEuc.repaint();
-        }
-        if (mapGeo.displayed()) {
-            currentCircuitGeo.calculateGreedyAlgorithm();
-            mapGeo.repaint();
-        }
-    }//GEN-LAST:event_greedyButtonActionPerformed
-
-    private void randomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomButtonActionPerformed
-        if (mapEuc.displayed()) {
-            currentCircuitEuc.calculateRandomAlgorithm();
-            mapEuc.repaint();
-        }
-        if (mapGeo.displayed()) {
-            currentCircuitGeo.calculateRandomAlgorithm();
-            mapGeo.repaint();
-        }
-    }//GEN-LAST:event_randomButtonActionPerformed
-
     private void selectToolBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectToolBtActionPerformed
         actionMode = ActionMode.SELECT;
     }//GEN-LAST:event_selectToolBtActionPerformed
-
-    private void insertionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertionButtonActionPerformed
-        if (mapEuc.displayed()) {
-            currentCircuitEuc.calculateBestInsertionAlgorithm();
-            mapEuc.repaint();
-        }
-        if (mapGeo.displayed()) {
-            currentCircuitGeo.calculateBestInsertionAlgorithm();
-            mapGeo.repaint();
-        }
-    }//GEN-LAST:event_insertionButtonActionPerformed
 
     private void addToolBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToolBtActionPerformed
         actionMode = ActionMode.ADD;
@@ -704,6 +825,191 @@ public class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Aucun fichier ouvert à sauvegarder", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveAsFileItemActionPerformed
+
+    private void ameliorationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ameliorationButtonActionPerformed
+        // TODO add your handling code here:
+        if (mapEuc.isOpen()) {
+            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
+            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            switch (choix) {
+                case 0:
+                    // L'utilisateur a cliqué sur "Glouton"
+                    currentCircuitEuc.bestGreedyAlgorithm();
+                    List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit() ;
+                    currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+                    List<CoordEuc> circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+                    mapEuc.repaint();
+                    break;
+                case 1:
+                    // L'utilisateur a cliqué sur "Insertion"
+                    currentCircuitEuc.bestInsertionAlgorithm();
+                    circuit = currentCircuitEuc.getInsertionCircuit() ;
+                    currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+                    circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+                    mapEuc.repaint();
+                    break;
+                case 2:
+                    // L'utilisateur a cliqué sur "Aléatoire"
+                    currentCircuitEuc.randomAlgorithm();
+                    circuit = currentCircuitEuc.getRandomCircuit() ;
+                    currentCircuitEuc.ameliorerCircuitParEchange(circuit);
+                    circuitAm = currentCircuitEuc.getAmeliorateCircuit();
+                    mapEuc.repaint();
+                    break;
+                default:
+                    // Fenêtre fermée ou aucune sélection
+                    System.out.println("Aucun algorithme sélectionné");
+                    break;
+            }
+        }
+
+        else if (mapGeo.isOpen()) {
+            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
+            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            switch (choix) {
+                case 0:
+                    // L'utilisateur a cliqué sur "Glouton"
+                    currentCircuitGeo.bestGreedyAlgorithm();
+                    List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit() ;
+                    currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+                    List<CoordGeo> circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+                    mapEuc.repaint();
+                    break;
+
+
+                case 1:
+                    // L'utilisateur a cliqué sur "Insertion"
+                    currentCircuitGeo.bestInsertionAlgorithm();
+                    circuit = currentCircuitGeo.getInsertionCircuit() ;
+                    currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+                    circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+                    mapEuc.repaint();
+                    break;
+                case 2:
+                    // L'utilisateur a cliqué sur "Aléatoire"
+                    currentCircuitGeo.randomAlgorithm();
+                    circuit = currentCircuitGeo.getRandomCircuit() ;
+                    currentCircuitGeo.ameliorerCircuitParEchange(circuit);
+                    circuitAm = currentCircuitGeo.getAmeliorateCircuit();
+                    mapEuc.repaint();
+                    break;
+                default:
+                    // Fenêtre fermée ou aucune sélection
+                    System.out.println("Aucun algorithme sélectionné");
+                    break;
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_ameliorationButtonActionPerformed
+
+    private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
+        // TODO add your handling code here:
+        if (!mapEuc.isOpen() && !mapGeo.isOpen()) {
+            JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (checkGreedy.isSelected()) {
+            if (mapEuc.isOpen()) {
+                currentCircuitEuc.bestGreedyAlgorithm();
+                mapEuc.repaint();
+                List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit();
+                String message = "Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter\n\n!Couleur sur la map : BLEU\nDistance à parcourir : " ;
+                double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
+                textGreedy.setText(message + String.format("%.2f", distance) + " km\n");
+                
+            } else {
+                currentCircuitGeo.bestGreedyAlgorithm();
+                mapGeo.repaint();
+                List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit();
+                String message = "Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter\n\n!Couleur sur la map : BLEU\nDistance à parcourir : " ;
+                double distance = currentCircuitGeo.calculateCircuitLength(circuit) ;
+                textGreedy.setText(message + String.format("%.2f", distance) + " km\n");
+                
+            }
+        } if (checkRandom.isSelected()) {
+            if (mapEuc.isOpen()) {
+                currentCircuitEuc.randomAlgorithm();
+                mapEuc.repaint();
+                List<CoordEuc> circuit = currentCircuitEuc.getRandomCircuit();
+                String message = "Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n" +"\n" +"Couleur sur la map : VERT\n" +"Distance à parcourir :  " ;
+                double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
+                textRandom.setText(message + String.format("%.2f", distance) + " km\n");
+            } else {
+                currentCircuitGeo.randomAlgorithm();
+                mapGeo.repaint();
+                List<CoordGeo> circuit = currentCircuitGeo.getRandomCircuit();
+                String message = "Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n" +"\n" +"Couleur sur la map : VERT\n" +"Distance à parcourir :  " ;
+                double distance = currentCircuitGeo.calculateCircuitLength(circuit) ;
+                textRandom.setText(message + String.format("%.2f", distance) + " km\n");
+            }
+        } if (checkInsertion.isSelected()) {
+            if (mapEuc.isOpen()) {
+                currentCircuitEuc.bestInsertionAlgorithm();
+                mapEuc.repaint();
+                List<CoordEuc> circuit = currentCircuitEuc.getInsertionCircuit();
+                String message = "Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n" +"\n" +"Couleur sur la map : JAUNE\n" +"Distance à parcourir :  " ;
+                double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
+                textInsertion.setText(message + String.format("%.2f", distance) + " km\n");
+            } else {
+                currentCircuitGeo.bestInsertionAlgorithm();
+                mapGeo.repaint();
+                List<CoordGeo> circuit = currentCircuitGeo.getInsertionCircuit();
+                String message = "Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n" +"\n" +"Couleur sur la map : JAUNE\n" +"Distance à parcourir :  " ;
+                double distance = currentCircuitGeo.calculateCircuitLength(circuit) ;
+                textInsertion.setText(message + String.format("%.2f", distance) + " km\n");
+            }
+        } if (!checkGreedy.isSelected() && !checkRandom.isSelected() && !checkInsertion.isSelected()) {
+            JOptionPane.showMessageDialog(mainPane, "Aucun algorithme sélectionné", "Erreur", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_executeButtonActionPerformed
+
+    private void checkRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkRandomActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkRandomActionPerformed
+
+    private void aleatoireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aleatoireActionPerformed
+        // TODO add your handling code here:
+        if (!mapEuc.isOpen() && !mapGeo.isOpen()) {
+                JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        String message = "Entrez le nombre de lieux que vous voulez générer !" ;
+        String reponseStr = JOptionPane.showInputDialog(mainPane, message, "Génération", JOptionPane.PLAIN_MESSAGE);
+        int reponse = 0;
+
+        if (reponseStr != null) { // Vérifie si l'utilisateur n'a pas annulé
+            try {
+                reponse = Integer.parseInt(reponseStr); // Convertit la chaîne en entier
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(mainPane, "Veuillez entrer un nombre valide.", "Erreur", JOptionPane.WARNING_MESSAGE);
+                return; // Ou une autre gestion d'erreur
+            }
+        } else {
+            return; // Annulé par l'utilisateur
+        }
+        Random random = new Random();
+
+        for (int i = 1; i <= reponse; i++) {
+            double x = 10 + (200 - 10) * random.nextDouble();
+            double y = 10 + (200 - 10) * random.nextDouble();
+            if (mapEuc.isOpen()) {
+                CoordEuc coord1 = new CoordEuc(x, y) ;
+                WaypointEuc w = new WaypointEuc(coord1) ;
+                mapEuc.addWaypoint(coord1);
+                currentCircuitEuc.addCoord(coord1);
+            }
+            else if (mapGeo.isOpen()) {
+                CoordGeo coord1 = new CoordGeo(x, y) ;
+                WaypointGeo w = new WaypointGeo(coord1) ;
+                mapGeo.addWaypoint(coord1);
+                mapGeo.addWaypoint(coord1);
+                currentCircuitGeo.addCoord(coord1);
+            }
+        }
+    }//GEN-LAST:event_aleatoireActionPerformed
     
     public void closeMap() {
         if (mapGeo.displayed()) {
@@ -713,7 +1019,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (mapEuc.displayed()) {
             mapEuc.close();
         }
-        
+        tableModel.setColumnCount(0);
         tableModel.setRowCount(0);
     }
     
@@ -753,27 +1059,35 @@ public class MainWindow extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addToolBt;
+    private javax.swing.JButton aleatoire;
     private javax.swing.JPanel algorithmPanel;
+    private javax.swing.JButton ameliorationButton;
+    private javax.swing.JCheckBox checkGreedy;
+    private javax.swing.JCheckBox checkInsertion;
+    private javax.swing.JCheckBox checkRandom;
     private javax.swing.JMenuItem closeFileMenuItem;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JRadioButtonMenuItem displayDistanceItem;
     private javax.swing.JPanel distancePanel;
     private javax.swing.JTable distanceTable;
+    private javax.swing.JButton executeButton;
     private javax.swing.JMenuItem exportResultFileItem;
+    private javax.swing.JPanel feuilleDeRoute;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTextField firstCompField;
     private javax.swing.JLabel firstCompLabel;
-    private javax.swing.JButton greedyButton;
     private javax.swing.JLabel idLabel;
     private javax.swing.JTextField idValueField;
-    private javax.swing.JButton insertionButton;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JSplitPane mainPane;
     private view.MapEuc mapEuc;
     private view.MapGeo mapGeo;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openFileMenuItem;
-    private javax.swing.JButton randomButton;
     private javax.swing.JButton removeToolBt;
     private javax.swing.JMenuItem resetMenuItem;
     private javax.swing.JMenuItem saveAsFileItem;
@@ -785,6 +1099,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSplitPane sidePanel;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JTextArea textGreedy;
+    private javax.swing.JTextArea textInsertion;
+    private javax.swing.JTextArea textRandom;
     private javax.swing.JPanel toolBar;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JPanel zoomLabelPanel;

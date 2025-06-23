@@ -32,6 +32,35 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
         } while (!scanner.hasNext("EOF"));
     }
+    
+    @Override
+    public void ameliorerCircuitParEchange(List<CoordEuc> circuitInitial) {
+        boolean amelioration = true;
+        
+        List<CoordEuc> circuit = new ArrayList<>(circuitInitial);
+        double longueurActuelle = calculateCircuitLength(circuit);
+
+        while (amelioration) {
+            amelioration = false;
+
+            for (int i = 1; i < circuit.size() - 2; i++) {
+                for (int j = i + 1; j < circuit.size() - 1; j++) {
+                    List<CoordEuc> nouveauCircuit = new ArrayList<>(circuit); // Échange les deux positions
+                    CoordEuc temp = nouveauCircuit.get(i);
+                    nouveauCircuit.set(i, nouveauCircuit.get(j));
+                    nouveauCircuit.set(j, temp);
+
+                    double nouvelleLongueur = calculateCircuitLength(nouveauCircuit);
+                    if (nouvelleLongueur < longueurActuelle) {
+                        circuit = nouveauCircuit;
+                        longueurActuelle = nouvelleLongueur;
+                        amelioration = true;
+                    }
+                }
+            }
+        }
+        ameliorateCircuit = circuit;
+    }
 
     @Override
     public void calculateRandomAlgorithm() {
@@ -45,7 +74,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
             circuit.add(coord);
         }
-        
+        circuit.add(circuit.get(0));
         randomCircuit = circuit;
     }
 

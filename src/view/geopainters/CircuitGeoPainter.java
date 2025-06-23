@@ -27,11 +27,13 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
     private Color greedyColor;
     private Color insertionColor;
     private Color randomColor;
+    private Color ameliorateColor;
 
-    public CircuitGeoPainter(Color greedyColor, Color insertionColor, Color randomColor) {
+    public CircuitGeoPainter(Color greedyColor, Color insertionColor, Color randomColor, Color ameliorateColor) {
         this.greedyColor = greedyColor;
         this.insertionColor = insertionColor;
         this.randomColor = randomColor;
+        this.ameliorateColor = ameliorateColor;
     }
 
     public void setCircuit(CircuitGeo circuit) {
@@ -45,6 +47,7 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
         drawCircuit(circuit.getGreedyCircuit(), g, map, greedyColor);
         drawCircuit(circuit.getInsertionCircuit(), g, map, insertionColor);
         drawCircuit(circuit.getRandomCircuit(), g, map, randomColor);
+        drawCircuit(circuit.getAmeliorateCircuit(), g, map, ameliorateColor);
 
         g.dispose();
     }
