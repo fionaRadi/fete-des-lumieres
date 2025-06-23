@@ -18,6 +18,6 @@ public class WaypointGeo extends Waypoint<CoordGeo> implements org.jxmapviewer.v
 
     @Override
     public GeoPosition getPosition() {
-        return new GeoPosition(coord.getLatitude(), coord.getLongitude());
+        return coord.getPosition();
     }
 }

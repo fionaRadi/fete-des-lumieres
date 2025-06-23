@@ -4,17 +4,14 @@
  */
 package model.circuit;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import model.coord.Coord;
 import model.coord.CoordEuc;
 
 /**
@@ -34,6 +31,35 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
         } while (!scanner.hasNext("EOF"));
     }
+    
+    @Override
+    public void ameliorerCircuitParEchange(List<CoordEuc> circuitInitial) {
+        boolean amelioration = true;
+        
+        List<CoordEuc> circuit = new ArrayList<>(circuitInitial);
+        double longueurActuelle = calculateCircuitLength(circuit);
+
+        while (amelioration) {
+            amelioration = false;
+
+            for (int i = 1; i < circuit.size() - 2; i++) {
+                for (int j = i + 1; j < circuit.size() - 1; j++) {
+                    List<CoordEuc> nouveauCircuit = new ArrayList<>(circuit); // Échange les deux positions
+                    CoordEuc temp = nouveauCircuit.get(i);
+                    nouveauCircuit.set(i, nouveauCircuit.get(j));
+                    nouveauCircuit.set(j, temp);
+
+                    double nouvelleLongueur = calculateCircuitLength(nouveauCircuit);
+                    if (nouvelleLongueur < longueurActuelle) {
+                        circuit = nouveauCircuit;
+                        longueurActuelle = nouvelleLongueur;
+                        amelioration = true;
+                    }
+                }
+            }
+        }
+        ameliorateCircuit = circuit;
+    }
 
     @Override
     public void randomAlgorithm() {
@@ -47,7 +73,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
 
             circuit.add(coord);
         }
-        
+        circuit.add(circuit.get(0));
         randomCircuit = circuit;
     }
 
@@ -212,5 +238,49 @@ public class CircuitEuc extends Circuit<CoordEuc> {
         
         return data ;
         
+    }
+
+    @Override
+    protected void exportBestCircuit(String outputPath, String fileName) {
+        File bestCircuitFile = new File(outputPath, fileName);
+        
+        try (FileWriter writer = new FileWriter(bestCircuitFile)) {
+            if (calculateCircuitLength(getGreedyCircuit()) >= calculateCircuitLength(getInsertionCircuit())) {            
+                for (CoordEuc coord : getGreedyCircuit()) {
+                    writer.write(coord.getId() + "\r\n");
+                }
+            } 
+            
+            else {
+                for (CoordEuc coord : getInsertionCircuit()) {
+                    writer.write(coord.getId() + "\r\n");
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Erreur lors de l'export du meilleur circuit");
+        }
+    }
+
+    @Override
+    protected void saveHeader(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde de l'en-tete");
+
+        writer.write("NAME : " + name + "\r\n");
+        writer.write("COMMENT : " + description + "\r\n");
+        writer.write("TYPE : TSP" + "\r\n");
+        writer.write("DIMENSION : " + coords.size() + "\r\n");
+        writer.write("EDGE_WEIGHT_TYPE : EUC_2D\r\n");
+        writer.write("NODE_COORD_SECTION\r\n");
+    }
+
+    @Override
+    protected void saveData(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde des données");
+        
+        for (CoordEuc coord : coords) {
+            writer.write(coord.getId() + " " + coord.getX() + " " + coord.getY() + "\r\n");
+        }
+
+        writer.write("EOF");
     }
 }

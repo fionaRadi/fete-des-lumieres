@@ -4,18 +4,14 @@
  */
 package model.circuit;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Comparator;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import model.coord.Coord;
-import model.coord.CoordEuc;
 import model.coord.CoordGeo;
 
 /**
@@ -28,12 +24,43 @@ public class CircuitGeo extends Circuit<CoordGeo> {
         System.out.println("=> Chargement des lieux");
         do {
             int id = scanner.nextInt();
-            double latitude = scanner.nextFloat();
-            double longitude = scanner.nextFloat();
+            double latitude = scanner.nextDouble();
+            double longitude = scanner.nextDouble();
 
             coords.add(new CoordGeo(id, latitude, longitude));
 
         } while (!scanner.hasNext("EOF"));
+    }
+    
+    @Override
+    public void ameliorerCircuitParEchange(List<CoordGeo> circuitInitial) {
+        boolean amelioration = true;
+        if (circuitInitial == null) {
+            System.err.println("Erreur : circuitInitial est null");
+        }
+        List<CoordGeo> circuit = circuitInitial;
+        double longueurActuelle = calculateCircuitLength(circuit);
+
+        while (amelioration) {
+            amelioration = false;
+
+            for (int i = 1; i < circuit.size() - 2; i++) {
+                for (int j = i + 1; j < circuit.size() - 1; j++) {
+                    List<CoordGeo> nouveauCircuit = new ArrayList<>(circuit); // Échange les deux positions
+                    CoordGeo temp = nouveauCircuit.get(i);
+                    nouveauCircuit.set(i, nouveauCircuit.get(j));
+                    nouveauCircuit.set(j, temp);
+
+                    double nouvelleLongueur = calculateCircuitLength(nouveauCircuit);
+                    if (nouvelleLongueur < longueurActuelle) {
+                        circuit = nouveauCircuit;
+                        longueurActuelle = nouvelleLongueur;
+                        amelioration = true;
+                    }
+                }
+            }
+        }
+        ameliorateCircuit = circuit ;
     }
 
     @Override
@@ -57,11 +84,11 @@ public class CircuitGeo extends Circuit<CoordGeo> {
     public double calculateDistance(CoordGeo a, CoordGeo b) {
         final double EARTH_RADIUS_KM = 6371.0;
         
-        double radianLat1 = Math.toRadians(a.getLatitude());
-        double radianLat2 = Math.toRadians(b.getLatitude());
+        double radianLat1 = Math.toRadians(a.getDecimalLatitude());
+        double radianLat2 = Math.toRadians(b.getDecimalLatitude());
         
-        double radianLong1 = Math.toRadians(a.getLongitude());
-        double radianLong2 = Math.toRadians(b.getLongitude());
+        double radianLong1 = Math.toRadians(a.getDecimalLongitude());
+        double radianLong2 = Math.toRadians(b.getDecimalLongitude());
 
         double distance = EARTH_RADIUS_KM * Math.acos(Math.sin(radianLat1) * Math.sin(radianLat2) + Math.cos(radianLat1) *  Math.cos(radianLat2) * Math.cos(radianLong1 - radianLong2));
 
@@ -220,5 +247,51 @@ public class CircuitGeo extends Circuit<CoordGeo> {
         }
 
         return circuit;
+    }
+
+    @Override
+    protected void exportBestCircuit(String outputPath, String fileName) {
+        File bestCircuitFile = new File(outputPath, fileName);
+        
+        try (FileWriter writer = new FileWriter(bestCircuitFile)) {
+            if (calculateCircuitLength(getGreedyCircuit()) >= calculateCircuitLength(getInsertionCircuit())) {            
+                for (CoordGeo coord : getGreedyCircuit()) {
+                    writer.write(coord.getId() + "\r\n");
+                }
+            } 
+            
+            else {
+                for (CoordGeo coord : getInsertionCircuit()) {
+                    writer.write(coord.getId() + "\r\n");
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Erreur lors de l'export du meilleur circuit");
+        }
+    }
+
+    @Override
+    protected void saveHeader(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde de l'en-tete");
+
+        writer.write("NAME : " + name + "\r\n");
+        writer.write("COMMENT : " + description + "\r\n");
+        writer.write("TYPE : TSP" + "\r\n");
+        writer.write("DIMENSION : " + coords.size() + "\r\n");
+        writer.write("EDGE_WEIGHT_TYPE : GEO\r\n");
+        writer.write("EDGE_WEIGHT_FORMAT: FUNCTION");
+        writer.write("DISPLAY_DATA_TYPE: COORD_DISPLAY\r\n");
+        writer.write("NODE_COORD_SECTION\r\n");
+    }
+
+    @Override
+    protected void saveData(FileWriter writer) throws IOException {
+        System.out.println("=> Sauvegarde des données");
+        
+        for (CoordGeo coord : coords) {
+            writer.write(coord.getId() + " " + coord.getDegreeMinuteLatitude()+ " " + coord.getDegreeMinuteLongitude() + "\r\n");
+        }
+
+        writer.write("EOF");
     }
 }

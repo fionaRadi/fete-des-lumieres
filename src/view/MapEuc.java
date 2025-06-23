@@ -9,16 +9,14 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import model.Constants;
 import model.circuit.CircuitEuc;
 import model.coord.CoordEuc;
 import view.waypoint.Waypoint;
@@ -31,9 +29,6 @@ import view.waypoint.WaypointEuc;
 public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     private int offsetX, offsetY;
 
-    private List<WaypointSelectionListener> waypointListeners = new ArrayList<>();
-    private ActionListener waypointListener;
-
     public MapEuc() {        
         super();
         
@@ -42,10 +37,6 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         offsetX = 0;
         offsetY = 0;
         
-        waypointListener = (ActionEvent e) -> {
-            Waypoint selectedWaypoint = (WaypointEuc) e.getSource();
-            fireWaypointSelected(selectedWaypoint);
-        };
 
         ToolTipManager.sharedInstance().registerComponent(this);
         
@@ -69,28 +60,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
     
-    private void initListeners(){
-        addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {}
-
-            @Override
-            public void mousePressed(MouseEvent e) {}
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                
-            }
-
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-            
-        });
-        
+    private void initListeners(){       
         // Gestion du déplacement sur la carte
         addMouseMotionListener(new MouseMotionListener() {
             private int lastX = -1;
@@ -99,6 +69,8 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                    
                     if (lastX != -1 && lastY != -1) {
                         offsetX += e.getX() - lastX;
                         offsetY += e.getY() - lastY;
@@ -131,7 +103,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             double mapMouseY = (screenMouseY - offsetY) / scale;
             
             scale = scale + -e.getWheelRotation() * 0.1;
-            if (scale < 0.5) scale = 0.5; else if (scale > 2) scale = 2;
+            if (scale < 0.1) scale = 0.1; else if (scale > 2) scale = 2;
             
             offsetX = (int) (screenMouseX - mapMouseX * scale);
             offsetY = (int) (screenMouseY - mapMouseY * scale);
@@ -142,6 +114,27 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             
             repaint();
         });
+        
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                fireMapClicked(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
     }
     
     @Override
@@ -151,20 +144,14 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(3));
         
-        drawCircuit(circuit.getInsertionCircuit(), g2d, Color.BLUE);
-        drawCircuit(circuit.getGreedyCircuit(), g2d, Color.YELLOW);
-        drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);        
-    }
-
-    @Override
-    protected void addCoord(double x, double y) {
-        CoordEuc coord = new CoordEuc(x, y);
-        circuit.addCoord(coord);
-        addWaypoint(coord);
+        drawCircuit(circuit.getInsertionCircuit(), g2d, Color.YELLOW);
+        drawCircuit(circuit.getGreedyCircuit(), g2d, Color.BLUE);
+        drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);    
+        drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
     }
     
     @Override
-    protected void addWaypoint(CoordEuc coord) {
+    public void addWaypoint(CoordEuc coord) {
         WaypointEuc waypoint = new WaypointEuc(coord);
         waypoint.addActionListener(waypointListener);
         waypoints.add(waypoint);
@@ -176,16 +163,25 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         int x = (int) (e.getX() / scale - offsetX / scale - Waypoint.getWaypointIcon().getIconWidth() / 2 / scale);
         int y = (int) (e.getY() / scale - offsetY / scale - Waypoint.getWaypointIcon().getIconHeight() / 2 / scale);
 
-        addCoord(x, y);
+        CoordEuc coord = new CoordEuc(x, y);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
 
         repaint();
     }
+    
+    public void removeCoord(WaypointEuc waypoint) {
+        circuit.removeCoord(waypoint.getCoord());
+        waypoints.remove(waypoint);
+        remove(waypoint);
+        repaint();
+    }
         
-    public void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
-        if (coords != null) {
-            graphics.setColor(color);
-            
+    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
+        if (coords != null) {            
             for (int i = 0; i < coords.size() - 1; i++) {                
+                graphics.setColor(color);
+                
                 CoordEuc c1 = coords.get(i);
                 CoordEuc c2 = coords.get(i + 1);
                 
@@ -196,17 +192,30 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 int y2 = (int) (scale * c2.getY()) + offsetY + Waypoint.getWaypointIcon().getIconHeight() / 2;
                 
                 graphics.drawLine(x1, y1, x2, y2);
+                
+                if (Constants.DISPLAY_DISTANCE) {
+                    double distance = circuit.calculateDistance(c1, c2);
+
+                    int xm = (x1 + x2) / 2;
+                    int ym = (y1 + y2) / 2;
+
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
+                }
             }
         }
     }
     
-    private void fireWaypointSelected(Waypoint waypoint) {
-        for (WaypointSelectionListener listener : waypointListeners) {
-            listener.onWaypointSelected(waypoint);
+    @Override
+    public void close() {
+        for (WaypointEuc waypoint : waypoints) {
+            remove(waypoint);
         }
-    }
-    
-    public void addWaypointSelectionListener(WaypointSelectionListener listener) {
-        waypointListeners.add(listener);
+        
+        offsetX = 0;
+        offsetY = 0;
+        scale = 1;
+        
+        super.close();
     }
 }
