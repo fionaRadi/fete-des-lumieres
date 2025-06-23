@@ -54,6 +54,15 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
         g.dispose();
     }
     
+    /**
+     * Dessine un circuit à partir de différents paramètres
+     * 
+     * @param circuitToDraw La liste de coordonnées du circuit
+     * @param g L'object qui permet de dessiner sur la map
+     * @param map Le viewer JXMapViewer (affichage de la map géographique)
+     * @param highlight Détermine si l'itinéraire est en surbrillance
+     * @param highlightColor La couleur de surbrillance
+     */
     private void drawCircuit(List<CoordGeo> circuitToDraw, Graphics2D g, JXMapViewer map, boolean highlight, Color highlightColor) {
         if (circuitToDraw != null) {            
             for (int i = 0; i < circuitToDraw.size() - 1; i++) {

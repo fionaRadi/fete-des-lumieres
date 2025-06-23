@@ -64,7 +64,7 @@ public abstract class Waypoint<T extends Coord> extends JButton {
     /**
      * Renvoie la coordonnée associée au waypoint
      * 
-     * @return 
+     * @return La coordonnée en question
      */
     public T getCoord() {
         return coord;

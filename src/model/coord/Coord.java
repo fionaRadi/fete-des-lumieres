@@ -22,7 +22,7 @@ public abstract class Coord {
     public int getId() { return id; }
 
     /**
-     * Renvoie l'ID maximum utilisé
+     * Renvoie l'ID maximum utilisé (Permet de créer des points qui possèdent un ID unique)
      * @return L'ID en question
      */
     public static int getMaxId() { return maxId; }

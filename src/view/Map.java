@@ -4,7 +4,6 @@
  */
 package view;
 
-import java.awt.Dimension;
 import view.listeners.MapClickedListener;
 import view.listeners.WaypointSelectionListener;
 import java.awt.event.ActionEvent;
@@ -74,6 +73,9 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         setVisible(true);
     }
 
+    /**
+     * Ferme la map. Décharge la plupart des éléments du circuit actuel.
+     */
     public void close() {        
         waypoints.clear();
         setVisible(false);
@@ -92,6 +94,11 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         return waypoints;
     }
     
+    /**
+     * Renvoie l'échelle de la map (niveau de zoom)
+     * 
+     * @return Le niveau de zoom
+     */
     public double getScale() {
         return scale;
     }

@@ -102,6 +102,11 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         waypointPainter.setWaypoints(waypoints);
     }
     
+    /**
+     * Ajoute une coordonnée à l'emplacement correspondant à celui du MouseEvent 
+     * 
+     * @param e Le MouseEvent en question
+     */
     public void addCoord(MouseEvent e) {
         Point point = e.getPoint();
         GeoPosition geoPos = viewer.convertPointToGeoPosition(point);
@@ -111,6 +116,12 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         viewer.repaint();
     }
     
+    /**
+     * Ajoute une coordonnée à la latitude et longitude indiquée (dans le circuit et dans la map / IHM)
+     * 
+     * @param latitude La latitude en degré décimal
+     * @param longitude La longitude en degré décimal
+     */
     public void addCoord(double latitude, double longitude) {
         CoordGeo coord = new CoordGeo(latitude, longitude);
         circuit.addCoord(coord);
@@ -118,6 +129,11 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         viewer.repaint();
     }
     
+    /**
+     * Supprime un waypoint et sa coordonnée associée
+     * 
+     * @param waypoint Le waypoint en question
+     */
     public void removeCoord(WaypointGeo waypoint) {
         circuit.removeCoord(waypoint.getCoord());
         waypoints.remove(waypoint);
@@ -143,16 +159,25 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         super.close();
     }
     
+     /**
+     * Change la surbrillance du circuit glouton (le devient si ce n'est pas le cas et inversement)
+     */
     public void swapHighlightGreedyCircuit() {
         circuitPainter.highlightGreedyCircuit(!circuitPainter.greedyCircuitHighlighted());
         repaint();
     }
     
+    /**
+     * Change la surbrillance du circuit par insertion (le devient si ce n'est pas le cas et inversement)
+     */
     public void swapHighlightInsertionCircuit() {
         circuitPainter.highlightInsertionCircuit(!circuitPainter.insertionCircuitHighlighted());
         repaint();
     }
     
+     /**
+     * Change la surbrillance du circuit aléatoire (le devient si ce n'est pas le cas et inversement)
+     */
     public void swapHighlightRandomCircuit() {
         circuitPainter.highlightRandomCircuit(!circuitPainter.randomCircuitHighlighted());
         repaint();

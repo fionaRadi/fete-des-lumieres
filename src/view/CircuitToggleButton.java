@@ -16,10 +16,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- *
+ * Composant similaire au JToggleButton qui permet l'utilisation d'un bouton à 2 états, mais avec d'autres labels (sert pour les propositions d'itinéraires)
+ * 
  * @author ugola
  */
-
 public class CircuitToggleButton extends JToggleButton {
     private final JLabel titleLabel = new JLabel("Itinéraire");
     private final JLabel subtitleLabel = new JLabel("Distance : 0 km");
@@ -58,18 +58,38 @@ public class CircuitToggleButton extends JToggleButton {
         add(textPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Renvoie le texte du haut du bouton
+     * 
+     * @return Le texte en question
+     */
     public String getTitleText() {
         return titleLabel.getText();
     }
 
+    /**
+     * Définit le texte du haut du bouton
+     * 
+     * @param text Le texte en question
+     */
     public void setTitleText(String text) {
         titleLabel.setText(text);
     }
 
+    /**
+     * Renvoie le texte du bas du bouton
+     * 
+     * @return Le texte en question
+     */
     public String getSubtitleText() {
         return subtitleLabel.getText();
     }
 
+    /**
+     * Définit le texte du bas du bouton
+     * 
+     * @param text Le texte en question
+     */
     public void setSubtitleText(String text) {
         subtitleLabel.setText(text);
     }

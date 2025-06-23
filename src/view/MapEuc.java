@@ -171,6 +171,11 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         waypoint.update(offsetX, offsetY, scale);
     }
     
+    /**
+     * Ajoute une coordonnée à l'emplacement correspondant à celui du MouseEvent
+     * 
+     * @param e Le MouseEvent en question
+     */
     public void addCoord(MouseEvent e) {
         int x = (int) (e.getX() / scale - offsetX / scale - Waypoint.getWaypointIcon().getIconWidth() / 2 / scale);
         int y = (int) (e.getY() / scale - offsetY / scale - Waypoint.getWaypointIcon().getIconHeight() / 2 / scale);
@@ -182,6 +187,12 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
     
+    /**
+     * Ajoute une coordonnée à la map (IHM) et au circuit associé
+     * 
+     * @param x Le composant X de la coordonnée
+     * @param y Le composant Y de la coordonnée
+     */
     public void addCoord(double x, double y) {
         CoordEuc coord = new CoordEuc(x, y);
         circuit.addCoord(coord);
@@ -190,6 +201,11 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
     
+    /**
+     * Supprime un waypoint et sa coordonnée associée
+     * 
+     * @param waypoint Le waypoint en question
+     */
     public void removeCoord(WaypointEuc waypoint) {
         circuit.removeCoord(waypoint.getCoord());
         waypoints.remove(waypoint);
@@ -258,16 +274,31 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         super.close();
     }
     
+    /**
+     * Définit si le circuit glouton est en surbrillance
+     * 
+     * @param value 
+     */
     public void highlightGreedyCircuit(boolean value) {
         highlightGreedyCircuit = value;
         repaint();
     }
     
+    /**
+     * Définit si le circuit par insertion est en surbrillance
+     * 
+     * @param value 
+     */
     public void highlightInsertionCircuit(boolean value) {
         highlightInsertionCircuit = value;
         repaint();
     }
     
+    /**
+     * Définit si le circuit aléatoire est en surbrillance
+     * 
+     * @param value 
+     */
     public void highlightRandomCircuit(boolean value) {
         highlightRandomCircuit = value;
         repaint();

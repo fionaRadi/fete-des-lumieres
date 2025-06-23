@@ -10,6 +10,13 @@ package model;
  * @author ugola
  */
 public class Constants {
+    /**
+     * Paramètre qui définit si les distances entre les points doivent être affichées
+     */
     public static boolean DISPLAY_DISTANCE = true;
+    
+    /**
+     * Paramètre qui définit la taille du tracé des itinéraires
+     */
     public static int TRACE_SIZE = 3;
 }

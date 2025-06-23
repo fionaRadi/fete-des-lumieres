@@ -187,6 +187,13 @@ public abstract class Circuit<T extends Coord> {
      * @return La liste de coordonnées ordonnées (circuit insertion)
      */
     abstract public List<T> insertionAlgorithmFrom(T start);
+    
+    /**
+     * Améliore un circuit existant en échangeant des points si cela le rend meilleur
+     * 
+     * @param initialCircuit Le circuit de base
+     * @param circuitType Le type du circuit (GREEDY, INSERTION ou RANDOM)
+     */
     abstract public void improveCircuitBySwapping(List<T> initialCircuit, String circuitType);
     
     /**
@@ -216,6 +223,12 @@ public abstract class Circuit<T extends Coord> {
         return insertionCircuit;
     }
     
+    /**
+     * Permet d'exporter des fichiers de résultats comme demandés dans la SAE (pour le jour de la présentation)
+     * 
+     * @param inputFiles Les fichiers tests
+     * @param outputPath Le chemin du dossier de sortie
+     */
     public static void exportResultFile(File[] inputFiles, String outputPath) {
         File file = new File(outputPath, "resultatsX_Y.csv");
         
