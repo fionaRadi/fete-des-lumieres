@@ -188,7 +188,7 @@ public abstract class Circuit<T extends Coord> {
      * @return La liste de coordonnées ordonnées (circuit insertion)
      */
     abstract public List<T> insertionAlgorithmFrom(T start);
-    abstract public void ameliorerCircuitParEchange(List<T> circuitInitial) ;
+    abstract public void improveCircuitBySwapping(List<T> initialCircuit, String circuitType);
     
     /**
      * Renvoie le dernier meilleur circuit glouton calculé.
@@ -215,10 +215,6 @@ public abstract class Circuit<T extends Coord> {
      */
     public List<T> getInsertionCircuit() {
         return insertionCircuit;
-    }
-    
-    public List<T> getAmeliorateCircuit() {
-        return ameliorateCircuit;
     }
     
     public static void exportResultFile(File[] inputFiles, String outputPath) {

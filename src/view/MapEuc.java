@@ -31,6 +31,10 @@ import view.waypoint.WaypointEuc;
  */
 public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     private int offsetX, offsetY;
+    
+    protected boolean highlightGreedyCircuit;
+    protected boolean highlightInsertionCircuit;
+    protected boolean highlightRandomCircuit;
 
     public MapEuc() {        
         super();
@@ -40,7 +44,10 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
 
             offsetX = 0;
             offsetY = 0;
-
+            
+            highlightGreedyCircuit = false;
+            highlightInsertionCircuit = false;
+            highlightRandomCircuit = false;
 
             ToolTipManager.sharedInstance().registerComponent(this);
 
@@ -240,10 +247,41 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             remove(waypoint);
         }
         
+        highlightGreedyCircuit = false;
+        highlightInsertionCircuit = false;
+        highlightRandomCircuit = false;
+        
         offsetX = 0;
         offsetY = 0;
         scale = 1;
         
         super.close();
+    }
+    
+    public void highlightGreedyCircuit(boolean value) {
+        highlightGreedyCircuit = value;
+        repaint();
+    }
+    
+    public void highlightInsertionCircuit(boolean value) {
+        highlightInsertionCircuit = value;
+        repaint();
+    }
+    
+    public void highlightRandomCircuit(boolean value) {
+        highlightRandomCircuit = value;
+        repaint();
+    }
+    
+    public boolean greedyCircuitHighlighted() {
+        return highlightGreedyCircuit;
+    }
+    
+    public boolean insertionCircuitHighlighted() {
+        return highlightInsertionCircuit;
+    }
+    
+    public boolean randomCircuitHighlighted() {
+        return highlightRandomCircuit;
     }
 }

@@ -138,6 +138,23 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
             viewer.remove(waypoint);
         }
         
+        circuitPainter.resetHightlight();
+        
         super.close();
+    }
+    
+    public void swapHighlightGreedyCircuit() {
+        circuitPainter.highlightGreedyCircuit(!circuitPainter.greedyCircuitHighlighted());
+        repaint();
+    }
+    
+    public void swapHighlightInsertionCircuit() {
+        circuitPainter.highlightInsertionCircuit(!circuitPainter.insertionCircuitHighlighted());
+        repaint();
+    }
+    
+    public void swapHighlightRandomCircuit() {
+        circuitPainter.highlightRandomCircuit(!circuitPainter.randomCircuitHighlighted());
+        repaint();
     }
 }

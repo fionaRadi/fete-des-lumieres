@@ -229,6 +229,12 @@ public class MainWindow extends javax.swing.JFrame {
         });
         toolBar.add(removeToolBt);
 
+        mapEuc.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                mapEucMouseWheelMoved(evt);
+            }
+        });
+
         mapGeo.setOpaque(true);
         mapGeo.setPreferredSize(new java.awt.Dimension(700, 700));
         mapGeo.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -788,7 +794,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         if (mapGeo.displayed()) {
-            mapGeo.highlightRandomCircuit(!mapGeo.randomCircuitHighlighted());
+            mapGeo.swapHighlightRandomCircuit();
         }
     }//GEN-LAST:event_toggleRandomHighlightBtActionPerformed
 
@@ -798,7 +804,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         if (mapGeo.displayed()) {
-            mapGeo.highlightGreedyCircuit(!mapGeo.greedyCircuitHighlighted());
+            mapGeo.swapHighlightGreedyCircuit();
         }
     }//GEN-LAST:event_toggleGreedyHighlightBtActionPerformed
 
@@ -870,38 +876,52 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void improveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_improveButtonActionPerformed
-        // TODO add your handling code here:
         if (mapEuc.displayed()) {
-            Object[] options = {"Glouton", "Insertion", "Aléatoire"};
-            int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            Object[] options = {"Itinéraire 1", "Itinéraire 2", "Itinéraire 3"};
+            int choix = JOptionPane.showOptionDialog(mainPane, "Choisir l'algorithme à améliorer", "Amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            
+            List<CoordEuc> circuit;
+            
             switch (choix) {
                 case 0:
-                // L'utilisateur a cliqué sur "Glouton"
-                currentCircuitEuc.calculateBestGreedyCircuit();
-                List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit() ;
-                currentCircuitEuc.ameliorerCircuitParEchange(circuit);
-                List<CoordEuc> circuitAm = currentCircuitEuc.getAmeliorateCircuit();
-                mapEuc.repaint();
-                break;
+                    // L'utilisateur a cliqué sur "Glouton"
+                    currentCircuitEuc.calculateBestGreedyCircuit();
+                    circuit = currentCircuitEuc.getGreedyCircuit() ;      
+                    currentCircuitEuc.improveCircuitBySwapping(circuit, "GREEDY");
+                    
+                    toggleGreedyHighlightBt.setSubtitleText("Distance : " + String.format("%.2f", currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getGreedyCircuit())) + " km");
+                    
+                    mapEuc.repaint();
+                    
+                    break;
+
                 case 1:
-                // L'utilisateur a cliqué sur "Insertion"
-                currentCircuitEuc.calculateBestInsertionCircuit();
-                circuit = currentCircuitEuc.getInsertionCircuit() ;
-                currentCircuitEuc.ameliorerCircuitParEchange(circuit);
-                circuitAm = currentCircuitEuc.getAmeliorateCircuit();
-                mapEuc.repaint();
-                break;
+                    // L'utilisateur a cliqué sur "Insertion"
+                    currentCircuitEuc.calculateBestInsertionCircuit();
+                    circuit = currentCircuitEuc.getInsertionCircuit() ;
+                    currentCircuitEuc.improveCircuitBySwapping(circuit, "INSERTION");
+
+                    toggleInsertionHightlightBt.setSubtitleText("Distance : " + String.format("%.2f", currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getInsertionCircuit())) + " km");
+                    
+                    mapEuc.repaint();
+                    
+                    break;
+                    
                 case 2:
-                // L'utilisateur a cliqué sur "Aléatoire"
-                currentCircuitEuc.calculateRandomCircuit();
-                circuit = currentCircuitEuc.getRandomCircuit() ;
-                currentCircuitEuc.ameliorerCircuitParEchange(circuit);
-                circuitAm = currentCircuitEuc.getAmeliorateCircuit();
-                mapEuc.repaint();
-                break;
+                    // L'utilisateur a cliqué sur "Aléatoire"
+                    currentCircuitEuc.calculateRandomCircuit();
+                    circuit = currentCircuitEuc.getRandomCircuit() ;
+                    currentCircuitEuc.improveCircuitBySwapping(circuit, " RANDOM");
+                    
+                    toggleRandomHighlightBt.setSubtitleText("Distance : " + currentCircuitEuc.calculateCircuitLength(currentCircuitEuc.getRandomCircuit()) + " km");
+                    
+                    mapEuc.repaint();
+                    
+                    break;
+                    
                 default:
-                // Fenêtre fermée ou aucune sélection
-                System.out.println("Aucun algorithme sélectionné");
+                    // Fenêtre fermée ou aucune sélection
+                    System.out.println("Aucun algorithme sélectionné");
                 break;
             }
         }
@@ -909,38 +929,53 @@ public class MainWindow extends javax.swing.JFrame {
         else if (mapGeo.displayed()) {
             Object[] options = {"Glouton", "Insertion", "Aléatoire"};
             int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            
+            List<CoordGeo> circuit;
+            
             switch (choix) {
                 case 0:
-                // L'utilisateur a cliqué sur "Glouton"
-                currentCircuitGeo.calculateBestGreedyCircuit();
-                List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit() ;
-                currentCircuitGeo.ameliorerCircuitParEchange(circuit);
-                List<CoordGeo> circuitAm = currentCircuitGeo.getAmeliorateCircuit();
-                mapEuc.repaint();
-                break;
+                    // L'utilisateur a cliqué sur "Glouton"
+                    currentCircuitGeo.calculateBestGreedyCircuit();
+                    circuit = currentCircuitGeo.getGreedyCircuit() ;
+                    currentCircuitGeo.improveCircuitBySwapping(circuit, "GREEDY");
+                    
+                    toggleGreedyHighlightBt.setSubtitleText("Distance : " + currentCircuitGeo.calculateCircuitLength(currentCircuitGeo.getGreedyCircuit()) + " km");
+            
+                    mapGeo.repaint();
+                    
+                    break;
 
                 case 1:
-                // L'utilisateur a cliqué sur "Insertion"
-                currentCircuitGeo.calculateBestInsertionCircuit();
-                circuit = currentCircuitGeo.getInsertionCircuit() ;
-                currentCircuitGeo.ameliorerCircuitParEchange(circuit);
-                circuitAm = currentCircuitGeo.getAmeliorateCircuit();
-                mapEuc.repaint();
-                break;
+                    // L'utilisateur a cliqué sur "Insertion"
+                    currentCircuitGeo.calculateBestInsertionCircuit();
+                    circuit = currentCircuitGeo.getInsertionCircuit() ;
+                    currentCircuitGeo.improveCircuitBySwapping(circuit, "INSERTION");
+
+                    toggleInsertionHightlightBt.setSubtitleText("Distance : " + currentCircuitGeo.calculateCircuitLength(currentCircuitGeo.getInsertionCircuit()) + " km");
+                    
+                    mapGeo.repaint();
+                    
+                    break;
+                    
                 case 2:
-                // L'utilisateur a cliqué sur "Aléatoire"
-                currentCircuitGeo.calculateRandomCircuit();
-                circuit = currentCircuitGeo.getRandomCircuit() ;
-                currentCircuitGeo.ameliorerCircuitParEchange(circuit);
-                circuitAm = currentCircuitGeo.getAmeliorateCircuit();
-                mapEuc.repaint();
-                break;
+                    // L'utilisateur a cliqué sur "Aléatoire"
+                    currentCircuitGeo.calculateRandomCircuit();
+                    circuit = currentCircuitGeo.getRandomCircuit() ;
+                    currentCircuitGeo.improveCircuitBySwapping(circuit, " RANDOM");
+                    
+                    toggleRandomHighlightBt.setSubtitleText("Distance : " + currentCircuitGeo.calculateCircuitLength(currentCircuitGeo.getRandomCircuit()) + " km");
+                    
+                    mapGeo.repaint();
+                    
+                    break;
+                    
                 default:
-                // Fenêtre fermée ou aucune sélection
-                System.out.println("Aucun algorithme sélectionné");
+                    // Fenêtre fermée ou aucune sélection
+                    System.out.println("Aucun algorithme sélectionné");
                 break;
             }
         }
+        
         else {
             JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
         }
@@ -952,9 +987,13 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         if (mapGeo.displayed()) {
-            mapGeo.highlightInsertionCircuit(!mapGeo.insertionCircuitHighlighted());
+            mapGeo.swapHighlightInsertionCircuit();
         }
     }//GEN-LAST:event_toggleInsertionHightlightBtActionPerformed
+
+    private void mapEucMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_mapEucMouseWheelMoved
+        scaleLabel.setText("x " + String.format("%.1f", mapEuc.getScale()));
+    }//GEN-LAST:event_mapEucMouseWheelMoved
     
     private void updateTable(Circuit currentCircuit) {        
         // Modification du model (distanceTable)
@@ -978,6 +1017,11 @@ public class MainWindow extends javax.swing.JFrame {
         if (mapEuc.displayed()) {
             mapEuc.close();
         }
+        
+        toggleGreedyHighlightBt.setSubtitleText("Distance : 0 km");
+        toggleInsertionHightlightBt.setSubtitleText("Distance : 0 km");
+        toggleRandomHighlightBt.setSubtitleText("Distance : 0 km");
+        
         tableModel.setColumnCount(0);
         tableModel.setRowCount(0);
     }

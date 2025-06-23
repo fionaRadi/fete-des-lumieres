@@ -24,16 +24,19 @@ import org.jxmapviewer.viewer.GeoPosition;
  */
 public class CircuitGeoPainter implements Painter<JXMapViewer> {
     private CircuitGeo circuit;
+    
     private Color greedyColor;
     private Color insertionColor;
     private Color randomColor;
-    private Color ameliorateColor;
+    
+    protected boolean highlightGreedyCircuit;
+    protected boolean highlightInsertionCircuit;
+    protected boolean highlightRandomCircuit;
 
     public CircuitGeoPainter(Color greedyColor, Color insertionColor, Color randomColor, Color ameliorateColor) {
         this.greedyColor = greedyColor;
         this.insertionColor = insertionColor;
         this.randomColor = randomColor;
-        this.ameliorateColor = ameliorateColor;
     }
 
     public void setCircuit(CircuitGeo circuit) {
@@ -44,18 +47,20 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
     public void paint(Graphics2D g, JXMapViewer map,  int w, int h) {
         g.setStroke(new BasicStroke(3));
 
-        drawCircuit(circuit.getGreedyCircuit(), g, map, greedyColor);
-        drawCircuit(circuit.getInsertionCircuit(), g, map, insertionColor);
-        drawCircuit(circuit.getRandomCircuit(), g, map, randomColor);
-        drawCircuit(circuit.getAmeliorateCircuit(), g, map, ameliorateColor);
+        drawCircuit(circuit.getGreedyCircuit(), g, map, highlightGreedyCircuit, greedyColor);
+        drawCircuit(circuit.getInsertionCircuit(), g, map, highlightInsertionCircuit, insertionColor);
+        drawCircuit(circuit.getRandomCircuit(), g, map, highlightRandomCircuit, randomColor);
 
         g.dispose();
     }
     
-    private void drawCircuit(List<CoordGeo> circuitToDraw, Graphics2D g, JXMapViewer map, Color color) {
+    private void drawCircuit(List<CoordGeo> circuitToDraw, Graphics2D g, JXMapViewer map, boolean highlight, Color highlightColor) {
         if (circuitToDraw != null) {            
             for (int i = 0; i < circuitToDraw.size() - 1; i++) {
-                g.setColor(color);
+                if (highlight)
+                    g.setColor(highlightColor);
+                else
+                    g.setColor(Color.LIGHT_GRAY);
                             
                 CoordGeo c1 = circuitToDraw.get(i);
                 CoordGeo c2 = circuitToDraw.get(i + 1);
@@ -79,5 +84,35 @@ public class CircuitGeoPainter implements Painter<JXMapViewer> {
                 }
             }
         }
+    }
+    
+    public void highlightGreedyCircuit(boolean value) {
+        highlightGreedyCircuit = value;
+    }
+    
+    public void highlightInsertionCircuit(boolean value) {
+        highlightInsertionCircuit = value;
+    }
+    
+    public void highlightRandomCircuit(boolean value) {
+        highlightRandomCircuit = value;
+    }
+    
+    public boolean greedyCircuitHighlighted() {
+        return highlightGreedyCircuit;
+    }
+    
+    public boolean insertionCircuitHighlighted() {
+        return highlightInsertionCircuit;
+    }
+    
+    public boolean randomCircuitHighlighted() {
+        return highlightRandomCircuit;
+    }
+    
+    public void resetHightlight() {
+        highlightRandomCircuit = false;
+        highlightGreedyCircuit = false;
+        highlightInsertionCircuit = false;
     }
 }
