@@ -20,6 +20,8 @@ import view.waypoint.WaypointGeo;
  * @author ugola
  */
 public class WaypointGeoPainter extends WaypointPainter<WaypointGeo> {         
+    
+    
     @Override
     protected void doPaint(Graphics2D g, JXMapViewer viewer, int width, int height) {
         for (WaypointGeo waypoint : getWaypoints()) {

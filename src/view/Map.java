@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.awt.Dimension;
 import view.listeners.MapClickedListener;
 import view.listeners.WaypointSelectionListener;
 import java.awt.event.ActionEvent;

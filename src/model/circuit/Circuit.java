@@ -137,7 +137,7 @@ public abstract class Circuit<T extends Coord> {
     /**
      * Calcule un circuit aléatoire
      */
-    abstract public void calculateRandomAlgorithm();
+    abstract public void calculateRandomCircuit();
     
     /**
      * Calcule la distance entre deux coordonnées
@@ -166,7 +166,7 @@ public abstract class Circuit<T extends Coord> {
     /**
      * Calcule le meilleur circuit possible à partir d'un algorithme glouton
      */
-    abstract public void calculateGreedyAlgorithm();
+    abstract public void calculateBestGreedyCircuit();
     
     /**
      * Calcule un circuit avec un algorithme glouton, en prenant comme point de départ (et d'arrivée) la coordonnée passée en paramètre
@@ -179,7 +179,7 @@ public abstract class Circuit<T extends Coord> {
     /**
      * Calcule le meilleur circuit possible à partir d'un algorithme par insertion
      */
-    abstract public void calculateBestInsertionAlgorithm();
+    abstract public void calculateBestInsertionCircuit();
     
     /**
      * Calcule un circuit avec un algorithme par insertion, en prenant comme point de départ (et d'arrivée) la coordonnée passée en paramètre
@@ -188,7 +188,7 @@ public abstract class Circuit<T extends Coord> {
      * @return La liste de coordonnées ordonnées (circuit insertion)
      */
     abstract public List<T> insertionAlgorithmFrom(T start);
-    abstract public void ameliorerCircuitParEchange(List<T> circuitInitial) ;
+    abstract public void improveCircuitBySwapping(List<T> initialCircuit, String circuitType);
     
     /**
      * Renvoie le dernier meilleur circuit glouton calculé.
@@ -215,10 +215,6 @@ public abstract class Circuit<T extends Coord> {
      */
     public List<T> getInsertionCircuit() {
         return insertionCircuit;
-    }
-    
-    public List<T> getAmeliorateCircuit() {
-        return ameliorateCircuit;
     }
     
     public static void exportResultFile(File[] inputFiles, String outputPath) {
@@ -251,8 +247,8 @@ public abstract class Circuit<T extends Coord> {
                         continue;
                 }
                 
-                circuit.calculateGreedyAlgorithm();
-                circuit.calculateBestInsertionAlgorithm();
+                circuit.calculateBestGreedyCircuit();
+                circuit.calculateBestInsertionCircuit();
                         
                 double greedyLength = circuit.calculateCircuitLength(circuit.getGreedyCircuit());
                 double insertionLength = circuit.calculateCircuitLength(circuit.getInsertionCircuit());

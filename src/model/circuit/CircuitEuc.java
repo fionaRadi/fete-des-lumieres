@@ -34,36 +34,58 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
     
     @Override
-    public void ameliorerCircuitParEchange(List<CoordEuc> circuitInitial) {
-        boolean amelioration = true;
+    public void improveCircuitBySwapping(List<CoordEuc> initialCircuit, String circuitType) {
+        boolean improve = true;
         
-        List<CoordEuc> circuit = new ArrayList<>(circuitInitial);
-        double longueurActuelle = calculateCircuitLength(circuit);
+        if (initialCircuit == null) {
+            System.err.println("Erreur : Le circuit initial est null");
+            return;
+        }
+        
+        List<CoordEuc> circuit = new ArrayList<>(initialCircuit);
+        double currentLength = calculateCircuitLength(circuit);
 
-        while (amelioration) {
-            amelioration = false;
+        while (improve) {
+            improve = false;
 
             for (int i = 1; i < circuit.size() - 2; i++) {
                 for (int j = i + 1; j < circuit.size() - 1; j++) {
-                    List<CoordEuc> nouveauCircuit = new ArrayList<>(circuit); // Échange les deux positions
-                    CoordEuc temp = nouveauCircuit.get(i);
-                    nouveauCircuit.set(i, nouveauCircuit.get(j));
-                    nouveauCircuit.set(j, temp);
+                    List<CoordEuc> newCircuit = new ArrayList<>(circuit); // Échange les deux positions
+                    CoordEuc temp = newCircuit.get(i);
+                    newCircuit.set(i, newCircuit.get(j));
+                    newCircuit.set(j, temp);
 
-                    double nouvelleLongueur = calculateCircuitLength(nouveauCircuit);
-                    if (nouvelleLongueur < longueurActuelle) {
-                        circuit = nouveauCircuit;
-                        longueurActuelle = nouvelleLongueur;
-                        amelioration = true;
+                    double newLength = calculateCircuitLength(newCircuit);
+                    if (newLength < currentLength) {
+                        circuit = newCircuit;
+                        currentLength = newLength;
+                        improve = true;
                     }
                 }
             }
         }
-        ameliorateCircuit = circuit;
+        
+        switch (circuitType) {
+            case "GREEDY":
+                greedyCircuit = circuit;
+                break;
+                
+            case "INSERTION":
+                insertionCircuit = circuit;
+                break;
+                
+            case "RANDOM":
+                randomCircuit = circuit;
+                break;
+                
+            default:
+                System.err.println("Erreur : Le type de circuit ne correspond à aucun algorithme existant");
+                break;
+        }
     }
 
     @Override
-    public void calculateRandomAlgorithm() {
+    public void calculateRandomCircuit() {
         Random random = new Random();
         ArrayList<CoordEuc> circuit = new ArrayList<>();
 
@@ -105,7 +127,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void calculateGreedyAlgorithm() {
+    public void calculateBestGreedyCircuit() {
         Random random = new Random();
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> possibleStarts = new ArrayList<>(coords);
@@ -154,7 +176,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void calculateBestInsertionAlgorithm() {
+    public void calculateBestInsertionCircuit() {
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> bestCircuit = null ;
 
