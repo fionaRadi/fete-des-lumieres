@@ -45,6 +45,8 @@ public class MainWindow extends javax.swing.JFrame {
         distanceTable.setModel(tableModel);
         distanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
+        resultPanel.setVisible(false);
+        
         mapEuc.addWaypointSelectionListener(waypoint -> {
             switch (actionMode) {
                 case SELECT:
@@ -664,7 +666,7 @@ public class MainWindow extends javax.swing.JFrame {
             String path = selectionWindow.getSelectedFile().getAbsolutePath();
             String type = Circuit.getFileType(path);
             closeCurrentMap();
-
+            
             int coordsCount;
             String[] columnsNames;
 
@@ -901,6 +903,8 @@ public class MainWindow extends javax.swing.JFrame {
 
             mapGeo.repaint();
         }
+        
+        resultPanel.setVisible(true);
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void improveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_improveButtonActionPerformed
@@ -1064,6 +1068,11 @@ public class MainWindow extends javax.swing.JFrame {
         
         tableModel.setColumnCount(0);
         tableModel.setRowCount(0);
+        
+        resultPanel.setVisible(false);
+        toggleGreedyHighlightBt.setSelected(false);
+        toggleInsertionHightlightBt.setSelected(false);
+        toggleRandomHighlightBt.setSelected(false);
     }
     
     /**

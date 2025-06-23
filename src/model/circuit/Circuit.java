@@ -28,7 +28,6 @@ public abstract class Circuit<T extends Coord> {
     protected List<T> greedyCircuit;
     protected List<T> insertionCircuit;
     protected List<T> randomCircuit;
-    protected List<T> ameliorateCircuit;
     
     protected File file;
 

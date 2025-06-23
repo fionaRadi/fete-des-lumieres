@@ -155,9 +155,9 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         
         Graphics2D g2d = (Graphics2D) g;
         
-        drawCircuit(circuit.getGreedyCircuit(), g2d, highlightGreedyCircuit, Color.BLUE, Constants.TRACE_SIZE);
-        drawCircuit(circuit.getInsertionCircuit(), g2d, highlightInsertionCircuit, Color.YELLOW, Constants.TRACE_SIZE * 2);
-        drawCircuit(circuit.getRandomCircuit(), g2d, highlightRandomCircuit, Color.GREEN, Constants.TRACE_SIZE * 3);    
+        drawCircuit(circuit.getGreedyCircuit(), g2d, highlightGreedyCircuit, Color.BLUE);
+        drawCircuit(circuit.getInsertionCircuit(), g2d, highlightInsertionCircuit, Color.YELLOW);
+        drawCircuit(circuit.getRandomCircuit(), g2d, highlightRandomCircuit, Color.GREEN);    
         
         // drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
     }
@@ -205,7 +205,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
      * @param graphics L'objet Graphics2D permettant l'affichage
      * @param hightlightColor La couleur du circuit
      */
-    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, boolean highlight, Color hightlightColor, int offset) {
+    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, boolean highlight, Color hightlightColor) {
         if (coords != null) {            
             for (int i = 0; i < coords.size() - 1; i++) {  
                 if (highlight) {
@@ -213,7 +213,6 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                     graphics.setStroke(new BasicStroke(Constants.TRACE_SIZE));
                     
                 } else {
-                    offset = 1;
                     graphics.setColor(Color.LIGHT_GRAY);
                     graphics.setStroke(new BasicStroke(1));
                 }
@@ -221,19 +220,19 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 CoordEuc c1 = coords.get(i);
                 CoordEuc c2 = coords.get(i + 1);
                 
-                int x1 = (int) (scale * c1.getX()) + offsetX + Waypoint.getWaypointIcon().getIconWidth() / 2 - offset;
-                int y1 = (int) (scale * c1.getY()) + offsetY + Waypoint.getWaypointIcon().getIconHeight() / 2 - offset;
+                int x1 = (int) (scale * c1.getX()) + offsetX + Waypoint.getWaypointIcon().getIconWidth() / 2;
+                int y1 = (int) (scale * c1.getY()) + offsetY + Waypoint.getWaypointIcon().getIconHeight() / 2;
                 
-                int x2 = (int) (scale * c2.getX()) + offsetX + Waypoint.getWaypointIcon().getIconWidth() / 2 - offset;
-                int y2 = (int) (scale * c2.getY()) + offsetY + Waypoint.getWaypointIcon().getIconHeight() / 2 - offset;
+                int x2 = (int) (scale * c2.getX()) + offsetX + Waypoint.getWaypointIcon().getIconWidth() / 2;
+                int y2 = (int) (scale * c2.getY()) + offsetY + Waypoint.getWaypointIcon().getIconHeight() / 2;
                 
                 graphics.drawLine(x1, y1, x2, y2);
                 
                 if (Constants.DISPLAY_DISTANCE && highlight) {
                     double distance = circuit.calculateDistance(c1, c2);
 
-                    int xm = (x1 + x2) / 2 + offset;
-                    int ym = (y1 + y2) / 2 + offset;
+                    int xm = (x1 + x2) / 2;
+                    int ym = (y1 + y2) / 2;
 
                     graphics.setColor(Color.BLACK);
                     graphics.drawString(String.format("%.1f", distance), xm + 15, ym + 15);
