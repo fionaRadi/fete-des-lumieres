@@ -4,6 +4,9 @@
  */
 package view;
 
+import view.geopainters.WaypointGeoPainter;
+import view.geopainters.CircuitGeoPainter;
+import view.listeners.RightPanMouseInputListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -25,7 +28,8 @@ import view.waypoint.WaypointGeo;
 import org.jxmapviewer.painter.Painter;
 
 /**
- *
+ * Une map de type géographique.
+ * Permet l'affichage de waypoints, le déplacement et le zoom.
  * @author ugola
  */
 public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
@@ -107,6 +111,13 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
         viewer.repaint();
     }
     
+    public void addCoord(double latitude, double longitude) {
+        CoordGeo coord = new CoordGeo(latitude, longitude);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
+        viewer.repaint();
+    }
+    
     public void removeCoord(WaypointGeo waypoint) {
         circuit.removeCoord(waypoint.getCoord());
         waypoints.remove(waypoint);
@@ -115,8 +126,8 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     } 
 
     @Override
-    public void open(CircuitGeo circuit) {
-        super.open(circuit);
+    public void load(CircuitGeo circuit) {
+        super.load(circuit);
         waypointPainter.setWaypoints(waypoints);
         circuitPainter.setCircuit(circuit);
     }
@@ -127,6 +138,23 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
             viewer.remove(waypoint);
         }
         
+        circuitPainter.resetHightlight();
+        
         super.close();
+    }
+    
+    public void swapHighlightGreedyCircuit() {
+        circuitPainter.highlightGreedyCircuit(!circuitPainter.greedyCircuitHighlighted());
+        repaint();
+    }
+    
+    public void swapHighlightInsertionCircuit() {
+        circuitPainter.highlightInsertionCircuit(!circuitPainter.insertionCircuitHighlighted());
+        repaint();
+    }
+    
+    public void swapHighlightRandomCircuit() {
+        circuitPainter.highlightRandomCircuit(!circuitPainter.randomCircuitHighlighted());
+        repaint();
     }
 }

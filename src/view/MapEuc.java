@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.beans.Beans;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -23,35 +24,46 @@ import view.waypoint.Waypoint;
 import view.waypoint.WaypointEuc;
 
 /**
- *
+ * Une map de type euclidienne.
+ * Permet l'affichage de waypoints, le déplacement et le zoom.
+ * 
  * @author ugola
  */
 public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     private int offsetX, offsetY;
+    
+    protected boolean highlightGreedyCircuit;
+    protected boolean highlightInsertionCircuit;
+    protected boolean highlightRandomCircuit;
 
     public MapEuc() {        
         super();
         
-        System.out.println("=> Creation de la carte euclidienne");
+        if (!Beans.isDesignTime()) {
+            System.out.println("=> Creation de la carte euclidienne");
 
-        offsetX = 0;
-        offsetY = 0;
-        
+            offsetX = 0;
+            offsetY = 0;
+            
+            highlightGreedyCircuit = false;
+            highlightInsertionCircuit = false;
+            highlightRandomCircuit = false;
 
-        ToolTipManager.sharedInstance().registerComponent(this);
-        
-        setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        
-        initListeners();
-        
-        System.out.println("=> Carte euclidienne creee");
-        
-        setVisible(false);
+            ToolTipManager.sharedInstance().registerComponent(this);
+
+            setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+
+            initListeners();
+
+            System.out.println("=> Carte euclidienne creee");
+
+            setVisible(false);
+        }
     }
     
     @Override
-    public void open(CircuitEuc circuit) {
-        super.open(circuit);
+    public void load(CircuitEuc circuit) {
+        super.load(circuit);
         
         for (WaypointEuc waypoint : waypoints) {
             waypoint.update(offsetX, offsetY, scale);
@@ -142,12 +154,12 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         super.paintComponent(g);
         
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setStroke(new BasicStroke(3));
         
-        drawCircuit(circuit.getInsertionCircuit(), g2d, Color.YELLOW);
-        drawCircuit(circuit.getGreedyCircuit(), g2d, Color.BLUE);
-        drawCircuit(circuit.getRandomCircuit(), g2d, Color.GREEN);    
-        drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
+        drawCircuit(circuit.getGreedyCircuit(), g2d, highlightGreedyCircuit, Color.BLUE);
+        drawCircuit(circuit.getInsertionCircuit(), g2d, highlightInsertionCircuit, Color.YELLOW);
+        drawCircuit(circuit.getRandomCircuit(), g2d, highlightRandomCircuit, Color.GREEN);    
+        
+        // drawCircuit(circuit.getAmeliorateCircuit(), g2d, Color.RED);
     }
     
     @Override
@@ -170,6 +182,14 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
     
+    public void addCoord(double x, double y) {
+        CoordEuc coord = new CoordEuc(x, y);
+        circuit.addCoord(coord);
+        addWaypoint(coord);
+
+        repaint();
+    }
+    
     public void removeCoord(WaypointEuc waypoint) {
         circuit.removeCoord(waypoint.getCoord());
         waypoints.remove(waypoint);
@@ -177,10 +197,25 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
         
-    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
+    /**
+     * Dessine un circuit en se basant sur des coordonnées ordonnées, avec une couleur définie
+     * Affiche également la distance entre les coordonnées si DISPLAY_DISTANCE est paramétré sur true
+     * 
+     * @param coords La liste ordonnée de coordonnées correspondant au circuit
+     * @param graphics L'objet Graphics2D permettant l'affichage
+     * @param hightlightColor La couleur du circuit
+     */
+    private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, boolean highlight, Color hightlightColor) {
         if (coords != null) {            
-            for (int i = 0; i < coords.size() - 1; i++) {                
-                graphics.setColor(color);
+            for (int i = 0; i < coords.size() - 1; i++) {  
+                if (highlight) {
+                    graphics.setColor(hightlightColor);
+                    graphics.setStroke(new BasicStroke(2));
+                    
+                } else {
+                    graphics.setColor(Color.LIGHT_GRAY);
+                    graphics.setStroke(new BasicStroke(3));
+                }
                 
                 CoordEuc c1 = coords.get(i);
                 CoordEuc c2 = coords.get(i + 1);
@@ -193,7 +228,7 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
                 
                 graphics.drawLine(x1, y1, x2, y2);
                 
-                if (Constants.DISPLAY_DISTANCE) {
+                if (Constants.DISPLAY_DISTANCE && highlight) {
                     double distance = circuit.calculateDistance(c1, c2);
 
                     int xm = (x1 + x2) / 2;
@@ -212,10 +247,41 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
             remove(waypoint);
         }
         
+        highlightGreedyCircuit = false;
+        highlightInsertionCircuit = false;
+        highlightRandomCircuit = false;
+        
         offsetX = 0;
         offsetY = 0;
         scale = 1;
         
         super.close();
+    }
+    
+    public void highlightGreedyCircuit(boolean value) {
+        highlightGreedyCircuit = value;
+        repaint();
+    }
+    
+    public void highlightInsertionCircuit(boolean value) {
+        highlightInsertionCircuit = value;
+        repaint();
+    }
+    
+    public void highlightRandomCircuit(boolean value) {
+        highlightRandomCircuit = value;
+        repaint();
+    }
+    
+    public boolean greedyCircuitHighlighted() {
+        return highlightGreedyCircuit;
+    }
+    
+    public boolean insertionCircuitHighlighted() {
+        return highlightInsertionCircuit;
+    }
+    
+    public boolean randomCircuitHighlighted() {
+        return highlightRandomCircuit;
     }
 }

@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import model.coord.Coord;
 
 /**
+ * Représentation visuelle d'une coordonnée
  *
  * @author ugola
  * @param <T>
@@ -36,6 +37,9 @@ public abstract class Waypoint<T extends Coord> extends JButton {
         setBorder(null);
     }
 
+    /**
+     * Charge l'icone du waypoint
+     */
     public static void loadImage() {
         System.out.println("=> Chargement des images des waypoints");
         try {
@@ -48,10 +52,20 @@ public abstract class Waypoint<T extends Coord> extends JButton {
         }
     }
     
+    /**
+     * Renvoie l'icone du waypoint
+     * 
+     * @return L'icone du waypoint
+     */
     public static ImageIcon getWaypointIcon() {
         return redIcon;
     }
     
+    /**
+     * Renvoie la coordonnée associée au waypoint
+     * 
+     * @return 
+     */
     public T getCoord() {
         return coord;
     }

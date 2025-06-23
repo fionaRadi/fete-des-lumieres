@@ -4,6 +4,9 @@
  */
 package view;
 
+import java.awt.Dimension;
+import view.listeners.MapClickedListener;
+import view.listeners.WaypointSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,11 +20,12 @@ import model.coord.Coord;
 import view.waypoint.Waypoint;
 
 /**
- *
+ * La représentation d'une carte permettant entre autres d'afficher des coordonnées via des Waypoints (représentation graphique) 
+ * 
  * @author ugola
- * @param <T>
- * @param <W>
- * @param <C>
+ * @param <T> Le type de coordonnées
+ * @param <W> Le type de waypoints
+ * @param <C> Le type de circuits
  */
 public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit> extends JComponent {
     protected Set<W> waypoints;    
@@ -48,7 +52,12 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
 
     public abstract void addWaypoint(T coord);
     
-    public void open(C circuit) {
+    /**
+     * Charge un circuit dans la map afin de l'afficher (Waypoints)
+     * 
+     * @param circuit Le circuit à charger
+     */
+    public void load(C circuit) {
         close();
         
         System.out.println("=> Chargement de la carte");
@@ -70,7 +79,12 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         setVisible(false);
     }
 
-    public boolean isOpen() {
+    /**
+     * Renvoie si la carte est affichée
+     * 
+     * @return true si la carte est à l'écran, false sinon
+     */
+    public boolean displayed() {
         return isVisible();
     }
     
@@ -82,22 +96,44 @@ public abstract class Map<T extends Coord, W extends Waypoint, C extends Circuit
         return scale;
     }
     
+    /**
+     * Est déclenché lors qu'un waypoint est sélectionné, déclenche par la suite les listeners associés (WaypointSelectionListener)
+     * Permet une bonne encapsulation
+     * 
+     * @param waypoint Le waypoint sélectionné
+     */
     private void fireWaypointSelected(W waypoint) {
         for (WaypointSelectionListener listener : waypointListeners) {
             listener.onWaypointSelected(waypoint);
         }
     }
     
+    /**
+     * Ajout un WaypointSelectionListener à la map
+     * 
+     * @param listener Le listener à ajouter
+     */
     public void addWaypointSelectionListener(WaypointSelectionListener listener) {
         waypointListeners.add(listener);
     }
     
+    /**
+     * Est déclenché lors que la map est cliqué, déclenche par la suite les listeners associés (MapClickedListener)
+     * Permet une bonne encapsulation
+     * 
+     * @param e Le MouseEvent généré lorsque la map est cliquée
+     */
     protected void fireMapClicked(MouseEvent e) {
         for (MapClickedListener listener : mapClickedListeners) {
             listener.onMapClicked(e);
         }
     }
     
+    /**
+     * Ajout un MapClickedListener à la map
+     * 
+     * @param listener 
+     */
     protected void addMapClickedListener(MapClickedListener listener) {
         mapClickedListeners.add(listener);
     }

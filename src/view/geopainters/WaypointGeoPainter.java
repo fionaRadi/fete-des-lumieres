@@ -1,4 +1,4 @@
-package view;
+package view.geopainters;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -15,10 +15,13 @@ import view.waypoint.Waypoint;
 import view.waypoint.WaypointGeo;
 
 /**
- *
+ * Classe qui gère l'affichage des waypoints dans la map géographique
+ * 
  * @author ugola
  */
 public class WaypointGeoPainter extends WaypointPainter<WaypointGeo> {         
+    
+    
     @Override
     protected void doPaint(Graphics2D g, JXMapViewer viewer, int width, int height) {
         for (WaypointGeo waypoint : getWaypoints()) {

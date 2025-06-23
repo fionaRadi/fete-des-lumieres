@@ -1,30 +1,45 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.coord;
 
 import org.jxmapviewer.viewer.GeoPosition;
 
 /**
- *
+ * Coordonnée géographique qui possède une latitude et une longitude
+ * 
  * @author ugola
  */
 public class CoordGeo extends Coord {    
     private GeoPosition position;
 
+    /**
+     * Constructeur de la coordonnée à partir d'une latitude et longitude
+     * 
+     * @param id L'id de la coordonnée
+     * @param latitude La latitude en degré minute
+     * @param longitude La longitude en degré minute
+     */
     public CoordGeo(int id, double latitude, double longitude) {
         super(id);
 
         this.position = new GeoPosition(convertToDecimal(latitude), convertToDecimal(longitude));
     }
     
+    /**
+     * Constructeur de la coordonnée à partir d'une position
+     * 
+     * @param position 
+     */
     public CoordGeo(GeoPosition position) {
         super(maxId + 1);
         
         this.position = position;
     }
 
+    /**
+     * Convertit une valeur en degré minute vers une valeur en degré décimal
+     * 
+     * @param degreeMinute La valeur en degré minute à convertir
+     * @return La valeur convertie en degré décimal
+     */
     private static double convertToDecimal(double degreeMinute) {
         int deg = (int) degreeMinute;
         double min = Math.abs((degreeMinute - deg) * 100);
@@ -36,6 +51,12 @@ public class CoordGeo extends Coord {
         }
     }
     
+    /**
+     * Convertit une valeur en degré décimal vers une valeur en degré minute
+     * 
+     * @param decimalDegree La valeur en degré décimal à convertir
+     * @return La valeur convertie en degré minute
+     */
     private static double convertToDegreeMinute(double decimalDegree) {
         int deg = (int) decimalDegree;
         double fractional = Math.abs(decimalDegree - deg);
