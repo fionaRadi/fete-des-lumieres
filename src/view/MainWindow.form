@@ -195,11 +195,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="toolBar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="649" max="32767" attributes="0"/>
+                          <EmptySpace pref="715" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
-                      <Component id="mapEuc" alignment="1" pref="700" max="32767" attributes="0"/>
+                      <Component id="mapEuc" alignment="1" pref="773" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -582,7 +582,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="tableScrollPane" alignment="0" pref="420" max="32767" attributes="0"/>
+                          <Component id="tableScrollPane" alignment="0" pref="516" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>

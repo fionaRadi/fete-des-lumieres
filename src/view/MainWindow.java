@@ -55,7 +55,8 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                     
                 case REMOVE:
-                    mapEuc.removeCoord((WaypointEuc) waypoint);                    
+                    mapEuc.removeCoord((WaypointEuc) waypoint);       
+                    updateTable(currentCircuitEuc);
             }
         });
         
@@ -69,7 +70,8 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                     
                 case REMOVE:
-                    mapGeo.removeCoord((WaypointGeo) waypoint);                    
+                    mapGeo.removeCoord((WaypointGeo) waypoint);     
+                    updateTable(currentCircuitGeo);
             }
         });
         
@@ -276,9 +278,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(layeredPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(649, Short.MAX_VALUE)))
+                    .addContainerGap(715, Short.MAX_VALUE)))
             .addGroup(layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
+                .addComponent(mapEuc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 773, Short.MAX_VALUE))
         );
 
         mainPane.setLeftComponent(layeredPane);
@@ -451,7 +453,7 @@ public class MainWindow extends javax.swing.JFrame {
         );
         distancePanelLayout.setVerticalGroup(
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+            .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Tableau des distances", distancePanel);
