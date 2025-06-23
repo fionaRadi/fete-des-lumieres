@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package view;
+package view.geopainters;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,7 +18,8 @@ import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.GeoPosition;
 
 /**
- *
+ * Classe qui se charge de dessiner des circuits sur la map géographique
+ * 
  * @author ugola
  */
 public class CircuitGeoPainter implements Painter<JXMapViewer> {

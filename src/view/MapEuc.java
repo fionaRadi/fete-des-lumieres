@@ -23,7 +23,9 @@ import view.waypoint.Waypoint;
 import view.waypoint.WaypointEuc;
 
 /**
- *
+ * Une map de type euclidienne.
+ * Permet l'affichage de waypoints, le déplacement et le zoom.
+ * 
  * @author ugola
  */
 public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
@@ -50,8 +52,8 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
     }
     
     @Override
-    public void open(CircuitEuc circuit) {
-        super.open(circuit);
+    public void load(CircuitEuc circuit) {
+        super.load(circuit);
         
         for (WaypointEuc waypoint : waypoints) {
             waypoint.update(offsetX, offsetY, scale);
@@ -177,6 +179,14 @@ public class MapEuc extends Map<CoordEuc, WaypointEuc, CircuitEuc> {
         repaint();
     }
         
+    /**
+     * Dessine un circuit en se basant sur des coordonnées ordonnées, avec une couleur définie
+     * Affiche également la distance entre les coordonnées si DISPLAY_DISTANCE est paramétré sur true
+     * 
+     * @param coords La liste ordonnée de coordonnées correspondant au circuit
+     * @param graphics L'objet Graphics2D permettant l'affichage
+     * @param color La couleur du circuit
+     */
     private void drawCircuit(List<CoordEuc> coords, Graphics2D graphics, Color color) {
         if (coords != null) {            
             for (int i = 0; i < coords.size() - 1; i++) {                

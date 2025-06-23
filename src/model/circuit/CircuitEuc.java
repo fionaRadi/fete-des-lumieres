@@ -15,7 +15,8 @@ import java.util.Scanner;
 import model.coord.CoordEuc;
 
 /**
- *
+ * Représente un circuit euclidien constitué d'une liste de coordonnées.
+ * 
  * @author ugola
  */
 public class CircuitEuc extends Circuit<CoordEuc> {
@@ -62,7 +63,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void randomAlgorithm() {
+    public void calculateRandomAlgorithm() {
         Random random = new Random();
         ArrayList<CoordEuc> circuit = new ArrayList<>();
 
@@ -104,7 +105,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void bestGreedyAlgorithm() {
+    public void calculateGreedyAlgorithm() {
         Random random = new Random();
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> possibleStarts = new ArrayList<>(coords);
@@ -153,7 +154,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void bestInsertionAlgorithm() {
+    public void calculateBestInsertionAlgorithm() {
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> bestCircuit = null ;
 

@@ -4,6 +4,9 @@
  */
 package view;
 
+import view.geopainters.WaypointGeoPainter;
+import view.geopainters.CircuitGeoPainter;
+import view.listeners.RightPanMouseInputListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -25,7 +28,8 @@ import view.waypoint.WaypointGeo;
 import org.jxmapviewer.painter.Painter;
 
 /**
- *
+ * Une map de type géographique.
+ * Permet l'affichage de waypoints, le déplacement et le zoom.
  * @author ugola
  */
 public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
@@ -115,8 +119,8 @@ public class MapGeo extends Map<CoordGeo, WaypointGeo, CircuitGeo> {
     } 
 
     @Override
-    public void open(CircuitGeo circuit) {
-        super.open(circuit);
+    public void load(CircuitGeo circuit) {
+        super.load(circuit);
         waypointPainter.setWaypoints(waypoints);
         circuitPainter.setCircuit(circuit);
     }

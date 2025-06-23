@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.circuit;
 
 import java.io.File;
@@ -15,7 +11,11 @@ import java.util.Scanner;
 import model.coord.Coord;
 
 /**
- *
+ * Représente un circuit constitué d'une liste de coordonnées.
+ * Peut être chargé via un fichier qui contient les données au format TSP.
+ * Permet de calculer des circuits de poids faible à partir de divers algorithmes.
+ * Peut être sauvegardé.
+ * 
  * @author ugola
  * @param <T>
  */
@@ -36,6 +36,12 @@ public abstract class Circuit<T extends Coord> {
         this.coords = new ArrayList<>();
     }
 
+    /**
+     * Charge l'en-tête du circuit / fichier (soient les infos générales)
+     * 
+     * @param scanner Le scanner qui effectue les opérations de lecture sur le fichier
+     * @throws IOException
+     */
     void loadHeader(Scanner scanner) throws IOException {
         System.out.println("=> Chargement de l'en-tete");
 
@@ -68,8 +74,19 @@ public abstract class Circuit<T extends Coord> {
             throw new IOException("Champ NODE_COORD_SECTION attendu dans le fichier");
     };
 
+    /**
+     * Charge les données du circuit / fichier (soient les coordonnées)
+     * 
+     * @param scanner Le scanner qui effectue les opérations de lecture sur le fichier
+     * @throws IOException
+     */
     protected abstract void loadData(Scanner scanner) throws IOException;
 
+    /**
+     * Charge le fichier passé en paramètre en tant que circuit (liste de coordonnées et autres infos)
+     * 
+     * @param file Le fichier à charger
+     */
     public void loadFile(File file) {        
         coords.clear();
         
@@ -89,40 +106,113 @@ public abstract class Circuit<T extends Coord> {
             System.out.println("Erreur : " + e.getMessage());
         }
     }
-
+    
+    /**
+     * Renvoie la liste des coordonnées du circuit
+     * 
+     * @return La liste des coordonnées
+     */
     public List<T> getCoords() { return coords; }
 
+    /**
+     * Ajoute une coordonnée au circuit
+     * 
+     * @param coord La coordonnée à ajouter
+     */
     public void addCoord(T coord) {
         if (coord != null) {
             coords.add(coord);
         }
     }
     
+    /**
+     * Supprime une coordonnée du circuit
+     * 
+     * @param coord La coordonnée à supprimer
+     */
     public void removeCoord(T coord) {
         coords.remove(coord);
     }
 
-    abstract public void randomAlgorithm();
+    /**
+     * Calcule un circuit aléatoire
+     */
+    abstract public void calculateRandomAlgorithm();
     
+    /**
+     * Calcule la distance entre deux coordonnées
+     * 
+     * @param a La première coordonnée
+     * @param b La seconde coordonnée
+     * @return La distance entre a et b
+     */
     abstract public double calculateDistance(T a, T b);
+    
+    /**
+     * Calcule le poids du circuit passé en paramètre
+     * 
+     * @param circuit Le circuit dont on doit calculer le poids
+     * @return Le poids du circuit
+     */
     abstract public double calculateCircuitLength(List<T> circuit);
+    
+    /**
+     * Renvoie une matrice correspondant aux distances entre chaque lieu
+     * 
+     * @return La matrice des distances
+     */
     abstract public Object[][] createDistanceMatrix();
     
-    abstract public void bestGreedyAlgorithm();
+    /**
+     * Calcule le meilleur circuit possible à partir d'un algorithme glouton
+     */
+    abstract public void calculateGreedyAlgorithm();
+    
+    /**
+     * Calcule un circuit avec un algorithme glouton, en prenant comme point de départ (et d'arrivée) la coordonnée passée en paramètre
+     * 
+     * @param start La coordonnée de départ (et d'arrivée)
+     * @return La liste de coordonnées ordonnées (circuit glouton)
+     */
     abstract public List<T> greedyAlgorithmFrom(T start);
     
-    abstract public void bestInsertionAlgorithm();
+    /**
+     * Calcule le meilleur circuit possible à partir d'un algorithme par insertion
+     */
+    abstract public void calculateBestInsertionAlgorithm();
+    
+    /**
+     * Calcule un circuit avec un algorithme par insertion, en prenant comme point de départ (et d'arrivée) la coordonnée passée en paramètre
+     * 
+     * @param start La coordonnée de départ (et d'arrivée)
+     * @return La liste de coordonnées ordonnées (circuit insertion)
+     */
     abstract public List<T> insertionAlgorithmFrom(T start);
     abstract public void ameliorerCircuitParEchange(List<T> circuitInitial) ;
     
+    /**
+     * Renvoie le dernier meilleur circuit glouton calculé.
+     * 
+     * @return Une liste de coordonnées ordonnée
+     */
     public List<T> getGreedyCircuit() {
         return greedyCircuit;
     }
     
+    /**
+     * Renvoie le dernier circuit glouton aléatoire calculé.
+     * 
+     * @return Une liste de coordonnées ordonnée
+     */
     public List<T> getRandomCircuit() {
         return randomCircuit;
     }
     
+    /**
+     * Renvoie le dernier meilleur circuit insertion calculé.
+     * 
+     * @return Une liste de coordonnées ordonnée
+     */
     public List<T> getInsertionCircuit() {
         return insertionCircuit;
     }
@@ -161,8 +251,8 @@ public abstract class Circuit<T extends Coord> {
                         continue;
                 }
                 
-                circuit.bestGreedyAlgorithm();
-                circuit.bestInsertionAlgorithm();
+                circuit.calculateGreedyAlgorithm();
+                circuit.calculateBestInsertionAlgorithm();
                         
                 double greedyLength = circuit.calculateCircuitLength(circuit.getGreedyCircuit());
                 double insertionLength = circuit.calculateCircuitLength(circuit.getInsertionCircuit());
@@ -178,8 +268,20 @@ public abstract class Circuit<T extends Coord> {
         }
     }
     
+    /**
+     * Ecris dans le fichier souhaité la liste des coordonnées dans l'ordre correspondant au meilleur circuit (un id pour une coordonnée par ligne)
+     * 
+     * @param outputPath Le chemin du fichier
+     * @param fileName Le nom du fichier
+     */
     protected abstract void exportBestCircuit(String outputPath, String fileName);
     
+    /**
+     * Renvoie le type EDGE_WEIGHT_TYPE du fichier se trouvant au chemin passé en paramètre.
+     * 
+     * @param path Le chemin du fichier
+     * @return Le type du fichier : EUC_2D ou GEO ou ERREUR
+     */
     public static String getFileType(String path) {
         String[] line;
         try (Scanner scanner = new Scanner(new FileInputStream(path))) {
@@ -201,10 +303,27 @@ public abstract class Circuit<T extends Coord> {
         return "ERREUR";
     }
     
+    /**
+     * Sauvegarde dans le fichier attendu le header correspondant au infos du circuit (nom, description)
+     * 
+     * @param writer Le FileWriter portant sur fichier qui doit être rempli
+     * @throws IOException 
+     */
     protected abstract void saveHeader(FileWriter writer) throws IOException;
     
+    /**
+     * Sauvegarde dans le fichier la liste de coordonnées
+     * 
+     * @param writer Le FileWriter portant sur fichier qui doit être rempli
+     * @throws IOException 
+     */
     protected abstract void saveData(FileWriter writer) throws IOException;
     
+    /**
+     * Sauvegarde les données du circuit dans le fichier actuel
+     * 
+     * @return renvoie true si l'opération a été une réussite, false sinon
+     */
     public boolean saveFile() {        
         try (FileWriter writer = new FileWriter(file)) {
             System.out.println("=> Sauvegarde du fichier");
@@ -221,6 +340,12 @@ public abstract class Circuit<T extends Coord> {
         }
     }
     
+    /**
+     * Sauvegarde les données du circuit dans un nouveau fichier (pas celui actuel)
+     * 
+     * @param newFile Le fichier dans lequel le circuit doit être sauvegarder
+     * @return Renvoie true si l'opération a été une réussite, false sinon
+     */
     public boolean saveFileAs(File newFile) {        
         try (FileWriter writer = new FileWriter(newFile)) {
             System.out.println("=> Sauvegarde du fichier");
