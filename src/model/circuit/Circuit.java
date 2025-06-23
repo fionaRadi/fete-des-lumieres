@@ -137,7 +137,7 @@ public abstract class Circuit<T extends Coord> {
     /**
      * Calcule un circuit aléatoire
      */
-    abstract public void calculateRandomAlgorithm();
+    abstract public void calculateRandomCircuit();
     
     /**
      * Calcule la distance entre deux coordonnées
@@ -166,7 +166,7 @@ public abstract class Circuit<T extends Coord> {
     /**
      * Calcule le meilleur circuit possible à partir d'un algorithme glouton
      */
-    abstract public void calculateGreedyAlgorithm();
+    abstract public void calculateBestGreedyCircuit();
     
     /**
      * Calcule un circuit avec un algorithme glouton, en prenant comme point de départ (et d'arrivée) la coordonnée passée en paramètre
@@ -179,7 +179,7 @@ public abstract class Circuit<T extends Coord> {
     /**
      * Calcule le meilleur circuit possible à partir d'un algorithme par insertion
      */
-    abstract public void calculateBestInsertionAlgorithm();
+    abstract public void calculateBestInsertionCircuit();
     
     /**
      * Calcule un circuit avec un algorithme par insertion, en prenant comme point de départ (et d'arrivée) la coordonnée passée en paramètre
@@ -251,8 +251,8 @@ public abstract class Circuit<T extends Coord> {
                         continue;
                 }
                 
-                circuit.calculateGreedyAlgorithm();
-                circuit.calculateBestInsertionAlgorithm();
+                circuit.calculateBestGreedyCircuit();
+                circuit.calculateBestInsertionCircuit();
                         
                 double greedyLength = circuit.calculateCircuitLength(circuit.getGreedyCircuit());
                 double insertionLength = circuit.calculateCircuitLength(circuit.getInsertionCircuit());

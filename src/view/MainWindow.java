@@ -180,7 +180,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         toolBar.add(addToolBt);
 
-        removeToolBt.setBackground(new java.awt.Color(255, 255, 255));
         removeToolBt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove_tool.png"))); // NOI18N
         removeToolBt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -276,7 +275,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         algorithmPanel.setBackground(new java.awt.Color(255, 51, 51));
 
-        ameliorationButton.setBackground(new java.awt.Color(255, 255, 255));
         ameliorationButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ameliorationButton.setText("Améliorer mon Trajet");
         ameliorationButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -288,7 +286,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        executeButton.setBackground(new java.awt.Color(255, 255, 255));
         executeButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         executeButton.setText("Recherche d'itinéraire");
         executeButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -300,7 +297,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        aleatoire.setBackground(new java.awt.Color(255, 255, 255));
         aleatoire.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         aleatoire.setText("Points Aléatoires");
         aleatoire.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -388,12 +384,11 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(feuilleDeRouteLayout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addComponent(checkRandom)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(feuilleDeRouteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(feuilleDeRouteLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(checkGreedy)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(checkInsertion)
                         .addGap(157, 157, 157))
                     .addGroup(feuilleDeRouteLayout.createSequentialGroup()
@@ -436,7 +431,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
         );
 
-        tabbedPane.addTab("Algorithmes", algorithmPanel);
+        tabbedPane.addTab("Itinéraires", algorithmPanel);
 
         distancePanel.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -466,7 +461,7 @@ public class MainWindow extends javax.swing.JFrame {
             distancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(distancePanelLayout.createSequentialGroup()
                 .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Tableau des distances", distancePanel);
@@ -561,8 +556,6 @@ public class MainWindow extends javax.swing.JFrame {
         sidePanel.setRightComponent(detailsPanel);
 
         mainPane.setRightComponent(sidePanel);
-
-        menuBar.setBackground(new java.awt.Color(255, 255, 255));
 
         fileMenu.setText("Fichier");
 
@@ -828,13 +821,13 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void ameliorationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ameliorationButtonActionPerformed
         // TODO add your handling code here:
-        if (mapEuc.isOpen()) {
+        if (mapEuc.displayed()) {
             Object[] options = {"Glouton", "Insertion", "Aléatoire"};
             int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             switch (choix) {
                 case 0:
                     // L'utilisateur a cliqué sur "Glouton"
-                    currentCircuitEuc.bestGreedyAlgorithm();
+                    currentCircuitEuc.calculateBestGreedyCircuit();
                     List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit() ;
                     currentCircuitEuc.ameliorerCircuitParEchange(circuit);
                     List<CoordEuc> circuitAm = currentCircuitEuc.getAmeliorateCircuit();
@@ -842,7 +835,7 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                 case 1:
                     // L'utilisateur a cliqué sur "Insertion"
-                    currentCircuitEuc.bestInsertionAlgorithm();
+                    currentCircuitEuc.calculateBestInsertionCircuit();
                     circuit = currentCircuitEuc.getInsertionCircuit() ;
                     currentCircuitEuc.ameliorerCircuitParEchange(circuit);
                     circuitAm = currentCircuitEuc.getAmeliorateCircuit();
@@ -850,7 +843,7 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                 case 2:
                     // L'utilisateur a cliqué sur "Aléatoire"
-                    currentCircuitEuc.randomAlgorithm();
+                    currentCircuitEuc.calculateRandomCircuit();
                     circuit = currentCircuitEuc.getRandomCircuit() ;
                     currentCircuitEuc.ameliorerCircuitParEchange(circuit);
                     circuitAm = currentCircuitEuc.getAmeliorateCircuit();
@@ -863,13 +856,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
 
-        else if (mapGeo.isOpen()) {
+        else if (mapGeo.displayed()) {
             Object[] options = {"Glouton", "Insertion", "Aléatoire"};
             int choix = JOptionPane.showOptionDialog(mainPane, "Choisissez l'algorithme a améliorer", "amélioration", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             switch (choix) {
                 case 0:
                     // L'utilisateur a cliqué sur "Glouton"
-                    currentCircuitGeo.bestGreedyAlgorithm();
+                    currentCircuitGeo.calculateBestGreedyCircuit();
                     List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit() ;
                     currentCircuitGeo.ameliorerCircuitParEchange(circuit);
                     List<CoordGeo> circuitAm = currentCircuitGeo.getAmeliorateCircuit();
@@ -879,7 +872,7 @@ public class MainWindow extends javax.swing.JFrame {
 
                 case 1:
                     // L'utilisateur a cliqué sur "Insertion"
-                    currentCircuitGeo.bestInsertionAlgorithm();
+                    currentCircuitGeo.calculateBestInsertionCircuit();
                     circuit = currentCircuitGeo.getInsertionCircuit() ;
                     currentCircuitGeo.ameliorerCircuitParEchange(circuit);
                     circuitAm = currentCircuitGeo.getAmeliorateCircuit();
@@ -887,7 +880,7 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                 case 2:
                     // L'utilisateur a cliqué sur "Aléatoire"
-                    currentCircuitGeo.randomAlgorithm();
+                    currentCircuitGeo.calculateRandomCircuit();
                     circuit = currentCircuitGeo.getRandomCircuit() ;
                     currentCircuitGeo.ameliorerCircuitParEchange(circuit);
                     circuitAm = currentCircuitGeo.getAmeliorateCircuit();
@@ -905,15 +898,14 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_ameliorationButtonActionPerformed
 
     private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
-        // TODO add your handling code here:
-        if (!mapEuc.isOpen() && !mapGeo.isOpen()) {
+        if (!mapEuc.displayed() && !mapGeo.displayed()) {
             JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
         if (checkGreedy.isSelected()) {
-            if (mapEuc.isOpen()) {
-                currentCircuitEuc.bestGreedyAlgorithm();
+            if (mapEuc.displayed()) {
+                currentCircuitEuc.calculateBestGreedyCircuit();
                 mapEuc.repaint();
                 List<CoordEuc> circuit = currentCircuitEuc.getGreedyCircuit();
                 String message = "Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter\n\n!Couleur sur la map : BLEU\nDistance à parcourir : " ;
@@ -921,7 +913,7 @@ public class MainWindow extends javax.swing.JFrame {
                 textGreedy.setText(message + String.format("%.2f", distance) + " km\n");
                 
             } else {
-                currentCircuitGeo.bestGreedyAlgorithm();
+                currentCircuitGeo.calculateBestGreedyCircuit();
                 mapGeo.repaint();
                 List<CoordGeo> circuit = currentCircuitGeo.getGreedyCircuit();
                 String message = "Choisissez cet algorithme si vous souhaitez générer un trajet qui vous indique le lieu le plus proche que vous n'avez pas visiter\n\n!Couleur sur la map : BLEU\nDistance à parcourir : " ;
@@ -930,15 +922,15 @@ public class MainWindow extends javax.swing.JFrame {
                 
             }
         } if (checkRandom.isSelected()) {
-            if (mapEuc.isOpen()) {
-                currentCircuitEuc.randomAlgorithm();
+            if (mapEuc.displayed()) {
+                currentCircuitEuc.calculateRandomCircuit();
                 mapEuc.repaint();
                 List<CoordEuc> circuit = currentCircuitEuc.getRandomCircuit();
                 String message = "Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n" +"\n" +"Couleur sur la map : VERT\n" +"Distance à parcourir :  " ;
                 double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
                 textRandom.setText(message + String.format("%.2f", distance) + " km\n");
             } else {
-                currentCircuitGeo.randomAlgorithm();
+                currentCircuitGeo.calculateRandomCircuit();
                 mapGeo.repaint();
                 List<CoordGeo> circuit = currentCircuitGeo.getRandomCircuit();
                 String message = "Choisissez cet algorithme si vous souhaitez génére run trajet aléatoire !\n" +"\n" +"Couleur sur la map : VERT\n" +"Distance à parcourir :  " ;
@@ -946,15 +938,15 @@ public class MainWindow extends javax.swing.JFrame {
                 textRandom.setText(message + String.format("%.2f", distance) + " km\n");
             }
         } if (checkInsertion.isSelected()) {
-            if (mapEuc.isOpen()) {
-                currentCircuitEuc.bestInsertionAlgorithm();
+            if (mapEuc.displayed()) {
+                currentCircuitEuc.calculateBestInsertionCircuit();
                 mapEuc.repaint();
                 List<CoordEuc> circuit = currentCircuitEuc.getInsertionCircuit();
                 String message = "Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n" +"\n" +"Couleur sur la map : JAUNE\n" +"Distance à parcourir :  " ;
                 double distance = currentCircuitEuc.calculateCircuitLength(circuit) ;
                 textInsertion.setText(message + String.format("%.2f", distance) + " km\n");
             } else {
-                currentCircuitGeo.bestInsertionAlgorithm();
+                currentCircuitGeo.calculateBestInsertionCircuit();
                 mapGeo.repaint();
                 List<CoordGeo> circuit = currentCircuitGeo.getInsertionCircuit();
                 String message = "Choisissez cet algorithme si vous souhaitez générer le trajet le plus cours !\n" +"\n" +"Couleur sur la map : JAUNE\n" +"Distance à parcourir :  " ;
@@ -972,7 +964,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void aleatoireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aleatoireActionPerformed
         // TODO add your handling code here:
-        if (!mapEuc.isOpen() && !mapGeo.isOpen()) {
+        if (!mapEuc.displayed() && !mapGeo.displayed()) {
                 JOptionPane.showMessageDialog(mainPane, "Aucun fichier n'a été ouvert", "Erreur d'ouverture", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -995,13 +987,13 @@ public class MainWindow extends javax.swing.JFrame {
         for (int i = 1; i <= reponse; i++) {
             double x = 10 + (200 - 10) * random.nextDouble();
             double y = 10 + (200 - 10) * random.nextDouble();
-            if (mapEuc.isOpen()) {
+            if (mapEuc.displayed()) {
                 CoordEuc coord1 = new CoordEuc(x, y) ;
                 WaypointEuc w = new WaypointEuc(coord1) ;
                 mapEuc.addWaypoint(coord1);
                 currentCircuitEuc.addCoord(coord1);
             }
-            else if (mapGeo.isOpen()) {
+            else if (mapGeo.displayed()) {
                 CoordGeo coord1 = new CoordGeo(x, y) ;
                 WaypointGeo w = new WaypointGeo(coord1) ;
                 mapGeo.addWaypoint(coord1);

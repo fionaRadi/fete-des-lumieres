@@ -63,7 +63,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void calculateRandomAlgorithm() {
+    public void calculateRandomCircuit() {
         Random random = new Random();
         ArrayList<CoordEuc> circuit = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void calculateGreedyAlgorithm() {
+    public void calculateBestGreedyCircuit() {
         Random random = new Random();
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> possibleStarts = new ArrayList<>(coords);
@@ -154,7 +154,7 @@ public class CircuitEuc extends Circuit<CoordEuc> {
     }
 
     @Override
-    public void calculateBestInsertionAlgorithm() {
+    public void calculateBestInsertionCircuit() {
         double bestLength = Double.MAX_VALUE;
         List<CoordEuc> bestCircuit = null ;
 
