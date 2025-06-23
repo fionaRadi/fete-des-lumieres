@@ -21,16 +21,50 @@ import model.coord.CoordEuc;
  */
 public class CircuitEuc extends Circuit<CoordEuc> {
     @Override
-    protected void loadData(Scanner scanner) throws IOException {
+protected void loadData(Scanner scanner) throws IOException {
         System.out.println("=> Chargement des lieux");
-        do {
-            int id = scanner.nextInt();
-            float x = scanner.nextFloat();
-            float y = scanner.nextFloat();
+
+        List<Integer> ids = new ArrayList<>();
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine().trim();
+
+            if (line.equals("EOF")) {
+                break;
+            }
+
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            String[] parts = line.split("\\s+");
+
+            if (parts.length != 3) {
+                throw new IOException("La ligne suivante ne contient pas exactement 3 éléments : " + line);
+            }
+
+            int id;
+            try {
+                id = Integer.parseInt(parts[0]);
+            } catch (NumberFormatException e) {
+                throw new IOException("ID invalide dans la ligne : " + line);
+            }
+
+            if (ids.contains(id)) {
+                throw new IOException("L'ID d'un point existe en double : " + id);
+            }
+            ids.add(id);
+
+            float x, y;
+            try {
+                x = Float.parseFloat(parts[1]);
+                y = Float.parseFloat(parts[2]);
+            } catch (NumberFormatException e) {
+                throw new IOException("Coordonnées invalides dans la ligne : " + line);
+            }
 
             coords.add(new CoordEuc(id, x, y));
-
-        } while (!scanner.hasNext("EOF"));
+        }
     }
     
     @Override

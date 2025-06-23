@@ -49,13 +49,18 @@ public abstract class Circuit<T extends Coord> {
         do {
             line = scanner.nextLine().split("\\s*:\\s+");
             if (line.length == 0) {
-                throw new IOException();
+                throw new IOException("Aucune ligne de header");
+            }
+            
+            else if (line.length == 1 && !line[0].equals("NODE_COORD_SECTION")) {
+                throw new IOException("Champ " + line[0] + " vide");
             }
 
             switch (line[0]) {
                 case "NAME":
                     if (name == null)
                         name = line[1];
+                    
                     else
                         throw new IOException("Champ NAME trouvé plusieurs fois dans le fichier");
                     break;
@@ -85,25 +90,22 @@ public abstract class Circuit<T extends Coord> {
      * Charge le fichier passé en paramètre en tant que circuit (liste de coordonnées et autres infos)
      * 
      * @param file Le fichier à charger
+     * @throws java.io.IOException
      */
-    public void loadFile(File file) {        
+    public void loadFile(File file) throws IOException {        
         coords.clear();
         
         this.file = file;
 
-        try (Scanner scanner = new Scanner(new FileInputStream(file.getAbsolutePath()))) {
-            System.out.println("=> Chargement du fichier");
+        Scanner scanner = new Scanner(new FileInputStream(file.getAbsolutePath()));
+        System.out.println("=> Chargement du fichier");
 
-            scanner.useLocale(Locale.US);
+        scanner.useLocale(Locale.US);
 
-            loadHeader(scanner);
-            loadData(scanner);
+        loadHeader(scanner);
+        loadData(scanner);
 
-            System.out.println("=> Chargement termine");
-
-        } catch (IOException e) {
-            System.out.println("Erreur : " + e.getMessage());
-        }
+        System.out.println("=> Chargement termine");
     }
     
     /**

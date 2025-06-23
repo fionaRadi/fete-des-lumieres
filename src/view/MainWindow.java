@@ -5,6 +5,7 @@
 package view;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JFileChooser;
@@ -301,7 +302,7 @@ public class MainWindow extends javax.swing.JFrame {
         buttonsPanel.setLayout(new java.awt.GridBagLayout());
 
         improveButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        improveButton.setText("Améliorer mon Trajet");
+        improveButton.setText("Améliorer mon trajet");
         improveButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         improveButton.setContentAreaFilled(false);
         improveButton.setOpaque(true);
@@ -673,45 +674,56 @@ public class MainWindow extends javax.swing.JFrame {
             switch (type) {
                 case "EUC_2D":
                     currentCircuitEuc = new CircuitEuc();
-                    currentCircuitEuc.loadFile(selectionWindow.getSelectedFile());
-                    mapEuc.load(currentCircuitEuc);
-                    SwingUtilities.invokeLater(() -> {
-                        if (mapGeo != null)
-                            if (mapGeo.isVisible()) {
-                                mapGeo.setVisible(false);
-                            }
-                        
-                        mapEuc.setVisible(true);
-                        mainPane.repaint();
-                    });
-
-                    updateTable(currentCircuitEuc);
                     
-                    // Modification du panneau des détails
-                    firstCompLabel.setText("X :");
-                    secondCompLabel.setText("Y :");
+                    try {
+                        currentCircuitEuc.loadFile(selectionWindow.getSelectedFile());
+                        mapEuc.load(currentCircuitEuc);
+                        SwingUtilities.invokeLater(() -> {
+                            if (mapGeo != null)
+                                if (mapGeo.isVisible()) {
+                                    mapGeo.setVisible(false);
+                                }
+
+                            mapEuc.setVisible(true);
+                            mainPane.repaint();
+                        });
+
+                        updateTable(currentCircuitEuc);
+
+                        // Modification du panneau des détails
+                        firstCompLabel.setText("X :");
+                        secondCompLabel.setText("Y :");
+                    
+                    } catch (IOException exception) {
+                        JOptionPane.showMessageDialog(this, "Erreur : " + exception.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
                     
                     break;
 
                 case "GEO":
                     currentCircuitGeo = new CircuitGeo();
-                    currentCircuitGeo.loadFile(selectionWindow.getSelectedFile());
-                    mapGeo.load(currentCircuitGeo);
-                    SwingUtilities.invokeLater(() -> {
-                        if (mapEuc != null)
-                            if (mapEuc.isVisible()) {
-                                mapEuc.setVisible(false);
-                            }
-                        
-                        mapGeo.setVisible(true);
-                        mainPane.repaint();
-                    });
                     
-                    updateTable(currentCircuitGeo);
-                    
-                    // Modification du panneau des détails
-                    firstCompLabel.setText("Latitude :");
-                    secondCompLabel.setText("Longitude :");
+                    try {
+                        currentCircuitGeo.loadFile(selectionWindow.getSelectedFile());
+                        mapGeo.load(currentCircuitGeo);
+                        SwingUtilities.invokeLater(() -> {
+                            if (mapEuc != null)
+                                if (mapEuc.isVisible()) {
+                                    mapEuc.setVisible(false);
+                                }
+
+                            mapGeo.setVisible(true);
+                            mainPane.repaint();
+                        });
+
+                        updateTable(currentCircuitGeo);
+
+                        // Modification du panneau des détails
+                        firstCompLabel.setText("Latitude :");
+                        secondCompLabel.setText("Longitude :");
+                    } catch (IOException exception) {
+                        JOptionPane.showMessageDialog(this, "Erreur : " + exception.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
                     
                     break;
                     
